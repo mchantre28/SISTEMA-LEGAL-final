@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ana Paula Medina - Sistema Legal v38.0 CORRIGIDO</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Sistema Legal">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzNiODJmNiIvPgo8cGF0aCBkPSJNMTYgOEMxMS41ODE3IDggOCAxMS41ODE3IDggMTZTMTEuNTgxNyAyNCAxNiAyNFMyNCAyMC40MTgzIDI0IDE2UzIwLjQxODMgOCAxNiA4Wk0xNiAyMEMxMy43OTE0IDIwIDEyIDE4LjIwODYgMTIgMTZTMTMuNzkxNCAxMiAxNiAxMlMyMCAxMy43OTE0IDIwIDE2UzE4LjIwODYgMjAgMTYgMjBaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMzYjgyZjYiLz4KPHBhdGggZD0iTTk2IDQ4QzY5LjQ5IDQ4IDQ4IDY5LjQ5IDQ4IDk2UzY5LjQ5IDE0NCA5NiAxNDRTMTQ0IDEyMi41MSAxNDQgOTZTMTIyLjUxIDQ4IDk2IDQ4Wk05NiAxMjhDNzMuOTA5IDEyOCA1NiAxMTAuMDkgNTYgODhTNzMuOTA5IDQ4IDk2IDQ4UzEzNiA2NS45MSAxMzYgODhTMTE4LjA5IDEyOCA5NiAxMjhaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -10041,6 +10055,25 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         window.gerarRelatorioIVATrimestral = gerarRelatorioIVATrimestral;
         window.obterTrimestreAtual = obterTrimestreAtual;
         window.obterPrazosIVA = obterPrazosIVA;
+        
+        // Registrar Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registrado com sucesso:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('Falha ao registrar Service Worker:', error);
+                    });
+            });
+        }
+        
+        // Detectar se é PWA
+        window.addEventListener('beforeinstallprompt', function(e) {
+            console.log('PWA pode ser instalado');
+            e.preventDefault();
+        });
 
     </script>
 </body>
