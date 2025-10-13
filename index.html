@@ -5927,6 +5927,25 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Parceria</label>
+                                    <select name="parceria" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="toggleParceriaNome('migracao')">
+                                        <option value="sem">Sem parceria</option>
+                                        <option value="empresa">Empresa</option>
+                                        <option value="pessoa">Pessoa</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="migracaoParceriaNomeDiv" style="display: none;">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nome da Parceria</label>
+                                    <input type="text" name="parceriaNome" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Nome da empresa ou pessoa">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Percentagem (%)</label>
+                                    <input type="number" name="percentagem" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Ex: 15">
+                                </div>
+                                
+                                <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Observações</label>
                                     <textarea name="observacoes" rows="3" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Observações adicionais sobre a migração..."></textarea>
                                 </div>
@@ -6259,6 +6278,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 valorComIva: valorComIva,
                 status: formData.get('status'),
                 dataInicio: formData.get('dataInicio'),
+                parceria: formData.get('parceria'),
+                parceriaNome: formData.get('parceriaNome'),
                 observacoes: formData.get('observacoes'),
                 dataCriacao: new Date().toISOString()
             };
