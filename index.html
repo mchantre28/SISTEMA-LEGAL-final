@@ -317,6 +317,54 @@
             background-color: #f9fafb;
         }
 
+        /* Larguras específicas para tabela de Migração */
+        .tabela-migracao th,
+        .tabela-migracao td {
+            min-width: 150px !important;
+        }
+        
+        .tabela-migracao th:nth-child(1),
+        .tabela-migracao td:nth-child(1) {
+            width: 200px !important;
+            min-width: 200px !important;
+        }
+        
+        .tabela-migracao th:nth-child(2),
+        .tabela-migracao td:nth-child(2) {
+            width: 180px !important;
+            min-width: 180px !important;
+        }
+        
+        .tabela-migracao th:nth-child(3),
+        .tabela-migracao td:nth-child(3) {
+            width: 300px !important;
+            min-width: 300px !important;
+        }
+        
+        .tabela-migracao th:nth-child(4),
+        .tabela-migracao td:nth-child(4) {
+            width: 150px !important;
+            min-width: 150px !important;
+        }
+        
+        .tabela-migracao th:nth-child(5),
+        .tabela-migracao td:nth-child(5) {
+            width: 140px !important;
+            min-width: 140px !important;
+        }
+        
+        .tabela-migracao th:nth-child(6),
+        .tabela-migracao td:nth-child(6) {
+            width: 150px !important;
+            min-width: 150px !important;
+        }
+        
+        .tabela-migracao th:nth-child(7),
+        .tabela-migracao td:nth-child(7) {
+            width: 120px !important;
+            min-width: 120px !important;
+        }
+
         .chart-container {
             position: relative;
             height: 300px;
@@ -5093,33 +5141,33 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     
                     <div class="card">
                         <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
+                            <table class="min-w-full divide-y divide-gray-200 tabela-migracao">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-1/5">Cliente</th>
-                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-1/5">Tipo</th>
-                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-1/3">Descrição</th>
-                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-1/5">Valor</th>
-                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-1/5">Status</th>
-                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-1/5">Data Início</th>
-                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-1/5">Ações</th>
+                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Cliente</th>
+                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tipo</th>
+                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Descrição</th>
+                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Valor</th>
+                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Data Início</th>
+                                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody id="listaMigracoes" class="bg-white divide-y divide-gray-200">
                                     ${migracoes.map(migracao => `
                                         <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/5">${migracao.clienteNome || 'N/A'}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-1/5">${migracao.tipo || 'N/A'}</td>
-                                            <td class="px-6 py-4 text-sm text-gray-500 w-1/3">${migracao.descricao || 'N/A'}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-1/5">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${migracao.clienteNome || 'N/A'}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${migracao.tipo || 'N/A'}</td>
+                                            <td class="px-6 py-4 text-sm text-gray-500">${migracao.descricao || 'N/A'}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <div class="text-sm">€${(Math.round((parseFloat(migracao.valor) || 0) * 100) / 100).toFixed(2)}</div>
                                                 <div class="text-xs text-gray-400">+ IVA: €${(Math.round((parseFloat(migracao.valorComIva || migracao.valor) || 0) * 100) / 100).toFixed(2)}</div>
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap w-1/5">
+                                            <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="status-badge status-${migracao.status}">${migracao.status === 'concluido' ? 'Concluído' : migracao.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-1/5">${migracao.dataInicio ? new Date(migracao.dataInicio).toLocaleDateString('pt-PT') : 'Data não definida'}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium w-1/5">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${migracao.dataInicio ? new Date(migracao.dataInicio).toLocaleDateString('pt-PT') : 'Data não definida'}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <button onclick="console.log('🔧 Botão editar clicado para ID:', ${migracao.id}); editarMigracaoDireto(${migracao.id})" class="text-blue-600 hover:text-blue-900 mr-2" title="Editar">
                                                     <i data-lucide="edit" class="w-4 h-4"></i>
                                                 </button>
