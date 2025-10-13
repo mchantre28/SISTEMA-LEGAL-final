@@ -1817,7 +1817,7 @@
                                                 <td>${contrato.tipo}</td>
                                                 <td>${contrato.descricao}</td>
                                                 <td>
-                                                    ${formatarValorComIva(contrato.valor, contrato.iva, contrato.valorTotal || contrato.valorComIva)}
+                                                    ${formatarValorComIva(contrato.valor, contrato.iva, contrato.valorTotal)}
                                                 </td>
                                                 <td><span class="status-badge status-${contrato.status}">${contrato.status === 'concluido' ? 'Concluído' : contrato.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span></td>
                                                 <td>${new Date(contrato.dataInicio).toLocaleDateString('pt-PT')}</td>
@@ -6762,15 +6762,21 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         // Função para formatar valor com IVA incorporado
         function formatarValorComIva(valor, iva, valorComIva) {
-            const valorFormatado = (Math.round((parseFloat(valor) || 0) * 100) / 100).toFixed(2);
-            const valorComIvaFormatado = (Math.round((parseFloat(valorComIva || valor) || 0) * 100) / 100).toFixed(2);
-            const percentagemIva = iva || 0;
+            const valorNum = parseFloat(valor) || 0;
+            const ivaNum = parseFloat(iva) || 0;
+            const valorComIvaNum = parseFloat(valorComIva) || 0;
+            
+            // Calcular valor com IVA se não foi fornecido
+            const valorComIvaCalculado = valorComIvaNum > 0 ? valorComIvaNum : valorNum + (valorNum * ivaNum / 100);
+            
+            const valorFormatado = (Math.round(valorNum * 100) / 100).toFixed(2);
+            const valorComIvaFormatado = (Math.round(valorComIvaCalculado * 100) / 100).toFixed(2);
             
             return `
                 <div class="flex flex-col">
                     <div class="text-sm font-medium text-gray-900">€${valorFormatado}</div>
                     <div class="text-xs text-gray-500">
-                        <span class="text-gray-400">+ ${percentagemIva}% IVA:</span>
+                        <span class="text-gray-400">+ ${ivaNum}% IVA:</span>
                         <span class="font-medium text-gray-700">€${valorComIvaFormatado}</span>
                     </div>
                 </div>
