@@ -6353,56 +6353,71 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
 
         function salvarMigracao(event) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            const clienteId = parseInt(formData.get('clienteId'));
-            const cliente = clientes.find(c => c.id === clienteId);
-            
-            const valor = parseFloat(formData.get('valor')) || 0;
-            const iva = parseFloat(formData.get('iva')) || 0;
-            const percentagem = parseFloat(formData.get('percentagem')) || 0;
-            const valorComIva = valor + (valor * iva / 100);
+            try {
+                event.preventDefault();
+                console.log('🔧 salvarMigracao iniciado');
+                
+                const formData = new FormData(event.target);
+                const clienteId = parseInt(formData.get('clienteId'));
+                const cliente = clientes.find(c => c.id === clienteId);
+                
+                const valor = parseFloat(formData.get('valor')) || 0;
+                const iva = parseFloat(formData.get('iva')) || 0;
+                const percentagem = parseFloat(formData.get('percentagem')) || 0;
+                const valorComIva = valor + (valor * iva / 100);
 
-            const novaMigracao = {
-                id: migracoes.length > 0 ? Math.max(...migracoes.map(m => m.id)) + 1 : 1,
-                clienteId: clienteId,
-                clienteNome: cliente ? cliente.nome : 'Cliente não encontrado',
-                tipo: formData.get('tipo'),
-                descricao: '', // Campo não existe no modal de Migração
-                valor: valor,
-                iva: iva,
-                percentagem: percentagem,
-                valorComIva: valorComIva,
-                status: formData.get('status'),
-                dataInicio: formData.get('dataInicio'),
-                parceria: formData.get('parceria'),
-                parceriaNome: formData.get('parceriaNome'),
-                observacoes: formData.get('observacoes'),
-                dataCriacao: new Date().toISOString()
-            };
+                const novaMigracao = {
+                    id: migracoes.length > 0 ? Math.max(...migracoes.map(m => m.id)) + 1 : 1,
+                    clienteId: clienteId,
+                    clienteNome: cliente ? cliente.nome : 'Cliente não encontrado',
+                    tipo: formData.get('tipo'),
+                    descricao: '', // Campo não existe no modal de Migração
+                    valor: valor,
+                    iva: iva,
+                    percentagem: percentagem,
+                    valorComIva: valorComIva,
+                    status: formData.get('status'),
+                    dataInicio: formData.get('dataInicio'),
+                    parceria: formData.get('parceria'),
+                    parceriaNome: formData.get('parceriaNome'),
+                    observacoes: formData.get('observacoes'),
+                    dataCriacao: new Date().toISOString()
+                };
 
-            migracoes.unshift(novaMigracao);
-            salvarDados('migracoes', migracoes);
-            
-            // Criar prazo automático para a migração
-            const prazoMigracao = {
-                id: Date.now() + 1,
-                clienteId: clienteId,
-                clienteNome: cliente ? cliente.nome : 'Cliente não encontrado',
-                descricao: `Prazo para ${novaMigracao.tipo} - ${novaMigracao.descricao}`,
-                dataLimite: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 90 dias
-                status: 'ativo',
-                tipo: 'migracao',
-                referenciaId: novaMigracao.id,
-                dataCriacao: new Date().toISOString()
-            };
-            
-            prazos.push(prazoMigracao);
-            salvarDados('prazos', prazos);
-            
-            mostrarNotificacao('Processo de migração e prazo criados com sucesso!', 'success');
-            fecharModal();
-            carregarSecao('migracoes');
+                console.log('🔧 Nova migração criada:', novaMigracao);
+                migracoes.unshift(novaMigracao);
+                salvarDados('migracoes', migracoes);
+                console.log('🔧 Migração salva no localStorage');
+                
+                // Criar prazo automático para a migração
+                const prazoMigracao = {
+                    id: Date.now() + 1,
+                    clienteId: clienteId,
+                    clienteNome: cliente ? cliente.nome : 'Cliente não encontrado',
+                    descricao: `Prazo para ${novaMigracao.tipo}`,
+                    dataLimite: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 90 dias
+                    status: 'ativo',
+                    tipo: 'migracao',
+                    referenciaId: novaMigracao.id,
+                    dataCriacao: new Date().toISOString()
+                };
+                
+                prazos.push(prazoMigracao);
+                salvarDados('prazos', prazos);
+                console.log('🔧 Prazo criado e salvo');
+                
+                mostrarNotificacao('Processo de migração e prazo criados com sucesso!', 'success');
+                fecharModal();
+                
+                console.log('🔧 Tentando carregar seção migracoes');
+                setTimeout(() => {
+                    carregarSecao('migracoes');
+                }, 100);
+                
+            } catch (error) {
+                console.error('❌ Erro ao salvar migração:', error);
+                mostrarNotificacao('Erro ao salvar migração: ' + error.message, 'error');
+            }
         }
 
         function salvarRegisto(event) {
