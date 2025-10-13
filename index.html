@@ -1817,8 +1817,7 @@
                                                 <td>${contrato.tipo}</td>
                                                 <td>${contrato.descricao}</td>
                                                 <td>
-                                                    <div class="text-sm">€${(Math.round((parseFloat(contrato.valor) || 0) * 100) / 100).toFixed(2)}</div>
-                                                    <div class="text-xs text-gray-400">+ IVA: €${(Math.round((parseFloat(contrato.valorTotal || contrato.valor) || 0) * 100) / 100).toFixed(2)}</div>
+                                                    ${formatarValorComIva(contrato.valor, contrato.iva, contrato.valorTotal || contrato.valorComIva)}
                                                 </td>
                                                 <td><span class="status-badge status-${contrato.status}">${contrato.status === 'concluido' ? 'Concluído' : contrato.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span></td>
                                                 <td>${new Date(contrato.dataInicio).toLocaleDateString('pt-PT')}</td>
@@ -5046,8 +5045,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${heranca.tipo}</td>
                                             <td class="px-6 py-4 text-sm text-gray-500">${heranca.descricao}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <div class="text-sm">€${(Math.round((parseFloat(heranca.valor) || 0) * 100) / 100).toFixed(2)}</div>
-                                                <div class="text-xs text-gray-400">+ IVA: €${(Math.round((parseFloat(heranca.valorComIva || heranca.valor) || 0) * 100) / 100).toFixed(2)}</div>
+                                                ${formatarValorComIva(heranca.valor, heranca.iva, heranca.valorComIva)}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="status-badge status-${heranca.status}">${heranca.status === 'concluido' ? 'Concluído' : heranca.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
@@ -5226,8 +5224,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${migracao.tipo || 'N/A'}</td>
                                             <td class="px-6 py-4 text-sm text-gray-500">${migracao.descricao || 'N/A'}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <div class="text-sm">€${(Math.round((parseFloat(migracao.valor) || 0) * 100) / 100).toFixed(2)}</div>
-                                                <div class="text-xs text-gray-400">+ IVA: €${(Math.round((parseFloat(migracao.valorComIva || migracao.valor) || 0) * 100) / 100).toFixed(2)}</div>
+                                                ${formatarValorComIva(migracao.valor, migracao.iva, migracao.valorComIva)}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="status-badge status-${migracao.status}">${migracao.status === 'concluido' ? 'Concluído' : migracao.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
@@ -5403,8 +5400,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${registo.tipo}</td>
                                             <td class="px-6 py-4 text-sm text-gray-500">${registo.descricao}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <div class="text-sm">€${(Math.round((parseFloat(registo.valor) || 0) * 100) / 100).toFixed(2)}</div>
-                                                <div class="text-xs text-gray-400">+ IVA: €${(Math.round((parseFloat(registo.valorComIva || registo.valor) || 0) * 100) / 100).toFixed(2)}</div>
+                                                ${formatarValorComIva(registo.valor, registo.iva, registo.valorComIva)}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="status-badge status-${registo.status}">${registo.status === 'concluido' ? 'Concluído' : registo.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
@@ -6762,6 +6758,23 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Função para formatar valor com IVA incorporado
+        function formatarValorComIva(valor, iva, valorComIva) {
+            const valorFormatado = (Math.round((parseFloat(valor) || 0) * 100) / 100).toFixed(2);
+            const valorComIvaFormatado = (Math.round((parseFloat(valorComIva || valor) || 0) * 100) / 100).toFixed(2);
+            const percentagemIva = iva || 0;
+            
+            return `
+                <div class="flex flex-col">
+                    <div class="text-sm font-medium text-gray-900">€${valorFormatado}</div>
+                    <div class="text-xs text-gray-500">
+                        <span class="text-gray-400">+ ${percentagemIva}% IVA:</span>
+                        <span class="font-medium text-gray-700">€${valorComIvaFormatado}</span>
+                    </div>
+                </div>
+            `;
         }
         
         function visualizarAnexo(anexoId) {
