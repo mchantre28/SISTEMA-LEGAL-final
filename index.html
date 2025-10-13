@@ -527,7 +527,7 @@
         <header class="bg-white shadow-sm border-b">
             <div class="px-6 py-4">
                 <div class="flex items-center justify-between">
-                    <h1 class="text-2xl font-bold text-gray-800" id="pageTitle">Dashboard</h1>
+                    <h1 class="text-2xl font-bold text-gray-800" id="pageTitle">Sistema Legal</h1>
                     <div class="flex items-center space-x-4">
                         <button onclick="exportarDados()" class="btn btn-primary">
                             <i data-lucide="download" class="w-4 h-4"></i>
@@ -1100,6 +1100,8 @@
         }
 
         function atualizarTitulo(secao) {
+            console.log('🔧 atualizarTitulo chamado para:', secao);
+            
             const titulos = {
                 dashboard: 'Visão Geral',
                 clientes: 'Gestão de Clientes',
@@ -1117,12 +1119,26 @@
             
             const tituloElement = document.getElementById('tituloSecao');
             const subtituloElement = document.getElementById('subtituloSecao');
+            const pageTitleElement = document.getElementById('pageTitle');
+            
+            console.log('🔧 Elementos encontrados:', {
+                tituloSecao: tituloElement ? 'SIM' : 'NÃO',
+                subtituloSecao: subtituloElement ? 'SIM' : 'NÃO',
+                pageTitle: pageTitleElement ? 'SIM' : 'NÃO'
+            });
+            
+            const titulo = titulos[secao] || 'Sistema Legal';
             
             if (tituloElement) {
-                tituloElement.textContent = titulos[secao] || 'Sistema Legal';
+                tituloElement.textContent = titulo;
+                console.log('✅ tituloSecao atualizado para:', titulo);
             }
             if (subtituloElement) {
                 subtituloElement.textContent = 'Visão geral do sistema';
+            }
+            if (pageTitleElement) {
+                pageTitleElement.textContent = titulo;
+                console.log('✅ pageTitle atualizado para:', titulo);
             }
         }
 
@@ -4090,7 +4106,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                             <div class="px-6 py-4">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <h2 id="tituloSecao" class="text-2xl font-bold text-gray-900">Dashboard</h2>
+                                        <h2 id="tituloSecao" class="text-2xl font-bold text-gray-900">Sistema Legal</h2>
                                         <p id="subtituloSecao" class="text-sm text-gray-600">Visão geral do sistema</p>
                                     </div>
                                     <div class="flex items-center space-x-4">
