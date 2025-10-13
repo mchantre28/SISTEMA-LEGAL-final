@@ -1,44 +1,53 @@
-// Service Worker para Sistema Legal
-const CACHE_NAME = 'sistema-legal-v38';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json'
-];
+// Service Worker simplificado para Sistema Legal
+const CACHE_NAME = 'sistema-legal-v39';
 
 // Instalar Service Worker
 self.addEventListener('install', function(event) {
+  console.log('Service Worker instalando...');
+  // Pular espera e ativar imediatamente
+  self.skipWaiting();
+});
+
+// Ativar Service Worker
+self.addEventListener('activate', function(event) {
+  console.log('Service Worker ativado');
+  // Limpar caches antigos
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(function(cache) {
-        console.log('Cache aberto');
-        // Adicionar URLs uma por uma para evitar erros
-        return Promise.all(
-          urlsToCache.map(url => {
-            return cache.add(url).catch(err => {
-              console.log('Erro ao adicionar ao cache:', url, err);
-              return null;
-            });
-          })
-        );
-      })
-      .catch(function(error) {
-        console.log('Erro ao abrir cache:', error);
-      })
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Removendo cache antigo:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
   );
 });
 
-// Interceptar requisições
+// Interceptar requisições (simplificado)
 self.addEventListener('fetch', function(event) {
+  // Apenas para requisições GET
+  if (event.request.method !== 'GET') {
+    return;
+  }
+  
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(function(response) {
-        // Cache hit - retornar resposta
-        if (response) {
-          return response;
+        // Se a resposta é válida, cache ela
+        if (response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(function(cache) {
+            cache.put(event.request, responseClone);
+          });
         }
-        return fetch(event.request);
-      }
-    )
+        return response;
+      })
+      .catch(function() {
+        // Se falhar, tentar buscar do cache
+        return caches.match(event.request);
+      })
   );
 });
