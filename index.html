@@ -1817,7 +1817,13 @@
                                                 <td>${contrato.tipo}</td>
                                                 <td>${contrato.descricao}</td>
                                                 <td>
-                                                    ${formatarValorComIva(contrato.valor, contrato.iva, contrato.valorTotal)}
+                                                    <div class="flex flex-col">
+                                                        <div class="text-sm font-medium text-gray-900">€${(Math.round((parseFloat(contrato.valor) || 0) * 100) / 100).toFixed(2)}</div>
+                                                        <div class="text-xs text-gray-500">
+                                                            <span class="text-gray-400">+ ${contrato.iva || 0}% IVA:</span>
+                                                            <span class="font-medium text-gray-700">€${(Math.round((parseFloat(contrato.valorTotal || contrato.valor) || 0) * 100) / 100).toFixed(2)}</span>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                                 <td><span class="status-badge status-${contrato.status}">${contrato.status === 'concluido' ? 'Concluído' : contrato.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span></td>
                                                 <td>${new Date(contrato.dataInicio).toLocaleDateString('pt-PT')}</td>
@@ -5045,7 +5051,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${heranca.tipo}</td>
                                             <td class="px-6 py-4 text-sm text-gray-500">${heranca.descricao}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                ${formatarValorComIva(heranca.valor, heranca.iva, heranca.valorComIva)}
+                                                <div class="flex flex-col">
+                                                    <div class="text-sm font-medium text-gray-900">€${(Math.round((parseFloat(heranca.valor) || 0) * 100) / 100).toFixed(2)}</div>
+                                                    <div class="text-xs text-gray-500">
+                                                        <span class="text-gray-400">+ ${heranca.iva || 0}% IVA:</span>
+                                                        <span class="font-medium text-gray-700">€${(Math.round((parseFloat(heranca.valorComIva || heranca.valor) || 0) * 100) / 100).toFixed(2)}</span>
+                                                    </div>
+                                                </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="status-badge status-${heranca.status}">${heranca.status === 'concluido' ? 'Concluído' : heranca.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
@@ -5224,7 +5236,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${migracao.tipo || 'N/A'}</td>
                                             <td class="px-6 py-4 text-sm text-gray-500">${migracao.descricao || 'N/A'}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                ${formatarValorComIva(migracao.valor, migracao.iva, migracao.valorComIva)}
+                                                <div class="flex flex-col">
+                                                    <div class="text-sm font-medium text-gray-900">€${(Math.round((parseFloat(migracao.valor) || 0) * 100) / 100).toFixed(2)}</div>
+                                                    <div class="text-xs text-gray-500">
+                                                        <span class="text-gray-400">+ ${migracao.iva || 0}% IVA:</span>
+                                                        <span class="font-medium text-gray-700">€${(Math.round((parseFloat(migracao.valorComIva || migracao.valor) || 0) * 100) / 100).toFixed(2)}</span>
+                                                    </div>
+                                                </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="status-badge status-${migracao.status}">${migracao.status === 'concluido' ? 'Concluído' : migracao.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
@@ -5400,7 +5418,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${registo.tipo}</td>
                                             <td class="px-6 py-4 text-sm text-gray-500">${registo.descricao}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                ${formatarValorComIva(registo.valor, registo.iva, registo.valorComIva)}
+                                                <div class="flex flex-col">
+                                                    <div class="text-sm font-medium text-gray-900">€${(Math.round((parseFloat(registo.valor) || 0) * 100) / 100).toFixed(2)}</div>
+                                                    <div class="text-xs text-gray-500">
+                                                        <span class="text-gray-400">+ ${registo.iva || 0}% IVA:</span>
+                                                        <span class="font-medium text-gray-700">€${(Math.round((parseFloat(registo.valorComIva || registo.valor) || 0) * 100) / 100).toFixed(2)}</span>
+                                                    </div>
+                                                </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="status-badge status-${registo.status}">${registo.status === 'concluido' ? 'Concluído' : registo.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
