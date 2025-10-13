@@ -5206,9 +5206,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 <tbody id="listaMigracoes" class="bg-white divide-y divide-gray-200">
                                     ${migracoes.map(migracao => `
                                         <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${migracao.clienteNome}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${migracao.tipo}</td>
-                                            <td class="px-6 py-4 text-sm text-gray-500">${migracao.descricao}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${migracao.clienteNome || 'N/A'}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${migracao.tipo || 'N/A'}</td>
+                                            <td class="px-6 py-4 text-sm text-gray-500">${migracao.descricao || 'N/A'}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <div class="text-sm">€${(Math.round((parseFloat(migracao.valor) || 0) * 100) / 100).toFixed(2)}</div>
                                                 <div class="text-xs text-gray-400">+ IVA: €${(Math.round((parseFloat(migracao.valorComIva || migracao.valor) || 0) * 100) / 100).toFixed(2)}</div>
