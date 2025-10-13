@@ -6368,7 +6368,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 clienteId: clienteId,
                 clienteNome: cliente ? cliente.nome : 'Cliente não encontrado',
                 tipo: formData.get('tipo'),
-                descricao: formData.get('descricao'),
+                descricao: '', // Campo não existe no modal de Migração
                 valor: valor,
                 iva: iva,
                 percentagem: percentagem,
