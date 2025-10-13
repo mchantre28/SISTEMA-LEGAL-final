@@ -2,7 +2,7 @@
 const CACHE_NAME = 'sistema-legal-v38';
 const urlsToCache = [
   '/',
-  '/sistema-legal.html',
+  '/index.html',
   '/manifest.json'
 ];
 
@@ -12,7 +12,18 @@ self.addEventListener('install', function(event) {
     caches.open(CACHE_NAME)
       .then(function(cache) {
         console.log('Cache aberto');
-        return cache.addAll(urlsToCache);
+        // Adicionar URLs uma por uma para evitar erros
+        return Promise.all(
+          urlsToCache.map(url => {
+            return cache.add(url).catch(err => {
+              console.log('Erro ao adicionar ao cache:', url, err);
+              return null;
+            });
+          })
+        );
+      })
+      .catch(function(error) {
+        console.log('Erro ao abrir cache:', error);
       })
   );
 });

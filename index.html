@@ -10085,9 +10085,16 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
         
         // Detectar se é PWA
+        let deferredPrompt;
         window.addEventListener('beforeinstallprompt', function(e) {
             console.log('PWA pode ser instalado');
             e.preventDefault();
+            deferredPrompt = e;
+            
+            // Mostrar botão de instalação se necessário
+            if (deferredPrompt) {
+                console.log('PWA pronto para instalação');
+            }
         });
 
     </script>
