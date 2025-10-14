@@ -5726,11 +5726,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function atualizarListaHerancas(herancasFiltradas) {
             console.log('🔧 atualizarListaHerancas chamado com', herancasFiltradas.length, 'heranças');
+            console.log('🔧 herancasFiltradas:', herancasFiltradas);
             const tbody = document.getElementById('listaHerancas');
             if (!tbody) {
                 console.log('❌ tbody listaHerancas não encontrado');
                 return;
             }
+            console.log('✅ tbody listaHerancas encontrado');
             const html = herancasFiltradas.map(heranca => `
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${heranca.clienteNome}</td>
@@ -5739,7 +5741,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div class="text-sm font-bold text-black">€${(heranca.valor || 0).toFixed(2)}</div>
                         <div class="text-xs font-bold text-red-600">+ IVA: €${((heranca.valor || 0) + ((heranca.valor || 0) * (heranca.iva || 0) / 100)).toFixed(2)}</div>
-                        <!-- IVA em vermelho forçado HERANÇAS - CACHE FORÇADO - CAMPOS VALOR REMOVIDOS - ACOES RESTAURADAS -->
+                        <!-- IVA em vermelho forçado HERANÇAS - CACHE FORÇADO - CAMPOS VALOR REMOVIDOS - ACOES RESTAURADAS - FORCAR ATUALIZACAO -->
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="status-badge status-${heranca.status}">${heranca.status === 'concluido' ? 'Concluído' : heranca.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
@@ -5797,11 +5799,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function atualizarListaRegistos(registosFiltrados) {
             console.log('🔧 atualizarListaRegistos chamado com', registosFiltrados.length, 'registos');
+            console.log('🔧 registosFiltrados:', registosFiltrados);
             const tbody = document.getElementById('listaRegistos');
             if (!tbody) {
                 console.log('❌ tbody listaRegistos não encontrado');
                 return;
             }
+            console.log('✅ tbody listaRegistos encontrado');
             const html = registosFiltrados.map(registo => `
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${registo.clienteNome}</td>
@@ -5810,7 +5814,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div class="text-sm font-bold text-black">€${(registo.valor || 0).toFixed(2)}</div>
                         <div class="text-xs font-bold text-red-600">+ IVA: €${((registo.valor || 0) + ((registo.valor || 0) * (registo.iva || 0) / 100)).toFixed(2)}</div>
-                        <!-- IVA em vermelho forçado REGISTOS - CACHE FORÇADO - CAMPOS VALOR REMOVIDOS - ACOES RESTAURADAS -->
+                        <!-- IVA em vermelho forçado REGISTOS - CACHE FORÇADO - CAMPOS VALOR REMOVIDOS - ACOES RESTAURADAS - FORCAR ATUALIZACAO -->
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="status-badge status-${registo.status}">${registo.status === 'concluido' ? 'Concluído' : registo.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
