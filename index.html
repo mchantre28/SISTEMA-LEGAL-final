@@ -5311,8 +5311,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${migracao.tipo || 'N/A'}</td>
                                             <td class="px-6 py-4 text-sm text-gray-500">${migracao.descricao || 'N/A'}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                ${formatarValorComIva(migracao.valor, migracao.iva, migracao.valorComIva)}
-                                                <div class="text-xs text-red-500">DEBUG: valor=${migracao.valor}, iva=${migracao.iva}, valorComIva=${migracao.valorComIva}</div>
+                                                <div class="text-sm font-bold text-black">€${(migracao.valor || 0).toFixed(2)}</div>
+                                                <div class="text-xs font-bold text-red-600">+ IVA: €${((migracao.valor || 0) + ((migracao.valor || 0) * (migracao.iva || 0) / 100)).toFixed(2)}</div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="status-badge status-${migracao.status}">${migracao.status === 'concluido' ? 'Concluído' : migracao.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
@@ -5794,7 +5794,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${migracao.tipo}</td>
                     <td class="px-6 py-4 text-sm text-gray-500">${migracao.descricao}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${formatarValorComIva(migracao.valor, migracao.iva, migracao.valorComIva)}
+                        <div class="text-sm font-bold text-black">€${(migracao.valor || 0).toFixed(2)}</div>
+                        <div class="text-xs font-bold text-red-600">+ IVA: €${((migracao.valor || 0) + ((migracao.valor || 0) * (migracao.iva || 0) / 100)).toFixed(2)}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="status-badge status-${migracao.status}">${migracao.status === 'concluido' ? 'Concluído' : migracao.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
