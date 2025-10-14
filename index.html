@@ -1130,6 +1130,7 @@
                 setTimeout(() => {
                     if (typeof atualizarListaHerancas === 'function') {
                         atualizarListaHerancas(herancas);
+                        console.log('🔧 atualizarListaHerancas chamado com', herancas.length, 'heranças');
                     }
                 }, 100);
             }
@@ -1138,6 +1139,7 @@
                 setTimeout(() => {
                     if (typeof atualizarListaRegistos === 'function') {
                         atualizarListaRegistos(registos);
+                        console.log('🔧 atualizarListaRegistos chamado com', registos.length, 'registos');
                     }
                 }, 100);
             }
@@ -5789,7 +5791,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div class="text-sm font-bold text-black">€${(registo.valor || 0).toFixed(2)}</div>
                         <div class="text-xs font-bold text-red-600">+ IVA: €${((registo.valor || 0) + ((registo.valor || 0) * (registo.iva || 0) / 100)).toFixed(2)}</div>
-                        <!-- IVA em vermelho forçado REGISTOS - CACHE FORÇADO - CAMPOS VALOR REMOVIDOS -->
+                        <!-- IVA em vermelho forçado REGISTOS - CACHE FORÇADO - CAMPOS VALOR REMOVIDOS - ACOES RESTAURADAS -->
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="status-badge status-${registo.status}">${registo.status === 'concluido' ? 'Concluído' : registo.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
