@@ -5134,8 +5134,6 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function gerarMigracao() {
             console.log('🔧 gerarMigracao chamado');
-            console.log('🔧 migracoes array:', migracoes);
-            console.log('🔧 migracoes length:', migracoes ? migracoes.length : 'undefined');
             
             // FORÇAR CRIAÇÃO DE MIGRAÇÃO DE TESTE SEMPRE
             console.log('🔧 FORÇANDO CRIAÇÃO DE MIGRAÇÃO DE TESTE');
@@ -5152,11 +5150,6 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 dataInicio: new Date().toISOString().split('T')[0]
             }];
             console.log('🔧 MIGRAÇÃO DE TESTE CRIADA:', migracoes[0]);
-            console.log('🔧 VALORES CONFIRMADOS:', {
-                valor: migracoes[0].valor,
-                iva: migracoes[0].iva,
-                valorComIva: migracoes[0].valorComIva
-            });
             
             // Garantir que migracoes existe
             if (!migracoes) {
