@@ -1837,15 +1837,6 @@
                                 </select>
                             </div>
                             
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Valor Mínimo</label>
-                                <input type="number" id="filtroValorMinContrato" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosContratos()" placeholder="Ex: 100.00">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Valor Máximo</label>
-                                <input type="number" id="filtroValorMaxContrato" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosContratos()" placeholder="Ex: 1000.00">
-                            </div>
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">NIF</label>
@@ -5083,15 +5074,6 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </select>
                             </div>
                             
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Valor Mínimo</label>
-                                <input type="number" id="filtroValorMinHeranca" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosHerancas()">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Valor Máximo</label>
-                                <input type="number" id="filtroValorMaxHeranca" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosHerancas()">
-                            </div>
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">NIF</label>
@@ -5270,15 +5252,6 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </select>
                             </div>
                             
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Valor Mínimo</label>
-                                <input type="number" id="filtroValorMinMigracao" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosMigracoes()">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Valor Máximo</label>
-                                <input type="number" id="filtroValorMaxMigracao" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosMigracoes()">
-                            </div>
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">NIF</label>
@@ -5453,15 +5426,6 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </select>
                             </div>
                             
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Valor Mínimo</label>
-                                <input type="number" id="filtroValorMinRegisto" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosRegistos()">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Valor Máximo</label>
-                                <input type="number" id="filtroValorMaxRegisto" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosRegistos()">
-                            </div>
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">NIF</label>
@@ -5515,8 +5479,6 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             const busca = document.getElementById('buscaHerancas')?.value.toLowerCase() || '';
             const status = document.getElementById('filtroStatusHeranca')?.value || '';
             const tipo = document.getElementById('filtroTipoHeranca')?.value || '';
-            const valorMin = parseFloat(document.getElementById('filtroValorMinHeranca')?.value) || 0;
-            const valorMax = parseFloat(document.getElementById('filtroValorMaxHeranca')?.value) || Infinity;
             const nif = document.getElementById('filtroNifHeranca')?.value || '';
             
             const herancasFiltradas = herancas.filter(heranca => {
@@ -5532,15 +5494,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 // Filtro por tipo
                 const matchTipo = !tipo || heranca.tipo === tipo;
                 
-                // Filtro por valor
-                const valor = parseFloat(heranca.valor) || 0;
-                const matchValor = valor >= valorMin && valor <= valorMax;
                 
                 // Filtro por NIF
                 const cliente = clientes.find(c => c.id === heranca.clienteId);
                 const matchNif = !nif || (cliente && cliente.nif && cliente.nif.includes(nif));
                 
-                return matchBusca && matchStatus && matchTipo && matchValor && matchNif;
+                return matchBusca && matchStatus && matchTipo && matchNif;
             });
             
             atualizarListaHerancas(herancasFiltradas);
