@@ -3457,8 +3457,8 @@
                     <td>${contrato.tipo}</td>
                     <td>${contrato.descricao || '-'}</td>
                     <td>
-                        <div class="text-sm">€${(Math.round((parseFloat(contrato.valor) || 0) * 100) / 100).toFixed(2)}</div>
-                        <div class="text-xs text-gray-400">+ IVA: €${(Math.round((parseFloat(contrato.valorTotal || contrato.valor) || 0) * 100) / 100).toFixed(2)}</div>
+                        <div class="text-sm font-bold text-black">€${(Math.round((parseFloat(contrato.valor) || 0) * 100) / 100).toFixed(2)}</div>
+                        <div class="text-xs font-bold text-red-600">+ IVA: €${((contrato.valor || 0) + ((contrato.valor || 0) * (contrato.iva || 0) / 100)).toFixed(2)}</div>
                     </td>
                     <td><span class="status-badge status-${contrato.status}">${contrato.status === 'concluido' ? 'Concluído' : contrato.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span></td>
                     <td>${contrato.dataInicio ? new Date(contrato.dataInicio).toLocaleDateString('pt-PT') : '-'}</td>
@@ -5807,8 +5807,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${heranca.tipo}</td>
                     <td class="px-6 py-4 text-sm text-gray-500">${heranca.descricao}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div class="text-sm">€${(heranca.valor || 0).toFixed(2)}</div>
-                        <div class="text-xs text-gray-400">+ IVA: €${(heranca.valorComIva || heranca.valor || 0).toFixed(2)}</div>
+                        <div class="text-sm font-bold text-black">€${(heranca.valor || 0).toFixed(2)}</div>
+                        <div class="text-xs font-bold text-red-600">+ IVA: €${((heranca.valor || 0) + ((heranca.valor || 0) * (heranca.iva || 0) / 100)).toFixed(2)}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="status-badge status-${heranca.status}">${heranca.status === 'concluido' ? 'Concluído' : heranca.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
@@ -5871,8 +5871,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${registo.tipo}</td>
                     <td class="px-6 py-4 text-sm text-gray-500">${registo.descricao}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div class="text-sm">€${(registo.valor || 0).toFixed(2)}</div>
-                        <div class="text-xs text-gray-400">+ IVA: €${(registo.valorComIva || registo.valor || 0).toFixed(2)}</div>
+                        <div class="text-sm font-bold text-black">€${(registo.valor || 0).toFixed(2)}</div>
+                        <div class="text-xs font-bold text-red-600">+ IVA: €${((registo.valor || 0) + ((registo.valor || 0) * (registo.iva || 0) / 100)).toFixed(2)}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="status-badge status-${registo.status}">${registo.status === 'concluido' ? 'Concluído' : registo.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
