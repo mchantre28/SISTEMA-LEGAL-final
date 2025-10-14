@@ -1138,6 +1138,14 @@
                         console.log('❌ atualizarListaHerancas não é uma função');
                     }
                 }, 100);
+                
+                // FORÇAR CHAMADA ADICIONAL
+                setTimeout(() => {
+                    console.log('🔧 FORÇANDO CHAMADA ADICIONAL atualizarListaHerancas');
+                    if (typeof atualizarListaHerancas === 'function') {
+                        atualizarListaHerancas(herancas);
+                    }
+                }, 500);
             }
             
             if (secao === 'registos') {
@@ -1152,6 +1160,14 @@
                         console.log('❌ atualizarListaRegistos não é uma função');
                     }
                 }, 100);
+                
+                // FORÇAR CHAMADA ADICIONAL
+                setTimeout(() => {
+                    console.log('🔧 FORÇANDO CHAMADA ADICIONAL atualizarListaRegistos');
+                    if (typeof atualizarListaRegistos === 'function') {
+                        atualizarListaRegistos(registos);
+                    }
+                }, 500);
             }
             
             console.log('✅ Seção carregada:', secao);
