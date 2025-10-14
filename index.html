@@ -1201,6 +1201,24 @@
             // FORÇAR EXECUÇÃO IMEDIATA PARA TESTE
             if (secao === 'herancas') {
                 console.log('🔧 FORÇANDO EXECUÇÃO IMEDIATA PARA HERANÇAS');
+                
+                // CRIAR DADOS DE TESTE SE NÃO EXISTIREM
+                if (!herancas || herancas.length === 0) {
+                    console.log('🔧 CRIANDO DADOS DE TESTE PARA HERANÇAS');
+                    herancas = [{
+                        id: 1,
+                        clienteId: 1,
+                        clienteNome: 'TESTE HERANÇA',
+                        tipo: 'TESTE',
+                        descricao: 'TESTE PARA VERIFICAR AÇÕES',
+                        valor: 1000,
+                        iva: 23,
+                        valorComIva: 1230,
+                        status: 'em_andamento',
+                        dataInicio: new Date().toISOString().split('T')[0]
+                    }];
+                }
+                
                 setTimeout(() => {
                     console.log('🔧 EXECUTANDO atualizarListaHerancas IMEDIATAMENTE');
                     if (typeof atualizarListaHerancas === 'function') {
@@ -1216,6 +1234,24 @@
             
             if (secao === 'registos') {
                 console.log('🔧 FORÇANDO EXECUÇÃO IMEDIATA PARA REGISTOS');
+                
+                // CRIAR DADOS DE TESTE SE NÃO EXISTIREM
+                if (!registos || registos.length === 0) {
+                    console.log('🔧 CRIANDO DADOS DE TESTE PARA REGISTOS');
+                    registos = [{
+                        id: 1,
+                        clienteId: 1,
+                        clienteNome: 'TESTE REGISTO',
+                        tipo: 'TESTE',
+                        descricao: 'TESTE PARA VERIFICAR AÇÕES',
+                        valor: 500,
+                        iva: 23,
+                        valorComIva: 615,
+                        status: 'em_andamento',
+                        dataInicio: new Date().toISOString().split('T')[0]
+                    }];
+                }
+                
                 setTimeout(() => {
                     console.log('🔧 EXECUTANDO atualizarListaRegistos IMEDIATAMENTE');
                     if (typeof atualizarListaRegistos === 'function') {
