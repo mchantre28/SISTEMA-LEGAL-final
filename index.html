@@ -5109,37 +5109,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                     </tr>
                                 </thead>
                                 <tbody id="listaHerancas" class="bg-white divide-y divide-gray-200">
-                                    ${herancas.map(heranca => `
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${heranca.clienteNome}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${heranca.tipo}</td>
-                                            <td class="px-6 py-4 text-sm text-gray-500">${heranca.descricao}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <div class="flex flex-col">
-                                                    <div class="text-sm font-medium text-gray-900">€${(Math.round((parseFloat(heranca.valor) || 0) * 100) / 100).toFixed(2)}</div>
-                                                    <div class="text-xs text-gray-500">
-                                                        <span class="text-gray-400">+ ${heranca.iva || 0}% IVA:</span>
-                                                        <span class="font-medium text-gray-700">€${(Math.round((parseFloat(heranca.valorComIva || heranca.valor) || 0) * 100) / 100).toFixed(2)}</span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="status-badge status-${heranca.status}">${heranca.status === 'concluido' ? 'Concluído' : heranca.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${heranca.dataInicio ? new Date(heranca.dataInicio).toLocaleDateString('pt-PT') : 'Data não definida'}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <button onclick="editarHerancaDireto(${heranca.id})" class="text-blue-600 hover:text-blue-900 mr-2" title="Editar">
-                                                    <i data-lucide="edit" class="w-4 h-4"></i>
-                                                </button>
-                                                <button onclick="abrirAnexosHeranca(${heranca.id})" class="text-green-600 hover:text-green-900 mr-2" title="Documentos">
-                                                    <i data-lucide="paperclip" class="w-4 h-4"></i>
-                                                </button>
-                                                <button onclick="excluirHerancaDireto(${heranca.id})" class="text-red-600 hover:text-red-900" title="Excluir">
-                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    `).join('')}
+                                    <!-- Conteúdo será carregado via atualizarListaHerancas() -->
                                 </tbody>
                             </table>
                         </div>
@@ -5147,6 +5117,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 </div>
             `;
         }
+        
+        // Chamar atualizarListaHerancas após gerar o HTML
+        setTimeout(() => {
+            if (typeof atualizarListaHerancas === 'function') {
+                atualizarListaHerancas(herancas);
+            }
+        }, 100);
 
         function gerarMigracao() {
             console.log('🔧 gerarMigracao chamado');
@@ -5509,37 +5486,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                     </tr>
                                 </thead>
                                 <tbody id="listaRegistos" class="bg-white divide-y divide-gray-200">
-                                    ${registos.map(registo => `
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${registo.clienteNome}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${registo.tipo}</td>
-                                            <td class="px-6 py-4 text-sm text-gray-500">${registo.descricao}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <div class="flex flex-col">
-                                                    <div class="text-sm font-medium text-gray-900">€${(Math.round((parseFloat(registo.valor) || 0) * 100) / 100).toFixed(2)}</div>
-                                                    <div class="text-xs text-gray-500">
-                                                        <span class="text-gray-400">+ ${registo.iva || 0}% IVA:</span>
-                                                        <span class="font-medium text-gray-700">€${(Math.round((parseFloat(registo.valorComIva || registo.valor) || 0) * 100) / 100).toFixed(2)}</span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="status-badge status-${registo.status}">${registo.status === 'concluido' ? 'Concluído' : registo.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${registo.dataInicio ? new Date(registo.dataInicio).toLocaleDateString('pt-PT') : 'Data não definida'}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <button onclick="editarRegistoDireto(${registo.id})" class="text-blue-600 hover:text-blue-900 mr-3" title="Editar">
-                                                    <i data-lucide="edit" class="w-4 h-4"></i>
-                                                </button>
-                                                <button onclick="abrirAnexosRegisto(${registo.id})" class="text-green-600 hover:text-green-900 mr-3" title="Documentos">
-                                                    <i data-lucide="paperclip" class="w-4 h-4"></i>
-                                                </button>
-                                                <button onclick="excluirRegistoDireto(${registo.id})" class="text-red-600 hover:text-red-900" title="Excluir">
-                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    `).join('')}
+                                    <!-- Conteúdo será carregado via atualizarListaRegistos() -->
                                 </tbody>
                             </table>
                         </div>
@@ -5547,6 +5494,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 </div>
             `;
         }
+        
+        // Chamar atualizarListaRegistos após gerar o HTML
+        setTimeout(() => {
+            if (typeof atualizarListaRegistos === 'function') {
+                atualizarListaRegistos(registos);
+            }
+        }, 100);
 
 
         // === FUNÇÕES DE FILTRO ===
