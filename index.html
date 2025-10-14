@@ -1126,6 +1126,22 @@
                 }, 100);
             }
             
+            if (secao === 'herancas') {
+                setTimeout(() => {
+                    if (typeof atualizarListaHerancas === 'function') {
+                        atualizarListaHerancas(herancas);
+                    }
+                }, 100);
+            }
+            
+            if (secao === 'registos') {
+                setTimeout(() => {
+                    if (typeof atualizarListaRegistos === 'function') {
+                        atualizarListaRegistos(registos);
+                    }
+                }, 100);
+            }
+            
             console.log('✅ Seção carregada:', secao);
             
             // Só tentar fechar sidebar se estiver no sistema principal
@@ -5117,13 +5133,6 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 </div>
             `;
         }
-        
-        // Chamar atualizarListaHerancas após gerar o HTML
-        setTimeout(() => {
-            if (typeof atualizarListaHerancas === 'function') {
-                atualizarListaHerancas(herancas);
-            }
-        }, 100);
 
         function gerarMigracao() {
             console.log('🔧 gerarMigracao chamado');
@@ -5494,13 +5503,6 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 </div>
             `;
         }
-        
-        // Chamar atualizarListaRegistos após gerar o HTML
-        setTimeout(() => {
-            if (typeof atualizarListaRegistos === 'function') {
-                atualizarListaRegistos(registos);
-            }
-        }, 100);
 
 
         // === FUNÇÕES DE FILTRO ===
@@ -6459,6 +6461,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             mostrarNotificacao('Herança e prazo criados com sucesso!', 'success');
             fecharModal();
             carregarSecao('herancas');
+            
+            // Atualizar lista após salvar
+            setTimeout(() => {
+                if (typeof atualizarListaHerancas === 'function') {
+                    atualizarListaHerancas(herancas);
+                }
+            }, 200);
         }
 
         function salvarMigracao(event) {
@@ -6585,6 +6594,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             mostrarNotificacao('Registo e prazo criados com sucesso!', 'success');
             fecharModal();
             carregarSecao('registos');
+            
+            // Atualizar lista após salvar
+            setTimeout(() => {
+                if (typeof atualizarListaRegistos === 'function') {
+                    atualizarListaRegistos(registos);
+                }
+            }, 200);
         }
 
         // === FUNÇÕES DE EDIÇÃO E EXCLUSÃO ===
@@ -8793,7 +8809,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 const matchTipo = !tipoFiltro || migracao.tipo === tipoFiltro;
                 const valor = parseFloat(migracao.valor) || 0;
                 const matchValor = valor >= valorMin && valor <= valorMax;
-                
+
                 // Filtro por NIF
                 const cliente = clientes.find(c => c.id === migracao.clienteId);
                 const matchNif = !nif || (cliente && cliente.nif && cliente.nif.includes(nif));
