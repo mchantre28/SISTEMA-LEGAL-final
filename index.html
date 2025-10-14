@@ -5764,13 +5764,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${heranca.dataInicio ? new Date(heranca.dataInicio).toLocaleDateString('pt-PT') : 'Data não definida'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button onclick="editarHeranca(${heranca.id})" class="text-blue-600 hover:text-blue-900 mr-3" title="Editar">
+                        <button onclick="editarHerancaDireto(${heranca.id})" class="text-blue-600 hover:text-blue-900 mr-2" title="Editar">
                             <i data-lucide="edit" class="w-4 h-4"></i>
                         </button>
-                        <button onclick="abrirAnexosHeranca(${heranca.id})" class="text-green-600 hover:text-green-900 mr-3" title="Documentos">
+                        <button onclick="abrirAnexosHeranca(${heranca.id})" class="text-green-600 hover:text-green-900 mr-2" title="Documentos">
                             <i data-lucide="paperclip" class="w-4 h-4"></i>
                         </button>
-                        <button onclick="excluirHeranca(${heranca.id})" class="text-red-600 hover:text-red-900" title="Excluir">
+                        <button onclick="excluirHerancaDireto(${heranca.id})" class="text-red-600 hover:text-red-900" title="Excluir">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                     </td>
@@ -5838,13 +5838,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${registo.dataInicio ? new Date(registo.dataInicio).toLocaleDateString('pt-PT') : 'Data não definida'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button onclick="editarRegisto(${registo.id})" class="text-blue-600 hover:text-blue-900 mr-3" title="Editar">
+                        <button onclick="editarRegistoDireto(${registo.id})" class="text-blue-600 hover:text-blue-900 mr-2" title="Editar">
                             <i data-lucide="edit" class="w-4 h-4"></i>
                         </button>
-                        <button onclick="abrirAnexosRegisto(${registo.id})" class="text-green-600 hover:text-green-900 mr-3" title="Documentos">
+                        <button onclick="abrirAnexosRegisto(${registo.id})" class="text-green-600 hover:text-green-900 mr-2" title="Documentos">
                             <i data-lucide="paperclip" class="w-4 h-4"></i>
                         </button>
-                        <button onclick="excluirRegisto(${registo.id})" class="text-red-600 hover:text-red-900" title="Excluir">
+                        <button onclick="excluirRegistoDireto(${registo.id})" class="text-red-600 hover:text-red-900" title="Excluir">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                     </td>
