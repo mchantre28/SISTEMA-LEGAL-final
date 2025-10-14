@@ -5085,6 +5085,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
 
         function gerarMigracao() {
+            console.log('🔧 gerarMigracao chamado');
+            console.log('🔧 migracoes array:', migracoes);
+            console.log('🔧 migracoes length:', migracoes ? migracoes.length : 'undefined');
             const totalMigracoes = migracoes.length;
             const migracoesAtivas = migracoes.filter(m => m.status === 'em_andamento').length;
             const migracoesSuspensas = migracoes.filter(m => m.status === 'pendente').length;
@@ -6387,6 +6390,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             try {
                 event.preventDefault();
                 console.log('🔧 salvarMigracao iniciado');
+                console.log('🔧 FormData:', event.target);
                 
                 const formData = new FormData(event.target);
                 const clienteId = parseInt(formData.get('clienteId'));
@@ -6396,6 +6400,11 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 const iva = parseFloat(formData.get('iva')) || 0;
                 const percentagem = parseFloat(formData.get('percentagem')) || 0;
                 const valorComIva = valor + (valor * iva / 100);
+                
+                console.log('🔧 Valores calculados:');
+                console.log('🔧 valor:', valor);
+                console.log('🔧 iva:', iva);
+                console.log('🔧 valorComIva:', valorComIva);
 
                 const novaMigracao = {
                     id: migracoes.length > 0 ? Math.max(...migracoes.map(m => m.id)) + 1 : 1,
