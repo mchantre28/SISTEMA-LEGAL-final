@@ -5247,6 +5247,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <div class="text-sm">€${(migracao.valor || 0).toFixed(2)}</div>
                                                 <div class="text-xs text-gray-400">+ IVA: €${((migracao.valor || 0) + ((migracao.valor || 0) * (migracao.iva || 0) / 100)).toFixed(2)}</div>
+                                                <div class="text-xs text-red-500">DEBUG: valor=${migracao.valor}, iva=${migracao.iva}, calculado=${((migracao.valor || 0) + ((migracao.valor || 0) * (migracao.iva || 0) / 100)).toFixed(2)}</div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="status-badge status-${migracao.status}">${migracao.status === 'concluido' ? 'Concluído' : migracao.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
