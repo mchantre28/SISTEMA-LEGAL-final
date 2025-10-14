@@ -1150,7 +1150,14 @@
                 // TESTE DIRETO NO CONSOLE
                 console.log('🔧 TESTE: Executando atualizarListaHerancas diretamente');
                 if (typeof atualizarListaHerancas === 'function') {
-                    atualizarListaHerancas(herancas);
+                    try {
+                        atualizarListaHerancas(herancas);
+                        console.log('✅ atualizarListaHerancas executado com sucesso');
+                    } catch (error) {
+                        console.error('❌ ERRO ao executar atualizarListaHerancas:', error);
+                    }
+                } else {
+                    console.error('❌ atualizarListaHerancas não é uma função');
                 }
             }
             
@@ -1178,11 +1185,49 @@
                 // TESTE DIRETO NO CONSOLE
                 console.log('🔧 TESTE: Executando atualizarListaRegistos diretamente');
                 if (typeof atualizarListaRegistos === 'function') {
-                    atualizarListaRegistos(registos);
+                    try {
+                        atualizarListaRegistos(registos);
+                        console.log('✅ atualizarListaRegistos executado com sucesso');
+                    } catch (error) {
+                        console.error('❌ ERRO ao executar atualizarListaRegistos:', error);
+                    }
+                } else {
+                    console.error('❌ atualizarListaRegistos não é uma função');
                 }
             }
             
             console.log('✅ Seção carregada:', secao);
+            
+            // FORÇAR EXECUÇÃO IMEDIATA PARA TESTE
+            if (secao === 'herancas') {
+                console.log('🔧 FORÇANDO EXECUÇÃO IMEDIATA PARA HERANÇAS');
+                setTimeout(() => {
+                    console.log('🔧 EXECUTANDO atualizarListaHerancas IMEDIATAMENTE');
+                    if (typeof atualizarListaHerancas === 'function') {
+                        try {
+                            atualizarListaHerancas(herancas);
+                            console.log('✅ atualizarListaHerancas FORÇADO executado');
+                        } catch (error) {
+                            console.error('❌ ERRO FORÇADO atualizarListaHerancas:', error);
+                        }
+                    }
+                }, 1000);
+            }
+            
+            if (secao === 'registos') {
+                console.log('🔧 FORÇANDO EXECUÇÃO IMEDIATA PARA REGISTOS');
+                setTimeout(() => {
+                    console.log('🔧 EXECUTANDO atualizarListaRegistos IMEDIATAMENTE');
+                    if (typeof atualizarListaRegistos === 'function') {
+                        try {
+                            atualizarListaRegistos(registos);
+                            console.log('✅ atualizarListaRegistos FORÇADO executado');
+                        } catch (error) {
+                            console.error('❌ ERRO FORÇADO atualizarListaRegistos:', error);
+                        }
+                    }
+                }, 1000);
+            }
             
             // Só tentar fechar sidebar se estiver no sistema principal
             if (window.innerWidth <= 1024 && document.getElementById('sidebar')) {
