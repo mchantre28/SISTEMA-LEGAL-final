@@ -5137,21 +5137,23 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             console.log('🔧 migracoes array:', migracoes);
             console.log('🔧 migracoes length:', migracoes ? migracoes.length : 'undefined');
             
-            // FORÇAR CRIAÇÃO DE MIGRAÇÃO DE TESTE SEMPRE
-            console.log('🔧 FORÇANDO CRIAÇÃO DE MIGRAÇÃO DE TESTE');
-            migracoes = [{
-                id: 999,
-                clienteId: 1,
-                clienteNome: 'TESTE IVA DEFINITIVO',
-                tipo: 'TESTE IVA',
-                descricao: 'TESTE PARA VERIFICAR IVA',
-                valor: 1000,
-                iva: 23,
-                valorComIva: 1230,
-                status: 'em_andamento',
-                dataInicio: new Date().toISOString().split('T')[0]
-            }];
-            console.log('🔧 MIGRAÇÃO DE TESTE CRIADA:', migracoes[0]);
+            // FORÇAR CRIAÇÃO DE MIGRAÇÃO DE TESTE APENAS SE NÃO HÁ MIGRAÇÕES
+            if (!migracoes || migracoes.length === 0) {
+                console.log('🔧 FORÇANDO CRIAÇÃO DE MIGRAÇÃO DE TESTE');
+                migracoes = [{
+                    id: 999,
+                    clienteId: 1,
+                    clienteNome: 'TESTE IVA DEFINITIVO',
+                    tipo: 'TESTE IVA',
+                    descricao: 'TESTE PARA VERIFICAR IVA',
+                    valor: 1000,
+                    iva: 23,
+                    valorComIva: 1230,
+                    status: 'em_andamento',
+                    dataInicio: new Date().toISOString().split('T')[0]
+                }];
+                console.log('🔧 MIGRAÇÃO DE TESTE CRIADA:', migracoes[0]);
+            }
             
             // Garantir que migracoes existe
             if (!migracoes) {
