@@ -1830,6 +1830,11 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Valor Máximo</label>
                                 <input type="number" id="filtroValorMaxContrato" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosContratos()" placeholder="Ex: 1000.00">
                             </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">NIF</label>
+                                <input type="text" id="filtroNifContrato" placeholder="Buscar por NIF..." class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosContratos()">
+                            </div>
                         </div>
                         
                         <div class="flex justify-between items-center mt-4">
@@ -3309,6 +3314,7 @@
             const clienteId = document.getElementById('filtroClienteContrato')?.value || '';
             const valorMin = parseFloat(document.getElementById('filtroValorMinContrato')?.value) || 0;
             const valorMax = parseFloat(document.getElementById('filtroValorMaxContrato')?.value) || Infinity;
+            const nif = document.getElementById('filtroNifContrato')?.value || '';
             
             console.log('🔧 Filtros aplicados:', { busca, status, clienteId, valorMin, valorMax });
             console.log('🔧 Total de contratos:', contratos.length);
@@ -3330,7 +3336,11 @@
                 const valor = parseFloat(contrato.valor) || 0;
                 const matchValor = valor >= valorMin && valor <= valorMax;
                 
-                return matchBusca && matchStatus && matchCliente && matchValor;
+                // Filtro por NIF
+                const cliente = clientes.find(c => c.id === contrato.clienteId);
+                const matchNif = !nif || (cliente && cliente.nif && cliente.nif.includes(nif));
+                
+                return matchBusca && matchStatus && matchCliente && matchValor && matchNif;
             });
             
             console.log('🔧 Contratos filtrados:', contratosFiltrados.length);
@@ -3356,6 +3366,7 @@
             document.getElementById('filtroClienteContrato').value = '';
             document.getElementById('filtroValorMinContrato').value = '';
             document.getElementById('filtroValorMaxContrato').value = '';
+            document.getElementById('filtroNifContrato').value = '';
             aplicarFiltrosContratos();
         }
 
@@ -5065,6 +5076,11 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Valor Máximo</label>
                                 <input type="number" id="filtroValorMaxHeranca" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosHerancas()">
                             </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">NIF</label>
+                                <input type="text" id="filtroNifHeranca" placeholder="Buscar por NIF..." class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosHerancas()">
+                            </div>
                         </div>
                         
                         <div class="flex justify-between items-center mt-4">
@@ -5460,6 +5476,11 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Valor Máximo</label>
                                 <input type="number" id="filtroValorMaxRegisto" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosRegistos()">
                             </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">NIF</label>
+                                <input type="text" id="filtroNifRegisto" placeholder="Buscar por NIF..." class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosRegistos()">
+                            </div>
                         </div>
                         
                         <div class="flex justify-between items-center mt-4">
@@ -5540,6 +5561,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             const tipo = document.getElementById('filtroTipoHeranca')?.value || '';
             const valorMin = parseFloat(document.getElementById('filtroValorMinHeranca')?.value) || 0;
             const valorMax = parseFloat(document.getElementById('filtroValorMaxHeranca')?.value) || Infinity;
+            const nif = document.getElementById('filtroNifHeranca')?.value || '';
             
             const herancasFiltradas = herancas.filter(heranca => {
                 // Filtro por busca de texto
@@ -5558,7 +5580,11 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 const valor = parseFloat(heranca.valor) || 0;
                 const matchValor = valor >= valorMin && valor <= valorMax;
                 
-                return matchBusca && matchStatus && matchTipo && matchValor;
+                // Filtro por NIF
+                const cliente = clientes.find(c => c.id === heranca.clienteId);
+                const matchNif = !nif || (cliente && cliente.nif && cliente.nif.includes(nif));
+                
+                return matchBusca && matchStatus && matchTipo && matchValor && matchNif;
             });
             
             atualizarListaHerancas(herancasFiltradas);
@@ -5571,6 +5597,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             document.getElementById('filtroTipoHeranca').value = '';
             document.getElementById('filtroValorMinHeranca').value = '';
             document.getElementById('filtroValorMaxHeranca').value = '';
+            document.getElementById('filtroNifHeranca').value = '';
             aplicarFiltrosHerancas();
         }
 
@@ -5634,6 +5661,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             const tipo = document.getElementById('filtroTipoRegisto')?.value || '';
             const valorMin = parseFloat(document.getElementById('filtroValorMinRegisto')?.value) || 0;
             const valorMax = parseFloat(document.getElementById('filtroValorMaxRegisto')?.value) || Infinity;
+            const nif = document.getElementById('filtroNifRegisto')?.value || '';
             
             const registosFiltrados = registos.filter(registo => {
                 // Filtro por busca de texto
@@ -5652,7 +5680,11 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 const valor = parseFloat(registo.valor) || 0;
                 const matchValor = valor >= valorMin && valor <= valorMax;
                 
-                return matchBusca && matchStatus && matchTipo && matchValor;
+                // Filtro por NIF
+                const cliente = clientes.find(c => c.id === registo.clienteId);
+                const matchNif = !nif || (cliente && cliente.nif && cliente.nif.includes(nif));
+                
+                return matchBusca && matchStatus && matchTipo && matchValor && matchNif;
             });
             
             atualizarListaRegistos(registosFiltrados);
@@ -5665,6 +5697,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             document.getElementById('filtroTipoRegisto').value = '';
             document.getElementById('filtroValorMinRegisto').value = '';
             document.getElementById('filtroValorMaxRegisto').value = '';
+            document.getElementById('filtroNifRegisto').value = '';
             aplicarFiltrosRegistos();
         }
 
