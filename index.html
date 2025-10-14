@@ -5091,6 +5091,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             
             // Adicionar migração de teste se não houver migrações
             if (!migracoes || migracoes.length === 0) {
+                console.log('🔧 NENHUMA MIGRAÇÃO ENCONTRADA - CRIANDO MIGRAÇÃO DE TESTE');
                 migracoes = [{
                     id: 1,
                     clienteId: 1,
@@ -5104,6 +5105,14 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     dataInicio: new Date().toISOString().split('T')[0]
                 }];
                 console.log('🔧 Migração de teste adicionada:', migracoes[0]);
+                console.log('🔧 Valores da migração:', {
+                    valor: migracoes[0].valor,
+                    iva: migracoes[0].iva,
+                    valorComIva: migracoes[0].valorComIva
+                });
+            } else {
+                console.log('🔧 MIGRAÇÕES EXISTENTES ENCONTRADAS:', migracoes.length);
+                console.log('🔧 Primeira migração:', migracoes[0]);
             }
             
             const totalMigracoes = migracoes.length;
