@@ -1127,10 +1127,15 @@
             }
             
             if (secao === 'herancas') {
+                console.log('🔧 Carregando seção herancas');
+                console.log('🔧 herancas array:', herancas);
+                console.log('🔧 herancas length:', herancas ? herancas.length : 'undefined');
                 setTimeout(() => {
                     if (typeof atualizarListaHerancas === 'function') {
+                        console.log('🔧 Chamando atualizarListaHerancas');
                         atualizarListaHerancas(herancas);
-                        console.log('🔧 atualizarListaHerancas chamado com', herancas.length, 'heranças');
+                    } else {
+                        console.log('❌ atualizarListaHerancas não é uma função');
                     }
                 }, 100);
             }
@@ -5723,7 +5728,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             console.log('🔧 Gerando HTML para', herancasFiltradas.length, 'heranças');
-            tbody.innerHTML = herancasFiltradas.map(heranca => `
+            const html = herancasFiltradas.map(heranca => `
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${heranca.clienteNome}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${heranca.tipo}</td>
@@ -5750,6 +5755,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     </td>
                 </tr>
             `).join('');
+            
+            console.log('🔧 HTML gerado:', html);
+            tbody.innerHTML = html;
         }
 
         function atualizarListaMigracoes(migracoesFiltradas) {
@@ -5793,7 +5801,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             console.log('🔧 Gerando HTML para', registosFiltrados.length, 'registos');
-            tbody.innerHTML = registosFiltrados.map(registo => `
+            const html = registosFiltrados.map(registo => `
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${registo.clienteNome}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${registo.tipo}</td>
@@ -5820,6 +5828,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     </td>
                 </tr>
             `).join('');
+            
+            console.log('🔧 HTML gerado:', html);
+            tbody.innerHTML = html;
         }
 
 
