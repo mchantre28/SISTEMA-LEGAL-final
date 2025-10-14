@@ -5247,7 +5247,6 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <div class="text-sm">€${(migracao.valor || 0).toFixed(2)}</div>
                                                 <div class="text-xs text-gray-400">+ IVA: €${((migracao.valor || 0) + ((migracao.valor || 0) * (migracao.iva || 0) / 100)).toFixed(2)}</div>
-                                                <div class="text-xs text-red-500">DEBUG: valor=${migracao.valor}, iva=${migracao.iva}, calculado=${((migracao.valor || 0) + ((migracao.valor || 0) * (migracao.iva || 0) / 100)).toFixed(2)}</div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="status-badge status-${migracao.status}">${migracao.status === 'concluido' ? 'Concluído' : migracao.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
@@ -6395,66 +6394,66 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function salvarMigracao(event) {
             try {
-                event.preventDefault();
+            event.preventDefault();
                 console.log('🔧 salvarMigracao iniciado');
                 console.log('🔧 FormData:', event.target);
                 
-                const formData = new FormData(event.target);
-                const clienteId = parseInt(formData.get('clienteId'));
-                const cliente = clientes.find(c => c.id === clienteId);
-                
-                const valor = parseFloat(formData.get('valor')) || 0;
-                const iva = parseFloat(formData.get('iva')) || 0;
-                const percentagem = parseFloat(formData.get('percentagem')) || 0;
-                const valorComIva = valor + (valor * iva / 100);
+            const formData = new FormData(event.target);
+            const clienteId = parseInt(formData.get('clienteId'));
+            const cliente = clientes.find(c => c.id === clienteId);
+            
+            const valor = parseFloat(formData.get('valor')) || 0;
+            const iva = parseFloat(formData.get('iva')) || 0;
+            const percentagem = parseFloat(formData.get('percentagem')) || 0;
+            const valorComIva = valor + (valor * iva / 100);
                 
                 console.log('🔧 Valores calculados:');
                 console.log('🔧 valor:', valor);
                 console.log('🔧 iva:', iva);
                 console.log('🔧 valorComIva:', valorComIva);
 
-                const novaMigracao = {
-                    id: migracoes.length > 0 ? Math.max(...migracoes.map(m => m.id)) + 1 : 1,
-                    clienteId: clienteId,
-                    clienteNome: cliente ? cliente.nome : 'Cliente não encontrado',
-                    tipo: formData.get('tipo'),
+            const novaMigracao = {
+                id: migracoes.length > 0 ? Math.max(...migracoes.map(m => m.id)) + 1 : 1,
+                clienteId: clienteId,
+                clienteNome: cliente ? cliente.nome : 'Cliente não encontrado',
+                tipo: formData.get('tipo'),
                     descricao: '', // Campo não existe no modal de Migração
-                    valor: valor,
-                    iva: iva,
-                    percentagem: percentagem,
-                    valorComIva: valorComIva,
-                    status: formData.get('status'),
-                    dataInicio: formData.get('dataInicio'),
+                valor: valor,
+                iva: iva,
+                percentagem: percentagem,
+                valorComIva: valorComIva,
+                status: formData.get('status'),
+                dataInicio: formData.get('dataInicio'),
                     parceria: formData.get('parceria'),
                     parceriaNome: formData.get('parceriaNome'),
-                    observacoes: formData.get('observacoes'),
-                    dataCriacao: new Date().toISOString()
-                };
+                observacoes: formData.get('observacoes'),
+                dataCriacao: new Date().toISOString()
+            };
 
                 console.log('🔧 Nova migração criada:', novaMigracao);
-                migracoes.unshift(novaMigracao);
-                salvarDados('migracoes', migracoes);
+            migracoes.unshift(novaMigracao);
+            salvarDados('migracoes', migracoes);
                 console.log('🔧 Migração salva no localStorage');
-                
-                // Criar prazo automático para a migração
-                const prazoMigracao = {
-                    id: Date.now() + 1,
-                    clienteId: clienteId,
-                    clienteNome: cliente ? cliente.nome : 'Cliente não encontrado',
+            
+            // Criar prazo automático para a migração
+            const prazoMigracao = {
+                id: Date.now() + 1,
+                clienteId: clienteId,
+                clienteNome: cliente ? cliente.nome : 'Cliente não encontrado',
                     descricao: `Prazo para ${novaMigracao.tipo}`,
-                    dataLimite: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 90 dias
-                    status: 'ativo',
-                    tipo: 'migracao',
-                    referenciaId: novaMigracao.id,
-                    dataCriacao: new Date().toISOString()
-                };
-                
-                prazos.push(prazoMigracao);
-                salvarDados('prazos', prazos);
+                dataLimite: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 90 dias
+                status: 'ativo',
+                tipo: 'migracao',
+                referenciaId: novaMigracao.id,
+                dataCriacao: new Date().toISOString()
+            };
+            
+            prazos.push(prazoMigracao);
+            salvarDados('prazos', prazos);
                 console.log('🔧 Prazo criado e salvo');
-                
-                mostrarNotificacao('Processo de migração e prazo criados com sucesso!', 'success');
-                fecharModal();
+            
+            mostrarNotificacao('Processo de migração e prazo criados com sucesso!', 'success');
+            fecharModal();
                 
                 console.log('🔧 Tentando carregar seção migracoes');
                 setTimeout(() => {
