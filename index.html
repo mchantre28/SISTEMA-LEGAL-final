@@ -5724,7 +5724,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div class="text-sm font-bold text-black">€${(heranca.valor || 0).toFixed(2)}</div>
                         <div class="text-xs font-bold text-red-600">+ IVA: €${((heranca.valor || 0) + ((heranca.valor || 0) * (heranca.iva || 0) / 100)).toFixed(2)}</div>
-                        <!-- IVA em vermelho forçado HERANÇAS - CACHE FORÇADO - CAMPOS VALOR REMOVIDOS -->
+                        <!-- IVA em vermelho forçado HERANÇAS - CACHE FORÇADO - CAMPOS VALOR REMOVIDOS - ACOES RESTAURADAS -->
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="status-badge status-${heranca.status}">${heranca.status === 'concluido' ? 'Concluído' : heranca.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
