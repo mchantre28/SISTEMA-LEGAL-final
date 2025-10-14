@@ -408,6 +408,54 @@
         .table-responsive tbody tr:hover {
             background-color: #f9fafb;
         }
+        
+        /* Correção definitiva para alinhamento das colunas */
+        .tabela-migracao th,
+        .tabela-migracao td {
+            vertical-align: top !important;
+        }
+        
+        .tabela-migracao th:nth-child(1),
+        .tabela-migracao td:nth-child(1) {
+            width: 20% !important;
+            min-width: 150px !important;
+        }
+        
+        .tabela-migracao th:nth-child(2),
+        .tabela-migracao td:nth-child(2) {
+            width: 15% !important;
+            min-width: 120px !important;
+        }
+        
+        .tabela-migracao th:nth-child(3),
+        .tabela-migracao td:nth-child(3) {
+            width: 20% !important;
+            min-width: 150px !important;
+        }
+        
+        .tabela-migracao th:nth-child(4),
+        .tabela-migracao td:nth-child(4) {
+            width: 15% !important;
+            min-width: 120px !important;
+        }
+        
+        .tabela-migracao th:nth-child(5),
+        .tabela-migracao td:nth-child(5) {
+            width: 12% !important;
+            min-width: 100px !important;
+        }
+        
+        .tabela-migracao th:nth-child(6),
+        .tabela-migracao td:nth-child(6) {
+            width: 10% !important;
+            min-width: 100px !important;
+        }
+        
+        .tabela-migracao th:nth-child(7),
+        .tabela-migracao td:nth-child(7) {
+            width: 8% !important;
+            min-width: 80px !important;
+        }
 
 
         .chart-container {
@@ -5245,8 +5293,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${migracao.tipo || 'N/A'}</td>
                                             <td class="px-6 py-4 text-sm text-gray-500">${migracao.descricao || 'N/A'}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <div class="text-sm">€${(migracao.valor || 0).toFixed(2)}</div>
-                                                <div class="text-xs text-gray-400">+ IVA: €${((migracao.valor || 0) + ((migracao.valor || 0) * (migracao.iva || 0) / 100)).toFixed(2)}</div>
+                                                <div class="text-sm font-medium">€${(migracao.valor || 0).toFixed(2)}</div>
+                                                <div class="text-xs text-green-600 font-semibold">+ IVA: €${((migracao.valor || 0) + ((migracao.valor || 0) * (migracao.iva || 0) / 100)).toFixed(2)}</div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="status-badge status-${migracao.status}">${migracao.status === 'concluido' ? 'Concluído' : migracao.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
@@ -5728,8 +5776,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${migracao.tipo}</td>
                     <td class="px-6 py-4 text-sm text-gray-500">${migracao.descricao}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div class="text-sm">€${(migracao.valor || 0).toFixed(2)}</div>
-                        <div class="text-xs text-gray-400">+ IVA: €${((migracao.valor || 0) + ((migracao.valor || 0) * (migracao.iva || 0) / 100)).toFixed(2)}</div>
+                        <div class="text-sm font-medium">€${(migracao.valor || 0).toFixed(2)}</div>
+                        <div class="text-xs text-green-600 font-semibold">+ IVA: €${((migracao.valor || 0) + ((migracao.valor || 0) * (migracao.iva || 0) / 100)).toFixed(2)}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="status-badge status-${migracao.status}">${migracao.status === 'concluido' ? 'Concluído' : migracao.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
