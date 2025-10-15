@@ -5882,14 +5882,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // === FUNÇÕES DE ATUALIZAÇÃO DE LISTAS ===
 
         function atualizarListaHerancas(herancasFiltradas) {
-            console.log('🔧 atualizarListaHerancas chamado com', herancasFiltradas.length, 'heranças');
-            console.log('🔧 herancasFiltradas:', herancasFiltradas);
-            const tbody = document.getElementById('listaHerancas');
-            if (!tbody) {
-                console.log('❌ tbody listaHerancas não encontrado');
-                return;
-            }
-            console.log('✅ tbody listaHerancas encontrado');
+            console.log('🔧 atualizarListaHerancas DESABILITADO - usando HTML estático');
+            // FUNÇÃO DESABILITADA - usando HTML estático
+            return;
             const html = herancasFiltradas.map(heranca => `
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${heranca.clienteNome}</td>
@@ -5957,14 +5952,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
 
         function atualizarListaRegistos(registosFiltrados) {
-            console.log('🔧 atualizarListaRegistos chamado com', registosFiltrados.length, 'registos');
-            console.log('🔧 registosFiltrados:', registosFiltrados);
-            const tbody = document.getElementById('listaRegistos');
-            if (!tbody) {
-                console.log('❌ tbody listaRegistos não encontrado');
-                return;
-            }
-            console.log('✅ tbody listaRegistos encontrado');
+            console.log('🔧 atualizarListaRegistos DESABILITADO - usando HTML estático');
+            // FUNÇÃO DESABILITADA - usando HTML estático
+            return;
             const html = registosFiltrados.map(registo => `
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${registo.clienteNome}</td>
