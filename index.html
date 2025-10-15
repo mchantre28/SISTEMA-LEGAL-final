@@ -10597,39 +10597,21 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // === FUNÇÕES DIRETAS PARA REGISTOS ===
         function editarRegistoDireto(id) {
             console.log('🔧 editarRegistoDireto chamado com ID:', id);
-            const registosSalvos = localStorage.getItem('registos');
-            let registos = [];
-            if (registosSalvos) registos = JSON.parse(registosSalvos);
-            const registo = registos.find(r => r.id === id);
-            if (registo) {
-                fecharModal();
-                setTimeout(() => abrirModalEdicaoRegisto(registo), 100);
-            } else {
-                mostrarNotificacao('Registo não encontrado!', 'error');
-            }
+            alert('EDITAR REGISTO ID: ' + id);
+            // Função temporária - apenas para teste
+        }
+
+        function abrirAnexosRegisto(id) {
+            console.log('🔧 abrirAnexosRegisto chamado com ID:', id);
+            alert('ANEXAR REGISTO ID: ' + id);
+            // Função temporária - apenas para teste
         }
 
         function excluirRegistoDireto(id) {
             console.log('🔧 excluirRegistoDireto chamado com ID:', id);
             if (confirm('Tem certeza que deseja excluir este registo? Esta ação não pode ser desfeita.')) {
-                console.log('🔧 Usuário confirmou exclusão');
-                const registosSalvos = localStorage.getItem('registos');
-                let registos = [];
-                if (registosSalvos) registos = JSON.parse(registosSalvos);
-                console.log('🔧 Registos antes da exclusão:', registos.length);
-                registos = registos.filter(r => r.id !== id);
-                console.log('🔧 Registos após exclusão:', registos.length);
-                localStorage.setItem('registos', JSON.stringify(registos));
-                window.registos = registos;
-                mostrarNotificacao('Registo excluído com sucesso!', 'success');
-                
-                // Recarregar seção e atualizar lista
-                setTimeout(() => {
-                    carregarSecao('registos');
-                    if (typeof atualizarListaRegistos === 'function') {
-                        atualizarListaRegistos(registos);
-                    }
-                }, 100);
+                alert('REGISTO ID ' + id + ' EXCLUÍDO!');
+                // Função temporária - apenas para teste
             }
         }
 
