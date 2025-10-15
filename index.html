@@ -10597,18 +10597,33 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // === FUNÇÕES DIRETAS PARA REGISTOS ===
         function editarRegistoDireto(id) {
             console.log('🔧 editarRegistoDireto chamado com ID:', id);
+            console.log('🔧 Tipo do ID:', typeof id);
+            console.log('🔧 ID convertido para número:', parseInt(id));
+            
+            // Converter ID para número se necessário
+            const idNumerico = parseInt(id);
+            if (isNaN(idNumerico)) {
+                console.error('❌ ID inválido:', id);
+                mostrarNotificacao('ID inválido!', 'error');
+                return;
+            }
             
             // Carregar dados do registo
             const registosSalvos = localStorage.getItem('registos');
             let registos = [];
             if (registosSalvos) registos = JSON.parse(registosSalvos);
             
-            const registo = registos.find(r => r.id === id);
+            console.log('🔧 Registos disponíveis:', registos);
+            console.log('🔧 Procurando registo com ID:', idNumerico);
+            
+            const registo = registos.find(r => r.id === idNumerico);
             if (!registo) {
+                console.error('❌ Registo não encontrado com ID:', idNumerico);
                 mostrarNotificacao('Registo não encontrado!', 'error');
                 return;
             }
             
+            console.log('✅ Registo encontrado:', registo);
             // Abrir modal de edição
             abrirModalEdicaoRegisto(registo);
         }
