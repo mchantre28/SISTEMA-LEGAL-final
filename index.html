@@ -6736,14 +6736,26 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             
             mostrarNotificacao('Registo e prazo criados com sucesso!', 'success');
             fecharModal();
-            carregarSecao('registos');
+            
+            // FORÇAR RECARREGAMENTO IMEDIATO
+            console.log('🔧 FORÇANDO RECARREGAMENTO APÓS SALVAR REGISTO');
+            console.log('🔧 registos após salvar:', registos);
+            
+            // Recarregar seção
+            setTimeout(() => {
+                carregarSecao('registos');
+            }, 100);
             
             // Atualizar lista após salvar
             setTimeout(() => {
+                console.log('🔧 CHAMANDO atualizarListaRegistos após salvar');
                 if (typeof atualizarListaRegistos === 'function') {
                     atualizarListaRegistos(registos);
+                    console.log('✅ atualizarListaRegistos executado após salvar');
+                } else {
+                    console.error('❌ atualizarListaRegistos não é uma função após salvar');
                 }
-            }, 200);
+            }, 300);
         }
 
         // === FUNÇÕES DE EDIÇÃO E EXCLUSÃO ===
