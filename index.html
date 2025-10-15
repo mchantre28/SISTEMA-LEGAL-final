@@ -10654,24 +10654,34 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             console.log('🔧 excluirHerancaDireto chamado com ID:', id);
             
             if (confirm('Tem certeza que deseja excluir esta herança? Esta ação não pode ser desfeita.')) {
+                console.log('🔧 Usuário confirmou exclusão');
+                
                 // Carregar dados da herança
                 const herancasSalvas = localStorage.getItem('herancas');
                 let herancas = [];
                 if (herancasSalvas) herancas = JSON.parse(herancasSalvas);
                 
+                console.log('🔧 Heranças antes da exclusão:', herancas.length);
+                
                 // Filtrar herança a ser excluída
                 const herancasAtualizadas = herancas.filter(h => h.id !== parseInt(id));
+                
+                console.log('🔧 Heranças após exclusão:', herancasAtualizadas.length);
                 
                 // Salvar dados atualizados
                 localStorage.setItem('herancas', JSON.stringify(herancasAtualizadas));
                 window.herancas = herancasAtualizadas;
                 
+                console.log('✅ Heranças salvas no localStorage');
+                
                 mostrarNotificacao('Herança excluída com sucesso!', 'success');
                 
                 // Recarregar seção
                 setTimeout(() => {
+                    console.log('🔧 Recarregando seção heranças');
                     carregarSecao('herancas');
                     if (typeof atualizarListaHerancas === 'function') {
+                        console.log('🔧 Chamando atualizarListaHerancas');
                         atualizarListaHerancas(herancasAtualizadas);
                     }
                 }, 100);
