@@ -10598,10 +10598,11 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         function editarRegistoDireto(id) {
             console.log('🔧 editarRegistoDireto chamado com ID:', id);
             console.log('🔧 Tipo do ID:', typeof id);
-            console.log('🔧 ID convertido para número:', parseInt(id));
             
             // Converter ID para número se necessário
             const idNumerico = parseInt(id);
+            console.log('🔧 ID convertido para número:', idNumerico);
+            
             if (isNaN(idNumerico)) {
                 console.error('❌ ID inválido:', id);
                 mostrarNotificacao('ID inválido!', 'error');
@@ -10612,6 +10613,39 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             const registosSalvos = localStorage.getItem('registos');
             let registos = [];
             if (registosSalvos) registos = JSON.parse(registosSalvos);
+            
+            // Se não há registos, criar dados de teste
+            if (!registos || registos.length === 0) {
+                console.log('🔧 Criando dados de teste para registos');
+                registos = [
+                    {
+                        id: 1,
+                        clienteId: 1,
+                        clienteNome: 'João Silva',
+                        tipo: 'Documentos',
+                        descricao: 'Documentos para o estrangeiro',
+                        valor: 100,
+                        iva: 23,
+                        valorComIva: 123,
+                        status: 'pendente',
+                        dataInicio: '2025-10-24'
+                    },
+                    {
+                        id: 2,
+                        clienteId: 2,
+                        clienteNome: 'Maria Santos',
+                        tipo: 'Certidões',
+                        descricao: 'Certidão de nascimento',
+                        valor: 50,
+                        iva: 23,
+                        valorComIva: 61.5,
+                        status: 'concluido',
+                        dataInicio: '2025-10-23'
+                    }
+                ];
+                localStorage.setItem('registos', JSON.stringify(registos));
+                window.registos = registos;
+            }
             
             console.log('🔧 Registos disponíveis:', registos);
             console.log('🔧 Procurando registo com ID:', idNumerico);
