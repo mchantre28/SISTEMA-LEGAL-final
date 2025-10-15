@@ -1165,6 +1165,18 @@
                 console.log('🔧 Carregando seção registos');
                 console.log('🔧 registos array:', registos);
                 console.log('🔧 registos length:', registos ? registos.length : 'undefined');
+                
+                // FORÇAR CHAMADA IMEDIATA
+                console.log('🔧 FORÇANDO CHAMADA IMEDIATA atualizarListaRegistos');
+                if (typeof atualizarListaRegistos === 'function') {
+                    try {
+                        atualizarListaRegistos(registos);
+                        console.log('✅ atualizarListaRegistos executado imediatamente');
+                    } catch (error) {
+                        console.error('❌ ERRO ao executar atualizarListaRegistos:', error);
+                    }
+                }
+                
                 setTimeout(() => {
                     if (typeof atualizarListaRegistos === 'function') {
                         console.log('🔧 Chamando atualizarListaRegistos');
