@@ -5633,13 +5633,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">24/10/2025</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button onclick="editarRegistoDireto(1); return false;" style="background: blue; color: white; padding: 8px; border: none; border-radius: 4px; margin: 2px; cursor: pointer; font-weight: bold; display: inline-block; width: 80px; height: 40px; position: relative; z-index: 9999; visibility: visible; opacity: 1; !important">
+                            <button onclick="console.log('🔧 EDITAR clicado'); if (typeof editarRegistoDireto === 'function') { editarRegistoDireto(1); } else { alert('Função editarRegistoDireto não encontrada!'); } return false;" style="background: blue; color: white; padding: 8px; border: none; border-radius: 4px; margin: 2px; cursor: pointer; font-weight: bold; display: inline-block; width: 80px; height: 40px; position: relative; z-index: 9999; visibility: visible; opacity: 1; !important">
                                 EDITAR
                             </button>
-                            <button onclick="abrirAnexosRegisto(1); return false;" style="background: green; color: white; padding: 8px; border: none; border-radius: 4px; margin: 2px; cursor: pointer; font-weight: bold; display: inline-block; width: 80px; height: 40px; position: relative; z-index: 9999; visibility: visible; opacity: 1; !important">
+                            <button onclick="console.log('🔧 ANEXAR clicado'); if (typeof abrirAnexosRegisto === 'function') { abrirAnexosRegisto(1); } else { alert('Função abrirAnexosRegisto não encontrada!'); } return false;" style="background: green; color: white; padding: 8px; border: none; border-radius: 4px; margin: 2px; cursor: pointer; font-weight: bold; display: inline-block; width: 80px; height: 40px; position: relative; z-index: 9999; visibility: visible; opacity: 1; !important">
                                 ANEXAR
                             </button>
-                            <button onclick="excluirRegistoDireto(1); return false;" style="background: red; color: white; padding: 8px; border: none; border-radius: 4px; margin: 2px; cursor: pointer; font-weight: bold; display: inline-block; width: 80px; height: 40px; position: relative; z-index: 9999; visibility: visible; opacity: 1; !important">
+                            <button onclick="console.log('🔧 ELIMINAR clicado'); if (typeof excluirRegistoDireto === 'function') { excluirRegistoDireto(1); } else { alert('Função excluirRegistoDireto não encontrada!'); } return false;" style="background: red; color: white; padding: 8px; border: none; border-radius: 4px; margin: 2px; cursor: pointer; font-weight: bold; display: inline-block; width: 80px; height: 40px; position: relative; z-index: 9999; visibility: visible; opacity: 1; !important">
                                 ELIMINAR
                             </button>
                         </td>
