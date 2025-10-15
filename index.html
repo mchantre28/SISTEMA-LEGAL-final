@@ -675,11 +675,16 @@
             location.reload();
         }
         
-        // Verificar login ao carregar a página
-        if (!verificarLogin()) {
-            // A página será substituída pela tela de login
-            // O resto do código não será executado
-        }
+        // Verificar login após o DOM estar carregado
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!verificarLogin()) {
+                // A página será substituída pela tela de login
+                // O resto do código não será executado
+                return;
+            }
+            // Se login OK, inicializar sistema normalmente
+            init();
+        });
         
         // Dados globais
         let clientes = [];
@@ -5174,10 +5179,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             `).join('');
         }
 
-        // Inicializar sistema
-        document.addEventListener('DOMContentLoaded', () => {
-            init();
-        });
+        // Sistema de inicialização movido para dentro da verificação de login
 
         // === FUNÇÕES DAS NOVAS SEÇÕES ===
 
