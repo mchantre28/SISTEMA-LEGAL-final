@@ -10764,8 +10764,10 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             // Salvar no localStorage
             localStorage.setItem('anexosRegistos', JSON.stringify(anexosExistentes));
             
+            console.log('🔧 Chamando mostrarNotificacao...');
             mostrarNotificacao(`${anexos.length} arquivo(s) anexado(s) com sucesso!`, 'success');
             console.log('✅ Anexos salvos no localStorage');
+            console.log('✅ Notificação enviada');
         }
 
         // Tornar funções globais
