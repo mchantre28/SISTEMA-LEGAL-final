@@ -10564,15 +10564,47 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function abrirAnexosRegisto(id) {
             console.log('🔧 abrirAnexosRegisto chamado com ID:', id);
-            alert('ANEXAR REGISTO ID: ' + id);
-            // Função temporária - apenas para teste
+            
+            // Carregar dados do registo
+            const registosSalvos = localStorage.getItem('registos');
+            let registos = [];
+            if (registosSalvos) registos = JSON.parse(registosSalvos);
+            
+            const registo = registos.find(r => r.id === parseInt(id));
+            if (!registo) {
+                mostrarNotificacao('Registo não encontrado!', 'error');
+                return;
+            }
+            
+            // Abrir modal de anexos
+            abrirModalAnexosRegisto(registo);
         }
 
         function excluirRegistoDireto(id) {
             console.log('🔧 excluirRegistoDireto chamado com ID:', id);
+            
             if (confirm('Tem certeza que deseja excluir este registo? Esta ação não pode ser desfeita.')) {
-                alert('REGISTO ID ' + id + ' EXCLUÍDO!');
-                // Função temporária - apenas para teste
+                // Carregar dados do registo
+                const registosSalvos = localStorage.getItem('registos');
+                let registos = [];
+                if (registosSalvos) registos = JSON.parse(registosSalvos);
+                
+                // Filtrar registo a ser excluído
+                const registosAtualizados = registos.filter(r => r.id !== parseInt(id));
+                
+                // Salvar dados atualizados
+                localStorage.setItem('registos', JSON.stringify(registosAtualizados));
+                window.registos = registosAtualizados;
+                
+                mostrarNotificacao('Registo excluído com sucesso!', 'success');
+                
+                // Recarregar seção
+                setTimeout(() => {
+                    carregarSecao('registos');
+                    if (typeof atualizarListaRegistos === 'function') {
+                        atualizarListaRegistos(registosAtualizados);
+                    }
+                }, 100);
             }
         }
 
