@@ -5633,7 +5633,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">24/10/2025</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button onclick="console.log('🔧 CLIQUE NO EDITAR'); alert('TESTE CLIQUE'); editarRegistoDireto(1);" style="background: blue; color: white; padding: 8px; border: none; border-radius: 4px; margin: 2px; cursor: pointer; font-weight: bold; display: inline-block; width: 80px; height: 40px;">
+                            <button onclick="editarRegistoDireto(1)" style="background: blue; color: white; padding: 8px; border: none; border-radius: 4px; margin: 2px; cursor: pointer; font-weight: bold; display: inline-block; width: 80px; height: 40px;">
                                 EDITAR
                             </button>
                             <button onclick="alert('ANEXAR - DESABILITADO'); return false;" style="background: gray; color: white; padding: 8px; border: none; border-radius: 4px; margin: 2px; cursor: not-allowed; font-weight: bold; display: inline-block; width: 80px; height: 40px; position: relative; z-index: 9999; visibility: visible; opacity: 0.5; !important">
@@ -10597,8 +10597,20 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // === FUNÇÕES DIRETAS PARA REGISTOS ===
         function editarRegistoDireto(id) {
             console.log('🔧 editarRegistoDireto chamado com ID:', id);
-            alert('EDITAR REGISTO ID: ' + id);
-            // Função temporária - apenas para teste
+            
+            // Carregar dados do registo
+            const registosSalvos = localStorage.getItem('registos');
+            let registos = [];
+            if (registosSalvos) registos = JSON.parse(registosSalvos);
+            
+            const registo = registos.find(r => r.id === id);
+            if (!registo) {
+                mostrarNotificacao('Registo não encontrado!', 'error');
+                return;
+            }
+            
+            // Abrir modal de edição
+            abrirModalEdicaoRegisto(registo);
         }
 
         function abrirAnexosRegisto(id) {
