@@ -9482,6 +9482,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
 
         function adicionarAnexoHeranca(event, herancaId) {
+            console.log('🔧 adicionarAnexoHeranca chamado com ID:', herancaId);
             event.preventDefault();
             
             const nome = document.getElementById('nomeDocumento').value;
@@ -9489,6 +9490,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             const tipoPersonalizado = document.getElementById('tipoPersonalizadoInput').value;
             const arquivo = document.getElementById('arquivoDocumento').files[0];
             const descricao = document.getElementById('descricaoDocumento').value;
+            
+            console.log('🔧 Dados do formulário:', { nome, tipoSelecionado, arquivo: arquivo?.name, descricao });
             
             if (!arquivo) {
                 mostrarNotificacao('Por favor, selecione um arquivo', 'error');
@@ -9515,12 +9518,19 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             };
             
             const heranca = herancas.find(h => h.id === herancaId);
+            console.log('🔧 Herança encontrada:', heranca);
             if (heranca) {
                 if (!heranca.anexos) heranca.anexos = [];
                 heranca.anexos.push(anexo);
+                console.log('🔧 Anexo adicionado:', anexo);
+                console.log('🔧 Herança atualizada:', heranca);
                 salvarDados('herancas', herancas);
+                console.log('✅ Dados salvos no localStorage');
                 mostrarNotificacao('Documento adicionado com sucesso!', 'success');
                 abrirAnexosHeranca(herancaId);
+            } else {
+                console.error('❌ Herança não encontrada com ID:', herancaId);
+                mostrarNotificacao('Herança não encontrada!', 'error');
             }
         }
 
