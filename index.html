@@ -1168,6 +1168,7 @@
                 
                 // FORÇAR CHAMADA IMEDIATA
                 console.log('🔧 FORÇANDO CHAMADA IMEDIATA atualizarListaRegistos');
+                console.log('🔧 registos disponíveis:', registos);
                 if (typeof atualizarListaRegistos === 'function') {
                     try {
                         atualizarListaRegistos(registos);
@@ -1175,6 +1176,8 @@
                     } catch (error) {
                         console.error('❌ ERRO ao executar atualizarListaRegistos:', error);
                     }
+                } else {
+                    console.error('❌ atualizarListaRegistos não é uma função!');
                 }
                 
                 setTimeout(() => {
@@ -5982,6 +5985,15 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             tbody.innerHTML = html;
             console.log('✅ HTML inserido no tbody listaRegistos');
             console.log('🔧 TESTE: Verificando se tbody tem conteúdo:', tbody.innerHTML.length);
+            console.log('🔧 HTML gerado:', html.substring(0, 500) + '...');
+            
+            // FORÇAR RENDERIZAÇÃO DOS ÍCONES
+            setTimeout(() => {
+                if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                    lucide.createIcons();
+                    console.log('🔧 Ícones Lucide renderizados');
+                }
+            }, 100);
         }
 
 
