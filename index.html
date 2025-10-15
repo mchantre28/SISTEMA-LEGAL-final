@@ -10608,6 +10608,61 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
         }
 
+        function abrirModalAnexosRegisto(registo) {
+            console.log('🔧 abrirModalAnexosRegisto chamado com:', registo);
+            
+            // Criar modal de anexos
+            const modal = document.createElement('div');
+            modal.id = 'modalAnexosRegisto';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Documentos - ${registo.clienteNome}</h3>
+                        <button onclick="fecharModalAnexosRegisto()" class="text-gray-400 hover:text-gray-600">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600">
+                            <strong>Registo:</strong> ${registo.tipo} - ${registo.clienteNome}
+                        </p>
+                    </div>
+                    
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <i data-lucide="upload" class="w-12 h-12 text-gray-400 mx-auto mb-4"></i>
+                        <p class="text-gray-500 mb-4">Arraste arquivos aqui ou clique para selecionar</p>
+                        <input type="file" id="anexosRegisto" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="hidden">
+                        <button onclick="document.getElementById('anexosRegisto').click()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                            Selecionar Arquivos
+                        </button>
+                    </div>
+                    
+                    <div id="listaAnexosRegisto" class="mt-4">
+                        <p class="text-gray-500 text-center">Nenhum documento anexado</p>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button onclick="fecharModalAnexosRegisto()" class="px-4 py-2 text-gray-600 bg-gray-200 rounded hover:bg-gray-300">
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            lucide.createIcons();
+            console.log('✅ Modal de anexos de registo criado e adicionado ao body!');
+        }
+
+        function fecharModalAnexosRegisto() {
+            const modal = document.getElementById('modalAnexosRegisto');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
         // Tornar funções globais
         window.abrirAnexosContrato = abrirAnexosContrato;
         window.abrirAnexosHeranca = abrirAnexosHeranca;
