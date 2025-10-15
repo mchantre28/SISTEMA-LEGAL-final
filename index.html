@@ -5873,41 +5873,55 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // === FUNÇÕES DE ATUALIZAÇÃO DE LISTAS ===
 
         function atualizarListaHerancas(herancasFiltradas) {
-            console.log('🔧 atualizarListaHerancas DESABILITADO - usando HTML estático');
-            // FUNÇÃO DESABILITADA - usando HTML estático
-            return;
+            console.log('🔧 atualizarListaHerancas REABILITADO - carregando heranças reais');
+            console.log('🔧 herancasFiltradas:', herancasFiltradas);
+            console.log('🔧 herancasFiltradas.length:', herancasFiltradas ? herancasFiltradas.length : 'undefined');
+            
+            const tbody = document.getElementById('listaHerancas');
+            if (!tbody) {
+                console.log('❌ tbody listaHerancas não encontrado');
+                return;
+            }
+            console.log('✅ tbody listaHerancas encontrado');
+            
             const html = herancasFiltradas.map(heranca => `
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${heranca.clienteNome}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${heranca.tipo}</td>
-                    <td class="px-6 py-4 text-sm text-gray-500">${heranca.descricao}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${heranca.clienteNome || 'N/A'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${heranca.tipo || 'N/A'}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${heranca.descricao || 'N/A'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div class="text-sm font-bold text-black">€${(heranca.valor || 0).toFixed(2)}</div>
-                        <div class="text-xs font-bold text-red-600">+ IVA: €${((heranca.valor || 0) + ((heranca.valor || 0) * (heranca.iva || 0) / 100)).toFixed(2)}</div>
-                        <!-- IVA em vermelho forçado HERANÇAS - CACHE FORÇADO - CAMPOS VALOR REMOVIDOS - ACOES RESTAURADAS - FORCAR ATUALIZACAO -->
+                        <div class="text-sm font-bold text-black">€${Number(heranca.valor || 0).toFixed(2)}</div>
+                        <div class="text-xs font-bold text-red-600">+ IVA: €${(Number(heranca.valor || 0) + (Number(heranca.valor || 0) * Number(heranca.iva || 0) / 100)).toFixed(2)}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="status-badge status-${heranca.status}">${heranca.status === 'concluido' ? 'Concluído' : heranca.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span>
+                        <span class="status-badge status-${heranca.status || 'pendente'}">${heranca.status || 'Pendente'}</span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${heranca.dataInicio ? new Date(heranca.dataInicio).toLocaleDateString('pt-PT') : 'Data não definida'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${heranca.dataInicio || 'N/A'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button onclick="alert('EDITAR HERANÇA ID: ${heranca.id}')" class="text-blue-600 hover:text-blue-900 mr-2" title="Editar">
+                        <button onclick="editarHerancaDireto(${heranca.id})" class="text-blue-600 hover:text-blue-900 mr-2" title="Editar">
                             <i data-lucide="edit" class="w-4 h-4"></i>
                         </button>
-                        <button onclick="alert('ANEXAR HERANÇA ID: ${heranca.id}')" class="text-green-600 hover:text-green-900 mr-2" title="Documentos">
+                        <button onclick="abrirAnexosHeranca(${heranca.id})" class="text-green-600 hover:text-green-900 mr-2" title="Documentos">
                             <i data-lucide="paperclip" class="w-4 h-4"></i>
                         </button>
-                        <button onclick="alert('ELIMINAR HERANÇA ID: ${heranca.id}')" class="text-red-600 hover:text-red-900" title="Excluir">
+                        <button onclick="excluirHerancaDireto(${heranca.id})" class="text-red-600 hover:text-red-900" title="Excluir">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                     </td>
                 </tr>
             `).join('');
             
-            console.log('🔧 HTML gerado:', html);
             tbody.innerHTML = html;
-            console.log('✅ HTML inserido no tbody listaRegistos');
+            console.log('✅ HTML inserido no tbody listaHerancas');
             console.log('🔧 TESTE: Verificando se tbody tem conteúdo:', tbody.innerHTML.length);
+            
+            // FORÇAR RENDERIZAÇÃO DOS ÍCONES
+            setTimeout(() => {
+                if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                    lucide.createIcons();
+                    console.log('🔧 Ícones Lucide renderizados');
+                }
+            }, 100);
         }
 
         function atualizarListaMigracoes(migracoesFiltradas) {
@@ -10598,6 +10612,67 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     carregarSecao('registos');
                     if (typeof atualizarListaRegistos === 'function') {
                         atualizarListaRegistos(registosAtualizados);
+                    }
+                }, 100);
+            }
+        }
+
+        // === FUNÇÕES PARA HERANÇAS ===
+        function editarHerancaDireto(id) {
+            console.log('🔧 editarHerancaDireto chamado com ID:', id);
+            
+            // Carregar dados da herança
+            const herancasSalvas = localStorage.getItem('herancas');
+            let herancas = [];
+            if (herancasSalvas) herancas = JSON.parse(herancasSalvas);
+            
+            const heranca = herancas.find(h => h.id === parseInt(id));
+            if (!heranca) {
+                mostrarNotificacao('Herança não encontrada!', 'error');
+                return;
+            }
+            
+            console.log('✅ Herança encontrada:', heranca);
+            // Abrir modal de edição
+            abrirModalEdicaoHeranca(heranca);
+        }
+
+        function abrirAnexosHeranca(id) {
+            console.log('🔧 abrirAnexosHeranca chamado com ID:', id);
+            const heranca = herancas.find(h => h.id === parseInt(id));
+            console.log('🔧 Herança encontrada:', heranca);
+            if (heranca) {
+                console.log('🔧 Chamando abrirModalAnexos para herança');
+                abrirModalAnexos('heranca', id, heranca.clienteNome || 'Herança');
+            } else {
+                console.error('❌ Herança não encontrada com ID:', id);
+                mostrarNotificacao('Herança não encontrada!', 'error');
+            }
+        }
+
+        function excluirHerancaDireto(id) {
+            console.log('🔧 excluirHerancaDireto chamado com ID:', id);
+            
+            if (confirm('Tem certeza que deseja excluir esta herança? Esta ação não pode ser desfeita.')) {
+                // Carregar dados da herança
+                const herancasSalvas = localStorage.getItem('herancas');
+                let herancas = [];
+                if (herancasSalvas) herancas = JSON.parse(herancasSalvas);
+                
+                // Filtrar herança a ser excluída
+                const herancasAtualizadas = herancas.filter(h => h.id !== parseInt(id));
+                
+                // Salvar dados atualizados
+                localStorage.setItem('herancas', JSON.stringify(herancasAtualizadas));
+                window.herancas = herancasAtualizadas;
+                
+                mostrarNotificacao('Herança excluída com sucesso!', 'success');
+                
+                // Recarregar seção
+                setTimeout(() => {
+                    carregarSecao('herancas');
+                    if (typeof atualizarListaHerancas === 'function') {
+                        atualizarListaHerancas(herancasAtualizadas);
                     }
                 }, 100);
             }
