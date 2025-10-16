@@ -50,10 +50,17 @@
         /* FORÇAR LARGURA EM DESKTOP */
         @media (min-width: 1025px) {
             .sidebar {
-                width: 280px !important;
-                min-width: 280px !important;
-                max-width: 280px !important;
+                width: 300px !important;
+                min-width: 300px !important;
+                max-width: 300px !important;
             }
+        }
+        
+        /* FORÇAR LARGURA GERAL */
+        #sidebar {
+            width: 300px !important;
+            min-width: 300px !important;
+            max-width: 300px !important;
         }
         
         @media (max-width: 1024px) {
@@ -134,7 +141,7 @@
         }
 
         .main-content {
-            margin-left: 280px;
+            margin-left: 300px;
             transition: margin-left 0.3s ease;
         }
         
@@ -968,9 +975,21 @@
             }
             // Se login OK, configurar interface baseada no tipo de usuário
             configurarInterfaceUsuario();
+            // Forçar largura do sidebar
+            forcarLarguraSidebar();
             // Inicializar sistema normalmente
             init();
         });
+        
+        function forcarLarguraSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.style.width = '300px';
+                sidebar.style.minWidth = '300px';
+                sidebar.style.maxWidth = '300px';
+                console.log('🔧 Largura do sidebar forçada para 300px');
+            }
+        }
         
         function configurarInterfaceUsuario() {
             const tipoUsuario = localStorage.getItem('tipoUsuario');
