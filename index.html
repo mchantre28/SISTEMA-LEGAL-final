@@ -50,22 +50,15 @@
         /* FORÇAR LARGURA EM DESKTOP */
         @media (min-width: 1025px) {
             .sidebar {
-                width: 300px !important;
-                min-width: 300px !important;
-                max-width: 300px !important;
+                width: 280px !important;
+                min-width: 280px !important;
+                max-width: 280px !important;
             }
-        }
-        
-        /* FORÇAR LARGURA GERAL */
-        #sidebar {
-            width: 300px !important;
-            min-width: 300px !important;
-            max-width: 300px !important;
         }
         
         @media (max-width: 1024px) {
             .sidebar {
-                width: 280px !important;
+                width: 280px;
                 transform: translateX(-100%);
                 overflow-y: auto;
                 max-height: 100vh;
@@ -78,13 +71,13 @@
         
         @media (max-width: 768px) {
             .sidebar {
-                width: 260px !important;
+                width: 260px;
             }
         }
         
         @media (max-width: 480px) {
             .sidebar {
-                width: 240px !important;
+                width: 240px;
             }
         }
 
@@ -141,7 +134,7 @@
         }
 
         .main-content {
-            margin-left: 300px;
+            margin-left: 280px;
             transition: margin-left 0.3s ease;
         }
         
@@ -593,7 +586,7 @@
     </button>
 
     <!-- Sidebar -->
-    <div class="sidebar" id="sidebar" style="width: 300px !important; min-width: 300px !important; max-width: 300px !important;">
+    <div class="sidebar" id="sidebar">
         <div class="p-6">
             <h2 class="text-white text-xl font-bold mb-6">Sistema Legal</h2>
             <nav class="space-y-2">
@@ -660,7 +653,7 @@
     </button>
 
     <!-- Conteúdo Principal -->
-    <div class="main-content min-h-screen" style="margin-left: 300px !important;">
+    <div class="main-content min-h-screen">
         <!-- Header -->
         <header class="bg-white shadow-sm border-b">
             <div class="px-6 py-4">
