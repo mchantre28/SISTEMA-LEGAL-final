@@ -977,17 +977,44 @@
             configurarInterfaceUsuario();
             // Forçar largura do sidebar
             forcarLarguraSidebar();
+            // Aplicar novamente após um delay
+            setTimeout(forcarLarguraSidebar, 1000);
+            setTimeout(forcarLarguraSidebar, 2000);
             // Inicializar sistema normalmente
             init();
         });
         
         function forcarLarguraSidebar() {
+            // Tentar múltiplas formas de encontrar o sidebar
             const sidebar = document.getElementById('sidebar');
+            const sidebarClass = document.querySelector('.sidebar');
+            
             if (sidebar) {
                 sidebar.style.width = '300px';
                 sidebar.style.minWidth = '300px';
                 sidebar.style.maxWidth = '300px';
-                console.log('🔧 Largura do sidebar forçada para 300px');
+                sidebar.style.setProperty('width', '300px', 'important');
+                sidebar.style.setProperty('min-width', '300px', 'important');
+                sidebar.style.setProperty('max-width', '300px', 'important');
+                console.log('🔧 Largura do sidebar forçada para 300px (ID)');
+            }
+            
+            if (sidebarClass) {
+                sidebarClass.style.width = '300px';
+                sidebarClass.style.minWidth = '300px';
+                sidebarClass.style.maxWidth = '300px';
+                sidebarClass.style.setProperty('width', '300px', 'important');
+                sidebarClass.style.setProperty('min-width', '300px', 'important');
+                sidebarClass.style.setProperty('max-width', '300px', 'important');
+                console.log('🔧 Largura do sidebar forçada para 300px (CLASS)');
+            }
+            
+            // Aplicar também no conteúdo principal
+            const mainContent = document.querySelector('.main-content');
+            if (mainContent) {
+                mainContent.style.marginLeft = '300px';
+                mainContent.style.setProperty('margin-left', '300px', 'important');
+                console.log('🔧 Margem do conteúdo principal ajustada para 300px');
             }
         }
         
