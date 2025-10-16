@@ -531,6 +531,10 @@
                     <i data-lucide="home" class="w-5 h-5 mr-3"></i>
                     Heranças
                 </a>
+                <a href="#" onclick="carregarSecao('convidados')" class="sidebar-item" id="nav-convidados" style="display: none;">
+                    <i data-lucide="user-plus" class="w-5 h-5 mr-3"></i>
+                    Gestão de Convidados
+                </a>
                 <a href="#" onclick="carregarSecao('migracoes')" class="sidebar-item" id="nav-migracao">
                     <i data-lucide="users-2" class="w-5 h-5 mr-3"></i>
                     Migração
@@ -627,10 +631,45 @@
                     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
                         <div class="text-center mb-8">
                             <h1 class="text-3xl font-bold text-gray-900">Sistema Legal</h1>
-                            <p class="text-gray-600 mt-2">Faça login para continuar</p>
+                            <p class="text-gray-600 mt-2">Selecione o tipo de acesso</p>
                         </div>
                         
-                        <form id="formLogin" class="space-y-6">
+                        <div class="space-y-4">
+                            <button onclick="mostrarLoginAdmin()" class="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center">
+                                <i data-lucide="shield-check" class="w-5 h-5 mr-2"></i>
+                                Administrador
+                            </button>
+                            
+                            <button onclick="mostrarLoginConvidado()" class="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center justify-center">
+                                <i data-lucide="user" class="w-5 h-5 mr-2"></i>
+                                Convidado
+                            </button>
+                        </div>
+                        
+                        <div class="mt-6 text-center text-sm text-gray-600">
+                            <p><strong>Administrador:</strong> Acesso total ao sistema</p>
+                            <p><strong>Convidado:</strong> Acesso limitado a clientes autorizados</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Renderizar ícones
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+        }
+        
+        function mostrarLoginAdmin() {
+            document.body.innerHTML = `
+                <div class="min-h-screen bg-gray-100 flex items-center justify-center">
+                    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                        <div class="text-center mb-8">
+                            <h1 class="text-3xl font-bold text-gray-900">Login Administrador</h1>
+                            <p class="text-gray-600 mt-2">Acesso total ao sistema</p>
+                        </div>
+                        
+                        <form id="formLoginAdmin" class="space-y-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Usuário</label>
                                 <input type="text" id="usuario" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Digite seu usuário" required>
@@ -641,20 +680,24 @@
                                 <input type="password" id="senha" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Digite sua senha" required>
                             </div>
                             
-                            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                Entrar
-                            </button>
+                            <div class="flex space-x-4">
+                                <button type="button" onclick="mostrarTelaLogin()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
+                                    Voltar
+                                </button>
+                                <button type="submit" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+                                    Entrar
+                                </button>
+                            </div>
                         </form>
                         
                         <div class="mt-6 text-center text-sm text-gray-600">
-                            <p>Usuário padrão: <strong>admin</strong></p>
-                            <p>Senha padrão: <strong>123456</strong></p>
+                            <p>Usuário: <strong>admin</strong> | Senha: <strong>123456</strong></p>
                         </div>
                     </div>
                 </div>
             `;
             
-            document.getElementById('formLogin').addEventListener('submit', function(e) {
+            document.getElementById('formLoginAdmin').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const usuario = document.getElementById('usuario').value;
                 const senha = document.getElementById('senha').value;
@@ -662,6 +705,7 @@
                 if (usuario === USUARIO_PADRAO && senha === SENHA_PADRAO) {
                     localStorage.setItem('usuarioLogado', 'true');
                     localStorage.setItem('usuarioNome', usuario);
+                    localStorage.setItem('tipoUsuario', 'admin');
                     location.reload();
                 } else {
                     alert('Usuário ou senha incorretos!');
@@ -669,10 +713,133 @@
             });
         }
         
+        function mostrarLoginConvidado() {
+            document.body.innerHTML = `
+                <div class="min-h-screen bg-gray-100 flex items-center justify-center">
+                    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                        <div class="text-center mb-8">
+                            <h1 class="text-3xl font-bold text-gray-900">Login Convidado</h1>
+                            <p class="text-gray-600 mt-2">Acesso limitado a clientes autorizados</p>
+                        </div>
+                        
+                        <form id="formLoginConvidado" class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nome do Convidado</label>
+                                <input type="text" id="nomeConvidado" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Digite seu nome" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Código de Acesso</label>
+                                <input type="text" id="codigoAcesso" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Digite o código de acesso" required>
+                            </div>
+                            
+                            <div class="flex space-x-4">
+                                <button type="button" onclick="mostrarTelaLogin()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
+                                    Voltar
+                                </button>
+                                <button type="submit" class="flex-1 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700">
+                                    Entrar
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="mt-6 text-center text-sm text-gray-600">
+                            <p>Peça o código de acesso ao administrador</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('formLoginConvidado').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const nome = document.getElementById('nomeConvidado').value;
+                const codigo = document.getElementById('codigoAcesso').value;
+                
+                // Verificar se o código existe e está ativo
+                const convidados = JSON.parse(localStorage.getItem('convidados') || '[]');
+                const convidado = convidados.find(c => c.codigo === codigo && c.ativo);
+                
+                if (convidado) {
+                    localStorage.setItem('usuarioLogado', 'true');
+                    localStorage.setItem('usuarioNome', nome);
+                    localStorage.setItem('tipoUsuario', 'convidado');
+                    localStorage.setItem('convidadoId', convidado.id);
+                    location.reload();
+                } else {
+                    alert('Código de acesso inválido ou inativo!');
+                }
+            });
+        }
+        
         function logout() {
             localStorage.removeItem('usuarioLogado');
             localStorage.removeItem('usuarioNome');
+            localStorage.removeItem('tipoUsuario');
+            localStorage.removeItem('convidadoId');
             location.reload();
+        }
+        
+        // SISTEMA DE GESTÃO DE CONVIDADOS
+        function criarConvidado(nome, clientesAutorizados) {
+            const convidados = JSON.parse(localStorage.getItem('convidados') || '[]');
+            const codigo = Math.random().toString(36).substr(2, 8).toUpperCase();
+            
+            const novoConvidado = {
+                id: Date.now(),
+                nome: nome,
+                codigo: codigo,
+                clientesAutorizados: clientesAutorizados || [],
+                ativo: true,
+                dataCriacao: new Date().toISOString()
+            };
+            
+            convidados.push(novoConvidado);
+            localStorage.setItem('convidados', JSON.stringify(convidados));
+            
+            return novoConvidado;
+        }
+        
+        function obterConvidados() {
+            return JSON.parse(localStorage.getItem('convidados') || '[]');
+        }
+        
+        function ativarDesativarConvidado(id, ativo) {
+            const convidados = obterConvidados();
+            const convidado = convidados.find(c => c.id === id);
+            if (convidado) {
+                convidado.ativo = ativo;
+                localStorage.setItem('convidados', JSON.stringify(convidados));
+            }
+        }
+        
+        function editarPermissoesConvidado(id, clientesAutorizados) {
+            const convidados = obterConvidados();
+            const convidado = convidados.find(c => c.id === id);
+            if (convidado) {
+                convidado.clientesAutorizados = clientesAutorizados;
+                localStorage.setItem('convidados', JSON.stringify(convidados));
+            }
+        }
+        
+        // VERIFICAÇÃO DE PERMISSÕES
+        function verificarPermissaoCliente(clienteId) {
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            
+            if (tipoUsuario === 'admin') {
+                return true; // Admin tem acesso total
+            }
+            
+            if (tipoUsuario === 'convidado') {
+                const convidadoId = localStorage.getItem('convidadoId');
+                const convidados = obterConvidados();
+                const convidado = convidados.find(c => c.id === parseInt(convidadoId));
+                
+                if (convidado && convidado.ativo) {
+                    return convidado.clientesAutorizados.includes(parseInt(clienteId));
+                }
+            }
+            
+            return false;
         }
         
         // Verificar login após o DOM estar carregado
@@ -682,9 +849,22 @@
                 // O resto do código não será executado
                 return;
             }
-            // Se login OK, inicializar sistema normalmente
+            // Se login OK, configurar interface baseada no tipo de usuário
+            configurarInterfaceUsuario();
+            // Inicializar sistema normalmente
             init();
         });
+        
+        function configurarInterfaceUsuario() {
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            const navConvidados = document.getElementById('nav-convidados');
+            
+            if (tipoUsuario === 'admin' && navConvidados) {
+                navConvidados.style.display = 'block';
+            } else if (navConvidados) {
+                navConvidados.style.display = 'none';
+            }
+        }
         
         // Dados globais
         let clientes = [];
@@ -1442,6 +1622,7 @@
                 prazos: gerarPrazos(),
                 notificacoes: gerarNotificacoes(),
                 herancas: gerarHerancas(),
+                convidados: gerarConvidados(),
                 migracoes: gerarMigracao(),
                 registos: gerarRegistos(),
                 'iva-trimestral': gerarRelatorioIVATrimestral(),
@@ -5353,6 +5534,284 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     </div>
                 </div>
             `;
+        }
+
+        function gerarConvidados() {
+            const convidados = obterConvidados();
+            const convidadosAtivos = convidados.filter(c => c.ativo).length;
+            const convidadosInativos = convidados.filter(c => !c.ativo).length;
+            const totalConvidados = convidados.length;
+
+            return `
+                <div class="space-y-6">
+                    <!-- Header com botões de ação -->
+                    <div class="flex justify-between items-center">
+                        <div class="flex space-x-3">
+                            <button onclick="abrirModalNovoConvidado()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
+                                <i data-lucide="user-plus" class="w-4 h-4 mr-2"></i>
+                                Novo Convidado
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Estatísticas -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="card p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-blue-100 rounded-lg">
+                                    <i data-lucide="users" class="w-6 h-6 text-blue-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-600">Total</p>
+                                    <p class="text-2xl font-bold text-gray-900">${totalConvidados}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-green-100 rounded-lg">
+                                    <i data-lucide="check-circle" class="w-6 h-6 text-green-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-600">Ativos</p>
+                                    <p class="text-2xl font-bold text-gray-900">${convidadosAtivos}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-gray-100 rounded-lg">
+                                    <i data-lucide="user-x" class="w-6 h-6 text-gray-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-600">Inativos</p>
+                                    <p class="text-2xl font-bold text-gray-900">${convidadosInativos}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Convidados -->
+                    <div class="card">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Lista de Convidados</h3>
+                            
+                            <div class="table-responsive">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Código</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clientes Autorizados</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data Criação</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listaConvidados">
+                                        ${convidados.map(convidado => `
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${convidado.nome}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">${convidado.codigo}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span class="status-badge status-${convidado.ativo ? 'ativo' : 'inativo'}">${convidado.ativo ? 'Ativo' : 'Inativo'}</span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${convidado.clientesAutorizados.length} cliente(s)</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${new Date(convidado.dataCriacao).toLocaleDateString('pt-PT')}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <button onclick="editarPermissoesConvidado(${convidado.id})" class="text-blue-600 hover:text-blue-900 mr-2" title="Editar Permissões">
+                                                        <i data-lucide="settings" class="w-4 h-4"></i>
+                                                    </button>
+                                                    <button onclick="ativarDesativarConvidado(${convidado.id}, ${!convidado.ativo})" class="text-${convidado.ativo ? 'red' : 'green'}-600 hover:text-${convidado.ativo ? 'red' : 'green'}-900 mr-2" title="${convidado.ativo ? 'Desativar' : 'Ativar'}">
+                                                        <i data-lucide="${convidado.ativo ? 'user-x' : 'user-check'}" class="w-4 h-4"></i>
+                                                    </button>
+                                                    <button onclick="copiarCodigoConvidado('${convidado.codigo}')" class="text-gray-600 hover:text-gray-900" title="Copiar Código">
+                                                        <i data-lucide="copy" class="w-4 h-4"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // FUNÇÕES AUXILIARES PARA GESTÃO DE CONVIDADOS
+        function abrirModalNovoConvidado() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900">Novo Convidado</h3>
+                            <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <i data-lucide="x" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                        
+                        <form id="formNovoConvidado" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nome do Convidado</label>
+                                <input type="text" id="nomeConvidado" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Digite o nome" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Clientes Autorizados</label>
+                                <div id="listaClientesConvidado" class="space-y-2 max-h-40 overflow-y-auto">
+                                    <!-- Lista de clientes será carregada aqui -->
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-4">
+                                <button type="button" onclick="fecharModal()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+                                    Criar Convidado
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Carregar lista de clientes
+            carregarClientesParaConvidado();
+            
+            document.getElementById('formNovoConvidado').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const nome = document.getElementById('nomeConvidado').value;
+                const clientesSelecionados = Array.from(document.querySelectorAll('#listaClientesConvidado input[type="checkbox"]:checked'))
+                    .map(cb => parseInt(cb.value));
+                
+                const novoConvidado = criarConvidado(nome, clientesSelecionados);
+                mostrarNotificacao(`Convidado criado! Código: ${novoConvidado.codigo}`, 'success');
+                fecharModal();
+                carregarSecao('convidados');
+            });
+        }
+        
+        function carregarClientesParaConvidado() {
+            const clientes = JSON.parse(localStorage.getItem('clientes') || '[]');
+            const container = document.getElementById('listaClientesConvidado');
+            
+            if (clientes.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Nenhum cliente cadastrado</p>';
+                return;
+            }
+            
+            container.innerHTML = clientes.map(cliente => `
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" value="${cliente.id}" class="rounded border-gray-300">
+                    <span class="text-sm text-gray-700">${cliente.nome}</span>
+                </label>
+            `).join('');
+        }
+        
+        function editarPermissoesConvidado(id) {
+            const convidados = obterConvidados();
+            const convidado = convidados.find(c => c.id === id);
+            
+            if (!convidado) {
+                mostrarNotificacao('Convidado não encontrado!', 'error');
+                return;
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900">Editar Permissões - ${convidado.nome}</h3>
+                            <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <i data-lucide="x" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                        
+                        <form id="formEditarPermissoes" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Clientes Autorizados</label>
+                                <div id="listaClientesEdicao" class="space-y-2 max-h-40 overflow-y-auto">
+                                    <!-- Lista de clientes será carregada aqui -->
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-4">
+                                <button type="button" onclick="fecharModal()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+                                    Salvar Permissões
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Carregar lista de clientes com seleções atuais
+            carregarClientesParaEdicao(convidado.clientesAutorizados);
+            
+            document.getElementById('formEditarPermissoes').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const clientesSelecionados = Array.from(document.querySelectorAll('#listaClientesEdicao input[type="checkbox"]:checked'))
+                    .map(cb => parseInt(cb.value));
+                
+                editarPermissoesConvidado(id, clientesSelecionados);
+                mostrarNotificacao('Permissões atualizadas com sucesso!', 'success');
+                fecharModal();
+                carregarSecao('convidados');
+            });
+        }
+        
+        function carregarClientesParaEdicao(clientesAutorizados) {
+            const clientes = JSON.parse(localStorage.getItem('clientes') || '[]');
+            const container = document.getElementById('listaClientesEdicao');
+            
+            if (clientes.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Nenhum cliente cadastrado</p>';
+                return;
+            }
+            
+            container.innerHTML = clientes.map(cliente => `
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" value="${cliente.id}" ${clientesAutorizados.includes(cliente.id) ? 'checked' : ''} class="rounded border-gray-300">
+                    <span class="text-sm text-gray-700">${cliente.nome}</span>
+                </label>
+            `).join('');
+        }
+        
+        function ativarDesativarConvidado(id, ativo) {
+            ativarDesativarConvidado(id, ativo);
+            mostrarNotificacao(`Convidado ${ativo ? 'ativado' : 'desativado'} com sucesso!`, 'success');
+            carregarSecao('convidados');
+        }
+        
+        function copiarCodigoConvidado(codigo) {
+            navigator.clipboard.writeText(codigo).then(() => {
+                mostrarNotificacao('Código copiado para a área de transferência!', 'success');
+            }).catch(() => {
+                // Fallback para navegadores mais antigos
+                const textArea = document.createElement('textarea');
+                textArea.value = codigo;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                mostrarNotificacao('Código copiado para a área de transferência!', 'success');
+            });
         }
 
         function gerarMigracao() {
