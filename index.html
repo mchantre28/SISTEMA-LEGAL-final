@@ -3640,6 +3640,9 @@
         function salvarCliente(event) {
             event.preventDefault();
             
+            console.log('🔧 salvarCliente chamado');
+            console.log('🔧 clientes antes:', clientes.length);
+            
             const cliente = {
                 id: Date.now(),
                 nome: document.getElementById('clienteNome').value,
@@ -3651,7 +3654,11 @@
                 dataCriacao: new Date().toISOString()
             };
             
+            console.log('🔧 Novo cliente criado:', cliente);
+            
             clientes.push(cliente);
+            console.log('🔧 clientes após push:', clientes.length);
+            
             salvarDados('clientes', clientes);
             mostrarNotificacao('Cliente salvo com sucesso!', 'success');
             
@@ -3660,6 +3667,7 @@
             
             // Recarregar seção após um pequeno delay
             setTimeout(() => {
+                console.log('🔧 Recarregando seção clientes...');
                 carregarSecao('clientes');
             }, 100);
         }
