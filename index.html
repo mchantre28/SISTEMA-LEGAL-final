@@ -957,16 +957,28 @@
         }
         
         function editarPermissoesConvidado(id, clientesAutorizados) {
+            console.log('🔧 editarPermissoesConvidado chamado:', id, clientesAutorizados);
+            
             const convidados = obterConvidados();
             const convidado = convidados.find(c => c.id === id);
+            
             if (convidado) {
+                console.log('🔧 Convidado encontrado:', convidado.nome);
+                console.log('🔧 Clientes autorizados antes:', convidado.clientesAutorizados);
+                
                 convidado.clientesAutorizados = clientesAutorizados;
                 localStorage.setItem('convidados', JSON.stringify(convidados));
                 
+                console.log('🔧 Clientes autorizados depois:', convidado.clientesAutorizados);
+                console.log('🔧 Dados salvos no localStorage');
+                
                 // Recarregar a seção de convidados para atualizar a tabela
                 setTimeout(() => {
+                    console.log('🔧 Recarregando seção convidados...');
                     carregarSecao('convidados');
                 }, 100);
+            } else {
+                console.error('❌ Convidado não encontrado com ID:', id);
             }
         }
         
@@ -6120,14 +6132,11 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 const clientesSelecionados = Array.from(document.querySelectorAll('#listaClientesEdicao input[type="checkbox"]:checked'))
                     .map(cb => parseInt(cb.value));
                 
+                console.log('🔧 Formulário submetido, clientes selecionados:', clientesSelecionados);
+                
                 editarPermissoesConvidado(id, clientesSelecionados);
                 mostrarNotificacao('Permissões atualizadas com sucesso!', 'success');
                 fecharModal();
-                
-                // Recarregar seção com delay para garantir atualização
-                setTimeout(() => {
-                    carregarSecao('convidados');
-                }, 200);
             });
         }
         
