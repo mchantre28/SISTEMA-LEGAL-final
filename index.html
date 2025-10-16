@@ -8167,24 +8167,33 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // === FUNÇÃO PARA CONTROLAR VISIBILIDADE DO TIPO PERSONALIZADO ===
         
         function toggleTipoPersonalizado(area) {
+            console.log('🔧 toggleTipoPersonalizado chamado para área:', area);
             const select = document.getElementById('tipoDocumento');
             const divPersonalizado = document.getElementById(`tipoPersonalizado${area.charAt(0).toUpperCase() + area.slice(1)}`);
             const inputPersonalizado = document.getElementById('tipoPersonalizadoInput');
             
+            console.log('🔧 Select encontrado:', !!select);
+            console.log('🔧 Div personalizado encontrado:', !!divPersonalizado);
+            console.log('🔧 Input personalizado encontrado:', !!inputPersonalizado);
+            
             if (select && divPersonalizado) {
                 if (select.value === 'outro') {
+                    console.log('🔧 Mostrando campo personalizado');
                     divPersonalizado.classList.remove('hidden');
                     if (inputPersonalizado) {
                         inputPersonalizado.required = true;
                         inputPersonalizado.focus();
                     }
                 } else {
+                    console.log('🔧 Ocultando campo personalizado');
                     divPersonalizado.classList.add('hidden');
                     if (inputPersonalizado) {
                         inputPersonalizado.required = false;
                         inputPersonalizado.value = '';
                     }
                 }
+            } else {
+                console.error('❌ Elementos não encontrados:', { select: !!select, divPersonalizado: !!divPersonalizado });
             }
         }
 
