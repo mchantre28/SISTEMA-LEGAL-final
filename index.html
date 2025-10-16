@@ -5993,7 +5993,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${convidado.clientesAutorizados.length} cliente(s)</td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${new Date(convidado.dataCriacao).toLocaleDateString('pt-PT')}</td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                    <button onclick="editarPermissoesConvidado(${convidado.id})" class="text-blue-600 hover:text-blue-900 mr-2" title="Editar Permissões">
+                                                    <button onclick="abrirModalEditarPermissoes(${convidado.id})" class="text-blue-600 hover:text-blue-900 mr-2" title="Editar Permissões">
                                                         <i data-lucide="settings" class="w-4 h-4"></i>
                                                     </button>
                                                     <button onclick="ativarDesativarConvidado(${convidado.id}, ${!convidado.ativo})" class="text-${convidado.ativo ? 'red' : 'green'}-600 hover:text-${convidado.ativo ? 'red' : 'green'}-900 mr-2" title="${convidado.ativo ? 'Desativar' : 'Ativar'}">
@@ -6089,7 +6089,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             `).join('');
         }
         
-        function editarPermissoesConvidado(id) {
+        function abrirModalEditarPermissoes(id) {
             const convidados = obterConvidados();
             const convidado = convidados.find(c => c.id === id);
             
