@@ -6133,8 +6133,11 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     .map(cb => parseInt(cb.value));
                 
                 console.log('🔧 Formulário submetido, clientes selecionados:', clientesSelecionados);
+                console.log('🔧 ID do convidado:', id);
+                console.log('🔧 Chamando editarPermissoesConvidado...');
                 
                 editarPermissoesConvidado(id, clientesSelecionados);
+                console.log('🔧 editarPermissoesConvidado chamado com sucesso');
                 mostrarNotificacao('Permissões atualizadas com sucesso!', 'success');
                 fecharModal();
             });
