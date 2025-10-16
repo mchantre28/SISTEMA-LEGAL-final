@@ -782,6 +782,41 @@
             location.reload();
         }
         
+        // FUNÇÃO PARA LIMPEZA PROFISSIONAL
+        function limparDadosParaUsoProfissional() {
+            if (confirm('⚠️ ATENÇÃO: Esta ação irá APAGAR TODOS os dados do sistema!\n\nIsso inclui:\n- Todos os clientes\n- Todos os honorários\n- Todos os contratos\n- Todas as heranças\n- Todas as migrações\n- Todos os registos\n- Todos os convidados\n\nTem certeza que deseja continuar?')) {
+                if (confirm('🚨 CONFIRMAÇÃO FINAL:\n\nEsta ação é IRREVERSÍVEL!\n\nTodos os dados serão permanentemente apagados.\n\nDeseja realmente continuar?')) {
+                    // Limpar todos os dados do localStorage
+                    localStorage.removeItem('clientes');
+                    localStorage.removeItem('honorarios');
+                    localStorage.removeItem('contratos');
+                    localStorage.removeItem('herancas');
+                    localStorage.removeItem('migracoes');
+                    localStorage.removeItem('registos');
+                    localStorage.removeItem('convidados');
+                    localStorage.removeItem('prazos');
+                    localStorage.removeItem('notificacoes');
+                    
+                    // Limpar variáveis globais
+                    clientes = [];
+                    honorarios = [];
+                    contratos = [];
+                    herancas = [];
+                    migracoes = [];
+                    registos = [];
+                    prazos = [];
+                    notificacoes = [];
+                    
+                    mostrarNotificacao('✅ Sistema limpo com sucesso! Pronto para uso profissional.', 'success');
+                    
+                    // Recarregar página após 2 segundos
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                }
+            }
+        }
+        
         // SISTEMA DE GESTÃO DE CONVIDADOS
         function criarConvidado(nome, clientesAutorizados) {
             const convidados = JSON.parse(localStorage.getItem('convidados') || '[]');
@@ -4541,6 +4576,18 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 Importar Backup
                             </button>
                         </div>
+                    </div>
+                    
+                    <div class="card p-6 border-red-200 bg-red-50">
+                        <h3 class="text-lg font-semibold mb-4 text-red-800">⚠️ Limpeza Profissional</h3>
+                        <p class="text-sm text-red-700 mb-4">
+                            Use esta função para limpar todos os dados de teste e preparar o sistema para uso profissional com clientes reais.
+                        </p>
+                        <button onclick="limparDadosParaUsoProfissional()" 
+                                class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 flex items-center justify-center">
+                            <i data-lucide="trash-2" class="w-4 h-4 mr-2"></i>
+                            Limpar Todos os Dados
+                        </button>
                     </div>
                     
                     <div class="card p-6">
