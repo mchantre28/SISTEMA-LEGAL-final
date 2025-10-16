@@ -2177,10 +2177,23 @@
                 const convidados = obterConvidados();
                 const convidado = convidados.find(c => c.id === parseInt(convidadoId));
                 
+                console.log('🔧 Convidado encontrado:', convidado);
+                console.log('🔧 Clientes autorizados:', convidado?.clientesAutorizados);
+                console.log('🔧 Total de clientes:', clientes.length);
+                
                 if (convidado && convidado.ativo) {
-                    clientesParaMostrar = clientes.filter(cliente => 
-                        convidado.clientesAutorizados.includes(cliente.id)
+                    // Permitir que convidados vejam clientes autorizados E clientes que eles criaram
+                    const clientesAutorizados = convidado.clientesAutorizados || [];
+                    const clientesCriadosPeloConvidado = clientes.filter(cliente => 
+                        cliente.criadoPorConvidado === parseInt(convidadoId)
                     );
+                    
+                    clientesParaMostrar = clientes.filter(cliente => 
+                        clientesAutorizados.includes(cliente.id) || 
+                        cliente.criadoPorConvidado === parseInt(convidadoId)
+                    );
+                    
+                    console.log('🔧 Clientes para mostrar:', clientesParaMostrar.length);
                 } else {
                     clientesParaMostrar = []; // Nenhum cliente se não há permissões
                 }
@@ -3643,6 +3656,9 @@
             console.log('🔧 salvarCliente chamado');
             console.log('🔧 clientes antes:', clientes.length);
             
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            const convidadoId = localStorage.getItem('convidadoId');
+            
             const cliente = {
                 id: Date.now(),
                 nome: document.getElementById('clienteNome').value,
@@ -3651,7 +3667,8 @@
                 nif: document.getElementById('clienteNIF').value,
                 endereco: document.getElementById('clienteEndereco').value,
                 status: document.getElementById('clienteStatus').value,
-                dataCriacao: new Date().toISOString()
+                dataCriacao: new Date().toISOString(),
+                criadoPorConvidado: tipoUsuario === 'convidado' ? parseInt(convidadoId) : null
             };
             
             console.log('🔧 Novo cliente criado:', cliente);
