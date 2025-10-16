@@ -957,28 +957,36 @@
         }
         
         function editarPermissoesConvidado(id, clientesAutorizados) {
-            console.log('🔧 editarPermissoesConvidado chamado:', id, clientesAutorizados);
-            
-            const convidados = obterConvidados();
-            const convidado = convidados.find(c => c.id === id);
-            
-            if (convidado) {
-                console.log('🔧 Convidado encontrado:', convidado.nome);
-                console.log('🔧 Clientes autorizados antes:', convidado.clientesAutorizados);
+            try {
+                console.log('🔧 editarPermissoesConvidado chamado:', id, clientesAutorizados);
                 
-                convidado.clientesAutorizados = clientesAutorizados;
-                localStorage.setItem('convidados', JSON.stringify(convidados));
+                const convidados = obterConvidados();
+                console.log('🔧 Convidados carregados:', convidados.length);
                 
-                console.log('🔧 Clientes autorizados depois:', convidado.clientesAutorizados);
-                console.log('🔧 Dados salvos no localStorage');
+                const convidado = convidados.find(c => c.id === id);
+                console.log('🔧 Buscando convidado com ID:', id);
                 
-                // Recarregar a seção de convidados para atualizar a tabela
-                setTimeout(() => {
-                    console.log('🔧 Recarregando seção convidados...');
-                    carregarSecao('convidados');
-                }, 100);
-            } else {
-                console.error('❌ Convidado não encontrado com ID:', id);
+                if (convidado) {
+                    console.log('🔧 Convidado encontrado:', convidado.nome);
+                    console.log('🔧 Clientes autorizados antes:', convidado.clientesAutorizados);
+                    
+                    convidado.clientesAutorizados = clientesAutorizados;
+                    localStorage.setItem('convidados', JSON.stringify(convidados));
+                    
+                    console.log('🔧 Clientes autorizados depois:', convidado.clientesAutorizados);
+                    console.log('🔧 Dados salvos no localStorage');
+                    
+                    // Recarregar a seção de convidados para atualizar a tabela
+                    setTimeout(() => {
+                        console.log('🔧 Recarregando seção convidados...');
+                        carregarSecao('convidados');
+                    }, 100);
+                } else {
+                    console.error('❌ Convidado não encontrado com ID:', id);
+                    console.log('🔧 IDs disponíveis:', convidados.map(c => c.id));
+                }
+            } catch (error) {
+                console.error('❌ Erro em editarPermissoesConvidado:', error);
             }
         }
         
