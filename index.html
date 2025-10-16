@@ -700,7 +700,7 @@
         
         // SISTEMA DE LOGIN
         const USUARIO_PADRAO = 'admin';
-        const SENHA_PADRAO = '123456';
+        const SENHA_PADRAO = 'APM2024!';
         
         function verificarLogin() {
             const usuarioLogado = localStorage.getItem('usuarioLogado');
@@ -779,7 +779,8 @@
                         </form>
                         
                         <div class="mt-6 text-center text-sm text-gray-600">
-                            <p>Usuário: <strong>admin</strong> | Senha: <strong>123456</strong></p>
+                            <p><strong>🔒 Acesso Restrito</strong></p>
+                            <p>Entre em contato com o administrador para obter as credenciais</p>
                         </div>
                     </div>
                 </div>
@@ -868,6 +869,16 @@
             location.reload();
         }
         
+        // FUNÇÃO PARA GERAR CÓDIGOS DE ACESSO SEGUROS
+        function gerarCodigoAcesso() {
+            const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let codigo = '';
+            for (let i = 0; i < 8; i++) {
+                codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+            }
+            return codigo;
+        }
+        
         // FUNÇÃO PARA LIMPEZA PROFISSIONAL
         function limparDadosParaUsoProfissional() {
             if (confirm('⚠️ ATENÇÃO: Esta ação irá APAGAR TODOS os dados do sistema!\n\nIsso inclui:\n- Todos os clientes\n- Todos os honorários\n- Todos os contratos\n- Todas as heranças\n- Todas as migrações\n- Todos os registos\n- Todos os convidados\n\nTem certeza que deseja continuar?')) {
@@ -906,7 +917,7 @@
         // SISTEMA DE GESTÃO DE CONVIDADOS
         function criarConvidado(nome, clientesAutorizados) {
             const convidados = JSON.parse(localStorage.getItem('convidados') || '[]');
-            const codigo = Math.random().toString(36).substr(2, 8).toUpperCase();
+            const codigo = gerarCodigoAcesso(); // Usar função de código seguro
             
             const novoConvidado = {
                 id: Date.now(),
