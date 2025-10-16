@@ -864,6 +864,55 @@
             } else if (navConvidados) {
                 navConvidados.style.display = 'none';
             }
+            
+            // OCULTAR SEÇÕES PARA CONVIDADOS
+            if (tipoUsuario === 'convidado') {
+                ocultarSecoesConvidado();
+            } else {
+                mostrarTodasSecoes();
+            }
+        }
+        
+        function ocultarSecoesConvidado() {
+            // Ocultar todas as seções exceto clientes e dashboard
+            const secoesParaOcultar = [
+                'nav-honorarios',
+                'nav-contratos', 
+                'nav-herancas',
+                'nav-migracao',
+                'nav-registos',
+                'nav-relatorios',
+                'nav-backup',
+                'nav-convidados'
+            ];
+            
+            secoesParaOcultar.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) {
+                    elemento.style.display = 'none';
+                }
+            });
+        }
+        
+        function mostrarTodasSecoes() {
+            // Mostrar todas as seções para administradores
+            const todasSecoes = [
+                'nav-honorarios',
+                'nav-contratos', 
+                'nav-herancas',
+                'nav-migracao',
+                'nav-registos',
+                'nav-relatorios',
+                'nav-backup',
+                'nav-convidados'
+            ];
+            
+            todasSecoes.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) {
+                    elemento.style.display = 'block';
+                }
+            });
         }
         
         // Dados globais
@@ -1638,14 +1687,44 @@
         }
 
         function gerarDashboard() {
-            const totalClientes = clientes.length;
-            const totalHonorarios = honorarios.length;
-            const valorTotal = honorarios.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
-            const honorariosPagos = honorarios.filter(h => h.status === 'pago').length;
-            const honorariosPendentes = honorarios.filter(h => h.status === 'pendente').length;
-            const totalHerancas = herancas.length;
-            const totalMigracoes = migracoes.length;
-            const totalRegistos = registos.length;
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            let clientesParaMostrar = clientes;
+            let honorariosParaMostrar = honorarios;
+            let herancasParaMostrar = herancas;
+            let migracoesParaMostrar = migracoes;
+            let registosParaMostrar = registos;
+            
+            // Filtrar dados para convidados
+            if (tipoUsuario === 'convidado') {
+                const convidadoId = localStorage.getItem('convidadoId');
+                const convidados = obterConvidados();
+                const convidado = convidados.find(c => c.id === parseInt(convidadoId));
+                
+                if (convidado && convidado.ativo) {
+                    const clientesAutorizados = convidado.clientesAutorizados;
+                    clientesParaMostrar = clientes.filter(c => clientesAutorizados.includes(c.id));
+                    honorariosParaMostrar = honorarios.filter(h => clientesAutorizados.includes(h.clienteId));
+                    herancasParaMostrar = herancas.filter(h => clientesAutorizados.includes(h.clienteId));
+                    migracoesParaMostrar = migracoes.filter(m => clientesAutorizados.includes(m.clienteId));
+                    registosParaMostrar = registos.filter(r => clientesAutorizados.includes(r.clienteId));
+                } else {
+                    // Se não há permissões, mostrar dados vazios
+                    clientesParaMostrar = [];
+                    honorariosParaMostrar = [];
+                    herancasParaMostrar = [];
+                    migracoesParaMostrar = [];
+                    registosParaMostrar = [];
+                }
+            }
+            
+            const totalClientes = clientesParaMostrar.length;
+            const totalHonorarios = honorariosParaMostrar.length;
+            const valorTotal = honorariosParaMostrar.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+            const honorariosPagos = honorariosParaMostrar.filter(h => h.status === 'pago').length;
+            const honorariosPendentes = honorariosParaMostrar.filter(h => h.status === 'pendente').length;
+            const totalHerancas = herancasParaMostrar.length;
+            const totalMigracoes = migracoesParaMostrar.length;
+            const totalRegistos = registosParaMostrar.length;
             
             // Calcular IVA acumulado trimestral
             const agora = new Date();
@@ -1881,13 +1960,35 @@
         }
 
         function gerarClientes() {
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            let clientesParaMostrar = clientes;
+            
+            // Filtrar clientes para convidados
+            if (tipoUsuario === 'convidado') {
+                const convidadoId = localStorage.getItem('convidadoId');
+                const convidados = obterConvidados();
+                const convidado = convidados.find(c => c.id === parseInt(convidadoId));
+                
+                if (convidado && convidado.ativo) {
+                    clientesParaMostrar = clientes.filter(cliente => 
+                        convidado.clientesAutorizados.includes(cliente.id)
+                    );
+                } else {
+                    clientesParaMostrar = []; // Nenhum cliente se não há permissões
+                }
+            }
+            
+            const botaoNovoCliente = tipoUsuario === 'admin' ? `
+                <button onclick="abrirModal('cliente')" class="btn btn-primary">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    Novo Cliente
+                </button>
+            ` : '';
+            
             return `
                 <div class="space-y-6">
                     <div class="flex justify-between items-center">
-                        <button onclick="abrirModal('cliente')" class="btn btn-primary">
-                            <i data-lucide="plus" class="w-4 h-4"></i>
-                            Novo Cliente
-                        </button>
+                        ${botaoNovoCliente}
                     </div>
 
                     <div class="card p-6">
@@ -1957,7 +2058,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="listaClientes">
-                                        ${clientes.map(cliente => `
+                                        ${clientesParaMostrar.map(cliente => `
                                             <tr>
                                                 <td>${cliente.nome}</td>
                                                 <td>${cliente.email}</td>
