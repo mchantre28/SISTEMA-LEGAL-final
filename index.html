@@ -962,6 +962,11 @@
             if (convidado) {
                 convidado.clientesAutorizados = clientesAutorizados;
                 localStorage.setItem('convidados', JSON.stringify(convidados));
+                
+                // Recarregar a seção de convidados para atualizar a tabela
+                setTimeout(() => {
+                    carregarSecao('convidados');
+                }, 100);
             }
         }
         
@@ -6118,7 +6123,11 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 editarPermissoesConvidado(id, clientesSelecionados);
                 mostrarNotificacao('Permissões atualizadas com sucesso!', 'success');
                 fecharModal();
-                carregarSecao('convidados');
+                
+                // Recarregar seção com delay para garantir atualização
+                setTimeout(() => {
+                    carregarSecao('convidados');
+                }, 200);
             });
         }
         
