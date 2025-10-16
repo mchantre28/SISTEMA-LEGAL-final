@@ -1057,13 +1057,15 @@
         }
         
         function ocultarSecoesConvidado() {
-            // Ocultar todas as seções exceto clientes e dashboard
+            // Ocultar todas as seções exceto clientes
             const secoesParaOcultar = [
+                'nav-dashboard',
                 'nav-honorarios',
                 'nav-contratos', 
                 'nav-herancas',
                 'nav-migracao',
                 'nav-registos',
+                'nav-prazos',
                 'nav-relatorios',
                 'nav-backup',
                 'nav-convidados'
@@ -1075,6 +1077,12 @@
                     elemento.style.display = 'none';
                 }
             });
+            
+            // Manter apenas a seção de clientes visível
+            const navClientes = document.getElementById('nav-clientes');
+            if (navClientes) {
+                navClientes.style.display = 'block';
+            }
         }
         
         function mostrarTodasSecoes() {
@@ -1199,7 +1207,15 @@
             console.log('🚀 Inicializando Sistema Legal');
             carregarDados();
             carregarDadosExemplo();
-            carregarSecao('dashboard');
+            
+            // Verificar tipo de usuário para carregar seção apropriada
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            if (tipoUsuario === 'convidado') {
+                carregarSecao('clientes');
+            } else {
+                carregarSecao('dashboard');
+            }
+            
             configurarEventos();
             atualizarInterface();
             iniciarSistemaNotificacoes();
@@ -1578,6 +1594,15 @@
 
         function carregarSecao(secao) {
             console.log('🔧 carregarSecao chamado para:', secao);
+            
+            // Verificar se é convidado e redirecionar para clientes se necessário
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            if (tipoUsuario === 'convidado') {
+                const secoesPermitidas = ['clientes'];
+                if (!secoesPermitidas.includes(secao)) {
+                    secao = 'clientes'; // Redirecionar para clientes
+                }
+            }
             
             // Fechar qualquer modal aberto antes de carregar nova seção
             fecharModal();
