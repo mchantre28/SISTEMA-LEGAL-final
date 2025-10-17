@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Paula Medina - Sistema Legal v45.0 DEBUG FUNCAO</title>
+    <title>Ana Paula Medina - Sistema Legal v46.0 DEBUG RETORNO</title>
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
@@ -3331,6 +3331,11 @@ END:VCALENDAR`;
             console.log('🔧 gerarConteudoSecao chamado para:', secao);
             console.log('🔧 migracoes array antes:', migracoes);
             
+            if (secao === 'automacoes') {
+                console.log('🔧 SECÇÃO AUTOMAÇÕES DETECTADA - v45.0');
+                alert('🔧 SECÇÃO AUTOMAÇÕES DETECTADA - v45.0');
+            }
+            
             // Garantir que migracoes existe
             if (!migracoes) {
                 migracoes = [];
@@ -3358,6 +3363,12 @@ END:VCALENDAR`;
             console.log('🔧 Conteúdo migracoes:', conteudos.migracoes);
             console.log('🔧 Conteúdo para automacoes:', conteudos.automacoes ? 'EXISTE' : 'NÃO EXISTE');
             console.log('🔧 Conteúdo automacoes:', conteudos.automacoes);
+            
+            if (secao === 'automacoes') {
+                console.log('🔧 RETORNANDO CONTEÚDO PARA AUTOMAÇÕES - v45.0');
+                alert('🔧 RETORNANDO CONTEÚDO PARA AUTOMAÇÕES - v45.0');
+                console.log('🔧 Conteúdo retornado:', conteudos.automacoes);
+            }
             
             return conteudos[secao] || '<p>Seção não encontrada</p>';
         }
