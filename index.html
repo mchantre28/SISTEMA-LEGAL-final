@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Paula Medina - Sistema Legal v39.0 AUTOMAÇÕES CORRIGIDAS</title>
+    <title>Ana Paula Medina - Sistema Legal v40.0 DEBUG AUTOMAÇÕES</title>
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
@@ -1787,6 +1787,7 @@
 
         // 2. CÁLCULO AUTOMÁTICO DE JUROS
         function calcularJurosAutomaticos() {
+            console.log('🔧 Função calcularJurosAutomaticos chamada');
             console.log('💰 Calculando juros automáticos...');
             
             const honorariosVencidos = honorarios.filter(h => {
@@ -1873,6 +1874,7 @@
 
         // 4. SINCRONIZAÇÃO COM CALENDÁRIO
         function sincronizarComCalendario() {
+            console.log('🔧 Função sincronizarComCalendario chamada');
             console.log('📅 Sincronizando com calendário...');
             
             const eventos = [];
@@ -2066,8 +2068,11 @@ END:VCALENDAR`;
 
         // Funções auxiliares para automações
         function obterLembretes() {
+            console.log('🔧 Função obterLembretes chamada');
             const lembretes = localStorage.getItem('lembretes');
-            return lembretes ? JSON.parse(lembretes) : [];
+            const resultado = lembretes ? JSON.parse(lembretes) : [];
+            console.log('🔧 Lembretes obtidos:', resultado.length);
+            return resultado;
         }
 
         function salvarLembretes() {
@@ -2076,13 +2081,19 @@ END:VCALENDAR`;
         }
 
         function obterFaturas() {
+            console.log('🔧 Função obterFaturas chamada');
             const faturas = localStorage.getItem('faturas');
-            return faturas ? JSON.parse(faturas) : [];
+            const resultado = faturas ? JSON.parse(faturas) : [];
+            console.log('🔧 Faturas obtidas:', resultado.length);
+            return resultado;
         }
 
         function obterIntegracoes() {
+            console.log('🔧 Função obterIntegracoes chamada');
             const integracoes = localStorage.getItem('integracoes');
-            return integracoes ? JSON.parse(integracoes) : [];
+            const resultado = integracoes ? JSON.parse(integracoes) : [];
+            console.log('🔧 Integrações obtidas:', resultado.length);
+            return resultado;
         }
 
         function salvarIntegracoes(integracoes) {
@@ -2102,9 +2113,17 @@ END:VCALENDAR`;
         }
 
         function gerarAutomacoes() {
+            console.log('🔧 Função gerarAutomacoes chamada');
+            
             const lembretes = obterLembretes();
             const faturas = obterFaturas();
             const integracoes = obterIntegracoes();
+            
+            console.log('🔧 Dados carregados:', {
+                lembretes: lembretes.length,
+                faturas: faturas.length,
+                integracoes: integracoes.length
+            });
             
             return `
                 <div class="space-y-6">
@@ -2238,10 +2257,14 @@ END:VCALENDAR`;
                     </div>
                 </div>
             `;
+            
+            console.log('🔧 HTML de automações gerado com sucesso');
+            return html;
         }
 
         // Funções auxiliares para automações
         function criarLembrete() {
+            console.log('🔧 Função criarLembrete chamada');
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
@@ -2309,6 +2332,7 @@ END:VCALENDAR`;
         }
 
         function gerarFaturasAutomaticas() {
+            console.log('🔧 Função gerarFaturasAutomaticas chamada');
             const honorariosComJuros = honorarios.filter(h => h.jurosCalculados && h.jurosCalculados > 0);
             
             if (honorariosComJuros.length === 0) {
@@ -2435,6 +2459,7 @@ END:VCALENDAR`;
 
         // Função para configurar integrações
         function configurarIntegracoes() {
+            console.log('🔧 Função configurarIntegracoes chamada');
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
