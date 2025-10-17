@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Paula Medina - Sistema Legal v42.0 TESTE SIMPLES</title>
+    <title>Ana Paula Medina - Sistema Legal v43.0 FORÇAR CACHE</title>
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
@@ -2283,7 +2283,8 @@ END:VCALENDAR`;
 
         // Função de teste simples
         function testarCriarLembrete() {
-            console.log('🔧 TESTE: Função testarCriarLembrete chamada');
+            console.log('🔧 TESTE: Função testarCriarLembrete chamada - v43.0');
+            alert('🔧 TESTE: Função testarCriarLembrete chamada!');
             
             const resultadoDiv = document.getElementById('resultado-teste');
             const resultadoTexto = document.getElementById('resultado-texto');
@@ -2294,6 +2295,7 @@ END:VCALENDAR`;
                 console.log('✅ Resultado exibido na tela');
             } else {
                 console.log('❌ Elementos não encontrados');
+                alert('❌ Elementos não encontrados');
             }
         }
 
