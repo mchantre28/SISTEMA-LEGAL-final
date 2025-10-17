@@ -2269,13 +2269,8 @@
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Período Personalizado</label>
-                                <input type="date" id="filtroDataInicioCliente" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosClientes()">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Até</label>
-                                <input type="date" id="filtroDataFimCliente" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosClientes()">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Buscar por NIF</label>
+                                <input type="text" id="buscaNifClientes" placeholder="Digite o NIF..." class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onkeyup="aplicarFiltrosClientes()">
                             </div>
                         </div>
                         
@@ -3916,17 +3911,20 @@
 
         function aplicarFiltrosClientes() {
             const busca = document.getElementById('buscaClientes')?.value.toLowerCase() || '';
+            const buscaNif = document.getElementById('buscaNifClientes')?.value.toLowerCase() || '';
             const status = document.getElementById('filtroStatusCliente')?.value || '';
             const dataFiltro = document.getElementById('filtroDataCliente')?.value || '';
-            const dataInicio = document.getElementById('filtroDataInicioCliente')?.value || '';
-            const dataFim = document.getElementById('filtroDataFimCliente')?.value || '';
             
             const clientesFiltrados = clientes.filter(cliente => {
-                // Filtro por busca de texto
+                // Filtro por busca de texto (nome, email, telefone)
                 const matchBusca = !busca || 
                     cliente.nome.toLowerCase().includes(busca) || 
                     cliente.email.toLowerCase().includes(busca) ||
                     cliente.telefone.toLowerCase().includes(busca);
+                
+                // Filtro por NIF
+                const matchNif = !buscaNif || 
+                    (cliente.nif && cliente.nif.toLowerCase().includes(buscaNif));
                 
                 // Filtro por status
                 const matchStatus = !status || cliente.status === status;
@@ -3956,21 +3954,7 @@
                     }
                 }
                 
-                // Filtro por período personalizado
-                if (dataInicio || dataFim) {
-                    const dataCliente = new Date(cliente.dataCriacao);
-                    if (dataInicio) {
-                        const inicio = new Date(dataInicio);
-                        matchData = matchData && dataCliente >= inicio;
-                    }
-                    if (dataFim) {
-                        const fim = new Date(dataFim);
-                        fim.setHours(23, 59, 59, 999);
-                        matchData = matchData && dataCliente <= fim;
-                    }
-                }
-                
-                return matchBusca && matchStatus && matchData;
+                return matchBusca && matchNif && matchStatus && matchData;
             });
             
             atualizarListaClientes(clientesFiltrados);
@@ -3979,10 +3963,9 @@
 
         function limparFiltrosClientes() {
             document.getElementById('buscaClientes').value = '';
+            document.getElementById('buscaNifClientes').value = '';
             document.getElementById('filtroStatusCliente').value = '';
             document.getElementById('filtroDataCliente').value = '';
-            document.getElementById('filtroDataInicioCliente').value = '';
-            document.getElementById('filtroDataFimCliente').value = '';
             aplicarFiltrosClientes();
         }
 
