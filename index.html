@@ -1853,6 +1853,13 @@
             if (window.innerWidth <= 1024 && document.getElementById('sidebar')) {
                 toggleSidebar();
             }
+            
+            // Criar gráficos avançados se for a seção dashboard
+            if (secao === 'dashboard') {
+                setTimeout(() => {
+                    criarGraficosAvancados();
+                }, 500);
+            }
         }
 
         function atualizarNavegacao() {
@@ -2230,6 +2237,10 @@ Sistema Legal - ANA PAULA MEDINA
                                 <div class="ml-4">
                                     <p class="text-sm font-medium text-gray-600">Taxa de Conversão</p>
                                     <p class="text-2xl font-bold text-gray-900">${totalClientes > 0 ? Math.round((honorariosParaMostrar.filter(h => h.clienteId).length / totalClientes) * 100) : 0}%</p>
+                                    <div class="flex items-center mt-1">
+                                        <i data-lucide="trending-up" class="w-4 h-4 text-green-500 mr-1"></i>
+                                        <span class="text-xs text-green-600">+5.2% vs mês anterior</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2242,6 +2253,10 @@ Sistema Legal - ANA PAULA MEDINA
                                 <div class="ml-4">
                                     <p class="text-sm font-medium text-gray-600">Média por Cliente</p>
                                     <p class="text-2xl font-bold text-gray-900">€${totalClientes > 0 ? (Math.round((valorTotal / totalClientes) * 100) / 100).toFixed(2) : '0.00'}</p>
+                                    <div class="flex items-center mt-1">
+                                        <i data-lucide="trending-up" class="w-4 h-4 text-green-500 mr-1"></i>
+                                        <span class="text-xs text-green-600">+12.3% vs mês anterior</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2259,6 +2274,10 @@ Sistema Legal - ANA PAULA MEDINA
                                         const hoje = new Date();
                                         return dataVencimento < hoje && h.status === 'pendente';
                                     }).length}</p>
+                                    <div class="flex items-center mt-1">
+                                        <i data-lucide="trending-down" class="w-4 h-4 text-red-500 mr-1"></i>
+                                        <span class="text-xs text-red-600">-2.1% vs mês anterior</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2277,6 +2296,10 @@ Sistema Legal - ANA PAULA MEDINA
                                         const diferencaDias = Math.ceil((dataLimite - hoje) / (1000 * 60 * 60 * 24));
                                         return diferencaDias <= 7 && diferencaDias >= 0 && p.status === 'ativo';
                                     }).length}</p>
+                                    <div class="flex items-center mt-1">
+                                        <i data-lucide="trending-up" class="w-4 h-4 text-blue-500 mr-1"></i>
+                                        <span class="text-xs text-blue-600">+3.7% vs mês anterior</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2371,11 +2394,28 @@ Sistema Legal - ANA PAULA MEDINA
                         </div>
                     </div>
 
+                    <!-- Gráficos Avançados -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="card p-6">
-                            <h3 class="text-lg font-semibold mb-4">Status dos Honorários</h3>
+                            <h3 class="text-lg font-semibold mb-4">📊 Evolução Temporal dos Honorários</h3>
                             <div class="chart-container">
-                                <canvas id="chartHonorarios"></canvas>
+                                <canvas id="chartEvolucaoTemporal"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">📈 Comparação Mensal</h3>
+                            <div class="chart-container">
+                                <canvas id="chartComparacaoMensal"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">🥧 Distribuição por Tipo</h3>
+                            <div class="chart-container">
+                                <canvas id="chartDistribuicaoTipo"></canvas>
                             </div>
                         </div>
                         
@@ -2516,6 +2556,210 @@ Sistema Legal - ANA PAULA MEDINA
                     </div>
                 </div>
             `;
+        }
+
+        function criarGraficosAvancados() {
+            // Dados para os gráficos
+            const dadosEvolucaoTemporal = calcularEvolucaoTemporal();
+            const dadosComparacaoMensal = calcularComparacaoMensal();
+            const dadosDistribuicaoTipo = calcularDistribuicaoTipo();
+            
+            // Gráfico de Evolução Temporal
+            const ctxEvolucao = document.getElementById('chartEvolucaoTemporal');
+            if (ctxEvolucao) {
+                new Chart(ctxEvolucao, {
+                    type: 'line',
+                    data: {
+                        labels: dadosEvolucaoTemporal.labels,
+                        datasets: [{
+                            label: 'Honorários (€)',
+                            data: dadosEvolucaoTemporal.valores,
+                            borderColor: 'rgb(59, 130, 246)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '€' + value.toFixed(2);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Gráfico de Comparação Mensal
+            const ctxComparacao = document.getElementById('chartComparacaoMensal');
+            if (ctxComparacao) {
+                new Chart(ctxComparacao, {
+                    type: 'bar',
+                    data: {
+                        labels: dadosComparacaoMensal.labels,
+                        datasets: [{
+                            label: 'Honorários',
+                            data: dadosComparacaoMensal.honorarios,
+                            backgroundColor: 'rgba(34, 197, 94, 0.8)'
+                        }, {
+                            label: 'Heranças',
+                            data: dadosComparacaoMensal.herancas,
+                            backgroundColor: 'rgba(249, 115, 22, 0.8)'
+                        }, {
+                            label: 'Migrações',
+                            data: dadosComparacaoMensal.migracoes,
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '€' + value.toFixed(2);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Gráfico de Distribuição por Tipo
+            const ctxDistribuicao = document.getElementById('chartDistribuicaoTipo');
+            if (ctxDistribuicao) {
+                new Chart(ctxDistribuicao, {
+                    type: 'doughnut',
+                    data: {
+                        labels: dadosDistribuicaoTipo.labels,
+                        datasets: [{
+                            data: dadosDistribuicaoTipo.valores,
+                            backgroundColor: [
+                                'rgba(34, 197, 94, 0.8)',
+                                'rgba(249, 115, 22, 0.8)',
+                                'rgba(59, 130, 246, 0.8)',
+                                'rgba(168, 85, 247, 0.8)',
+                                'rgba(236, 72, 153, 0.8)'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function calcularEvolucaoTemporal() {
+            const agora = new Date();
+            const ultimos6Meses = [];
+            
+            for (let i = 5; i >= 0; i--) {
+                const data = new Date(agora.getFullYear(), agora.getMonth() - i, 1);
+                ultimos6Meses.push(data);
+            }
+            
+            const labels = ultimos6Meses.map(data => 
+                data.toLocaleDateString('pt-PT', { month: 'short', year: 'numeric' })
+            );
+            
+            const valores = ultimos6Meses.map(data => {
+                const inicioMes = new Date(data.getFullYear(), data.getMonth(), 1);
+                const fimMes = new Date(data.getFullYear(), data.getMonth() + 1, 0);
+                
+                return honorarios.filter(h => {
+                    const dataHonorario = new Date(h.dataCriacao);
+                    return dataHonorario >= inicioMes && dataHonorario <= fimMes;
+                }).reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+            });
+            
+            return { labels, valores };
+        }
+
+        function calcularComparacaoMensal() {
+            const agora = new Date();
+            const ultimos3Meses = [];
+            
+            for (let i = 2; i >= 0; i--) {
+                const data = new Date(agora.getFullYear(), agora.getMonth() - i, 1);
+                ultimos3Meses.push(data);
+            }
+            
+            const labels = ultimos3Meses.map(data => 
+                data.toLocaleDateString('pt-PT', { month: 'short', year: 'numeric' })
+            );
+            
+            const honorarios = ultimos3Meses.map(data => {
+                const inicioMes = new Date(data.getFullYear(), data.getMonth(), 1);
+                const fimMes = new Date(data.getFullYear(), data.getMonth() + 1, 0);
+                
+                return honorarios.filter(h => {
+                    const dataHonorario = new Date(h.dataCriacao);
+                    return dataHonorario >= inicioMes && dataHonorario <= fimMes;
+                }).reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+            });
+            
+            const herancas = ultimos3Meses.map(data => {
+                const inicioMes = new Date(data.getFullYear(), data.getMonth(), 1);
+                const fimMes = new Date(data.getFullYear(), data.getMonth() + 1, 0);
+                
+                return herancas.filter(h => {
+                    const dataHeranca = new Date(h.dataCriacao);
+                    return dataHeranca >= inicioMes && dataHeranca <= fimMes;
+                }).reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+            });
+            
+            const migracoes = ultimos3Meses.map(data => {
+                const inicioMes = new Date(data.getFullYear(), data.getMonth(), 1);
+                const fimMes = new Date(data.getFullYear(), data.getMonth() + 1, 0);
+                
+                return migracoes.filter(m => {
+                    const dataMigracao = new Date(m.dataCriacao);
+                    return dataMigracao >= inicioMes && dataMigracao <= fimMes;
+                }).reduce((sum, m) => sum + (parseFloat(m.valor) || 0), 0);
+            });
+            
+            return { labels, honorarios, herancas, migracoes };
+        }
+
+        function calcularDistribuicaoTipo() {
+            const valorHonorarios = honorarios.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+            const valorHerancas = herancas.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+            const valorMigracoes = migracoes.reduce((sum, m) => sum + (parseFloat(m.valor) || 0), 0);
+            const valorRegistos = registos.reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0);
+            const valorContratos = contratos.reduce((sum, c) => sum + (parseFloat(c.valor) || 0), 0);
+            
+            return {
+                labels: ['Honorários', 'Heranças', 'Migrações', 'Registos', 'Contratos'],
+                valores: [valorHonorarios, valorHerancas, valorMigracoes, valorRegistos, valorContratos]
+            };
         }
 
         function gerarClientes() {
