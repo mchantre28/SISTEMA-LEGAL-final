@@ -1665,6 +1665,11 @@
             if (conteudoElement) {
                 conteudoElement.innerHTML = conteudo;
                 console.log('✅ Conteúdo inserido no DOM');
+                
+                // Atualizar badge de notificações se for a seção de notificações
+                if (secao === 'notificacoes') {
+                    atualizarBadgeNotificacoes();
+                }
             } else {
                 console.error('❌ Elemento conteudoDinamico não encontrado');
             }
@@ -5808,7 +5813,23 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
 
         function atualizarBadgeNotificacoes() {
-            const notificacoesNaoLidas = notificacoes.filter(n => !n.lida).length;
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            const convidadoId = localStorage.getItem('convidadoId');
+            
+            // Filtrar notificações baseado no tipo de usuário (igual ao gerarNotificacoes)
+            let notificacoesFiltradas = notificacoes;
+            
+            if (tipoUsuario === 'convidado') {
+                notificacoesFiltradas = notificacoes.filter(n => 
+                    n.destinatarioId === parseInt(convidadoId) || 
+                    n.destinatarioId === 'todos' ||
+                    n.tipo === 'cliente_autorizado' ||
+                    n.tipo === 'documento_anexado' ||
+                    n.tipo === 'prazo_proximo'
+                );
+            }
+            
+            const notificacoesNaoLidas = notificacoesFiltradas.filter(n => !n.lida).length;
             const badge = document.getElementById('badgeNotificacoes');
             
             if (badge) {
