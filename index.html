@@ -2221,6 +2221,287 @@ END:VCALENDAR`;
             carregarSecao('automacoes');
         }
 
+        // Funções para gerenciar lembretes
+        function editarLembrete(lembreteId) {
+            const lembretes = obterLembretes();
+            const lembrete = lembretes.find(l => l.id === lembreteId);
+            
+            if (!lembrete) {
+                mostrarNotificacao('Lembrete não encontrado!', 'error');
+                return;
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Editar Lembrete</h3>
+                        <button onclick="fecharModal()" class="btn btn-sm btn-secondary">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <form onsubmit="atualizarLembrete(event, ${lembreteId})">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Cliente</label>
+                                <select name="clienteId" required class="w-full p-2 border rounded-lg">
+                                    <option value="">Selecione um cliente</option>
+                                    ${clientes.map(c => `<option value="${c.id}" ${c.id === lembrete.clienteId ? 'selected' : ''}>${c.nome}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Título</label>
+                                <input type="text" name="titulo" required class="w-full p-2 border rounded-lg" 
+                                       value="${lembrete.titulo}" placeholder="Título do lembrete">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Data/Hora</label>
+                                <input type="datetime-local" name="data" required class="w-full p-2 border rounded-lg" 
+                                       value="${lembrete.data}">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Descrição</label>
+                                <textarea name="descricao" class="w-full p-2 border rounded-lg" rows="3" 
+                                          placeholder="Descrição do lembrete">${lembrete.descricao}</textarea>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button type="submit" class="btn btn-primary">Atualizar Lembrete</button>
+                                <button type="button" onclick="fecharModal()" class="btn btn-secondary">Cancelar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function atualizarLembrete(event, lembreteId) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            const lembretes = obterLembretes();
+            const lembreteIndex = lembretes.findIndex(l => l.id === lembreteId);
+            
+            if (lembreteIndex === -1) {
+                mostrarNotificacao('Lembrete não encontrado!', 'error');
+                return;
+            }
+            
+            lembretes[lembreteIndex] = {
+                ...lembretes[lembreteIndex],
+                clienteId: parseInt(formData.get('clienteId')),
+                titulo: formData.get('titulo'),
+                data: formData.get('data'),
+                descricao: formData.get('descricao'),
+                atualizadoEm: new Date().toISOString()
+            };
+            
+            localStorage.setItem('lembretes', JSON.stringify(lembretes));
+            
+            fecharModal();
+            mostrarNotificacao('Lembrete atualizado com sucesso!', 'success');
+            carregarSecao('automacoes');
+        }
+
+        function desativarLembrete(lembreteId) {
+            if (!confirm('Tem certeza que deseja desativar este lembrete?')) {
+                return;
+            }
+            
+            const lembretes = obterLembretes();
+            const lembreteIndex = lembretes.findIndex(l => l.id === lembreteId);
+            
+            if (lembreteIndex === -1) {
+                mostrarNotificacao('Lembrete não encontrado!', 'error');
+                return;
+            }
+            
+            lembretes[lembreteIndex].ativo = false;
+            lembretes[lembreteIndex].desativadoEm = new Date().toISOString();
+            
+            localStorage.setItem('lembretes', JSON.stringify(lembretes));
+            
+            mostrarNotificacao('Lembrete desativado com sucesso!', 'success');
+            carregarSecao('automacoes');
+        }
+
+        // Função para configurar integrações
+        function configurarIntegracoes() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Configurar Integrações</h3>
+                        <button onclick="fecharModal()" class="btn btn-sm btn-secondary">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- Integração de Email -->
+                        <div class="card p-4">
+                            <h4 class="font-semibold mb-3">📧 Integração de Email</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Servidor SMTP</label>
+                                    <input type="text" id="smtpServer" class="w-full p-2 border rounded-lg" 
+                                           placeholder="smtp.gmail.com">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Porta</label>
+                                    <input type="number" id="smtpPort" class="w-full p-2 border rounded-lg" 
+                                           placeholder="587" value="587">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Email</label>
+                                    <input type="email" id="smtpEmail" class="w-full p-2 border rounded-lg" 
+                                           placeholder="seu@email.com">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Senha</label>
+                                    <input type="password" id="smtpPassword" class="w-full p-2 border rounded-lg" 
+                                           placeholder="Senha do email">
+                                </div>
+                                <button onclick="salvarIntegracaoEmail()" class="btn btn-primary">
+                                    <i data-lucide="save" class="w-4 h-4 mr-2"></i>
+                                    Salvar Configuração
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Integração de Calendário -->
+                        <div class="card p-4">
+                            <h4 class="font-semibold mb-3">📅 Integração de Calendário</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Tipo de Calendário</label>
+                                    <select id="calendarioTipo" class="w-full p-2 border rounded-lg">
+                                        <option value="google">Google Calendar</option>
+                                        <option value="outlook">Outlook Calendar</option>
+                                        <option value="apple">Apple Calendar</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">API Key</label>
+                                    <input type="text" id="calendarioApiKey" class="w-full p-2 border rounded-lg" 
+                                           placeholder="Chave da API">
+                                </div>
+                                <button onclick="salvarIntegracaoCalendario()" class="btn btn-primary">
+                                    <i data-lucide="save" class="w-4 h-4 mr-2"></i>
+                                    Salvar Configuração
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Integração de Contabilidade -->
+                        <div class="card p-4">
+                            <h4 class="font-semibold mb-3">💰 Integração de Contabilidade</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Sistema</label>
+                                    <select id="contabilidadeSistema" class="w-full p-2 border rounded-lg">
+                                        <option value="sap">SAP</option>
+                                        <option value="oracle">Oracle</option>
+                                        <option value="custom">Sistema Personalizado</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">URL da API</label>
+                                    <input type="url" id="contabilidadeUrl" class="w-full p-2 border rounded-lg" 
+                                           placeholder="https://api.exemplo.com">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Token de Acesso</label>
+                                    <input type="text" id="contabilidadeToken" class="w-full p-2 border rounded-lg" 
+                                           placeholder="Token de autenticação">
+                                </div>
+                                <button onclick="salvarIntegracaoContabilidade()" class="btn btn-primary">
+                                    <i data-lucide="save" class="w-4 h-4 mr-2"></i>
+                                    Salvar Configuração
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-3">
+                            <button onclick="fecharModal()" class="btn btn-secondary">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function salvarIntegracaoEmail() {
+            const config = {
+                tipo: 'email',
+                servidor: document.getElementById('smtpServer').value,
+                porta: document.getElementById('smtpPort').value,
+                email: document.getElementById('smtpEmail').value,
+                senha: document.getElementById('smtpPassword').value,
+                ativa: true,
+                configuradaEm: new Date().toISOString()
+            };
+            
+            const integracoes = obterIntegracoes();
+            const index = integracoes.findIndex(i => i.tipo === 'email');
+            
+            if (index >= 0) {
+                integracoes[index] = config;
+            } else {
+                integracoes.push(config);
+            }
+            
+            salvarIntegracoes(integracoes);
+            mostrarNotificacao('Configuração de email salva com sucesso!', 'success');
+        }
+
+        function salvarIntegracaoCalendario() {
+            const config = {
+                tipo: 'calendario',
+                sistema: document.getElementById('calendarioTipo').value,
+                apiKey: document.getElementById('calendarioApiKey').value,
+                ativa: true,
+                configuradaEm: new Date().toISOString()
+            };
+            
+            const integracoes = obterIntegracoes();
+            const index = integracoes.findIndex(i => i.tipo === 'calendario');
+            
+            if (index >= 0) {
+                integracoes[index] = config;
+            } else {
+                integracoes.push(config);
+            }
+            
+            salvarIntegracoes(integracoes);
+            mostrarNotificacao('Configuração de calendário salva com sucesso!', 'success');
+        }
+
+        function salvarIntegracaoContabilidade() {
+            const config = {
+                tipo: 'contabilidade',
+                sistema: document.getElementById('contabilidadeSistema').value,
+                url: document.getElementById('contabilidadeUrl').value,
+                token: document.getElementById('contabilidadeToken').value,
+                ativa: true,
+                configuradaEm: new Date().toISOString()
+            };
+            
+            const integracoes = obterIntegracoes();
+            const index = integracoes.findIndex(i => i.tipo === 'contabilidade');
+            
+            if (index >= 0) {
+                integracoes[index] = config;
+            } else {
+                integracoes.push(config);
+            }
+            
+            salvarIntegracoes(integracoes);
+            mostrarNotificacao('Configuração de contabilidade salva com sucesso!', 'success');
+        }
+
         function carregarDados() {
             try {
                 const clientesSalvos = localStorage.getItem('clientes');
