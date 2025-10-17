@@ -1643,7 +1643,7 @@
             // Verificar se é convidado e redirecionar para clientes se necessário
             const tipoUsuario = localStorage.getItem('tipoUsuario');
             if (tipoUsuario === 'convidado') {
-                const secoesPermitidas = ['clientes'];
+                const secoesPermitidas = ['clientes', 'notificacoes'];
                 if (!secoesPermitidas.includes(secao)) {
                     secao = 'clientes'; // Redirecionar para clientes
                 }
