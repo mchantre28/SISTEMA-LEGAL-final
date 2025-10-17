@@ -7974,27 +7974,29 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 return;
             }
             
-            // Simular upload (em um sistema real, enviaria para servidor)
-            const anexo = {
-                id: Date.now().toString(),
-                nome: nome,
-                tipo: tipo,
-                descricao: descricao,
-                nomeArquivo: arquivo.name,
-                tamanho: formatarTamanho(arquivo.size),
-                dataUpload: new Date().toISOString(),
-                tipoArquivo: arquivo.type,
-                conteudo: 'CONVERSAO_REAL_IMPLEMENTADA_FINAL...' // Em um sistema real, seria o arquivo real
-            };
-            
-            const cliente = clientes.find(c => c.id === clienteId);
-            if (cliente) {
-                if (!cliente.anexos) cliente.anexos = [];
-                cliente.anexos.push(anexo);
-                salvarDados('clientes', clientes);
-                mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                abrirAnexosCliente(clienteId); // Recarregar modal
-            }
+            // Converter arquivo para Base64
+            converterArquivoParaBase64(arquivo, function(base64Content) {
+                const anexo = {
+                    id: Date.now().toString(),
+                    nome: nome,
+                    tipo: tipo,
+                    descricao: descricao,
+                    nomeArquivo: arquivo.name,
+                    tamanho: formatarTamanho(arquivo.size),
+                    dataUpload: new Date().toISOString(),
+                    tipoArquivo: arquivo.type,
+                    conteudo: base64Content
+                };
+                
+                const cliente = clientes.find(c => c.id === clienteId);
+                if (cliente) {
+                    if (!cliente.anexos) cliente.anexos = [];
+                    cliente.anexos.push(anexo);
+                    salvarDados('clientes', clientes);
+                    mostrarNotificacao('Documento adicionado com sucesso!', 'success');
+                    abrirAnexosCliente(clienteId); // Recarregar modal
+                }
+            });
         }
         
         function formatarTamanho(bytes) {
@@ -8499,26 +8501,29 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 return;
             }
             
-            const anexo = {
-                id: Date.now().toString(),
-                nome: nome,
-                tipo: tipo,
-                descricao: descricao,
-                nomeArquivo: arquivo.name,
-                tamanho: formatarTamanho(arquivo.size),
-                dataUpload: new Date().toISOString(),
-                tipoArquivo: arquivo.type,
-                conteudo: 'CONVERSAO_REAL_IMPLEMENTADA_FINAL...'
-            };
-            
-            const contrato = contratos.find(c => c.id === contratoId);
-            if (contrato) {
-                if (!contrato.anexos) contrato.anexos = [];
-                contrato.anexos.push(anexo);
-                salvarDados('contratos', contratos);
-                mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                abrirAnexosContrato(contratoId);
-            }
+            // Converter arquivo para Base64
+            converterArquivoParaBase64(arquivo, function(base64Content) {
+                const anexo = {
+                    id: Date.now().toString(),
+                    nome: nome,
+                    tipo: tipo,
+                    descricao: descricao,
+                    nomeArquivo: arquivo.name,
+                    tamanho: formatarTamanho(arquivo.size),
+                    dataUpload: new Date().toISOString(),
+                    tipoArquivo: arquivo.type,
+                    conteudo: base64Content
+                };
+                
+                const contrato = contratos.find(c => c.id === contratoId);
+                if (contrato) {
+                    if (!contrato.anexos) contrato.anexos = [];
+                    contrato.anexos.push(anexo);
+                    salvarDados('contratos', contratos);
+                    mostrarNotificacao('Documento adicionado com sucesso!', 'success');
+                    abrirAnexosContrato(contratoId);
+                }
+            });
         }
         
         function removerAnexoContrato(contratoId, anexoId) {
@@ -10751,26 +10756,29 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 return;
             }
             
-            const anexo = {
-                id: Date.now().toString(),
-                nome: nome,
-                tipo: tipo,
-                descricao: descricao,
-                nomeArquivo: arquivo.name,
-                tamanho: formatarTamanho(arquivo.size),
-                dataUpload: new Date().toISOString(),
-                tipoArquivo: arquivo.type,
-                conteudo: 'CONVERSAO_REAL_IMPLEMENTADA_FINAL...'
-            };
-            
-            const contrato = contratos.find(c => c.id === contratoId);
-            if (contrato) {
-                if (!contrato.anexos) contrato.anexos = [];
-                contrato.anexos.push(anexo);
-                salvarDados('contratos', contratos);
-                mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                abrirAnexosContrato(contratoId);
-            }
+            // Converter arquivo para Base64
+            converterArquivoParaBase64(arquivo, function(base64Content) {
+                const anexo = {
+                    id: Date.now().toString(),
+                    nome: nome,
+                    tipo: tipo,
+                    descricao: descricao,
+                    nomeArquivo: arquivo.name,
+                    tamanho: formatarTamanho(arquivo.size),
+                    dataUpload: new Date().toISOString(),
+                    tipoArquivo: arquivo.type,
+                    conteudo: base64Content
+                };
+                
+                const contrato = contratos.find(c => c.id === contratoId);
+                if (contrato) {
+                    if (!contrato.anexos) contrato.anexos = [];
+                    contrato.anexos.push(anexo);
+                    salvarDados('contratos', contratos);
+                    mostrarNotificacao('Documento adicionado com sucesso!', 'success');
+                    abrirAnexosContrato(contratoId);
+                }
+            });
         }
 
         function adicionarAnexoHeranca(event, herancaId) {
@@ -10797,33 +10805,36 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 return;
             }
             
-            const anexo = {
-                id: Date.now().toString(),
-                nome: nome,
-                tipo: tipo,
-                descricao: descricao,
-                nomeArquivo: arquivo.name,
-                tamanho: formatarTamanho(arquivo.size),
-                dataUpload: new Date().toISOString(),
-                tipoArquivo: arquivo.type,
-                conteudo: 'CONVERSAO_REAL_IMPLEMENTADA_FINAL...'
-            };
-            
-            const heranca = herancas.find(h => h.id === herancaId);
-            console.log('🔧 Herança encontrada:', heranca);
-            if (heranca) {
-                if (!heranca.anexos) heranca.anexos = [];
-                heranca.anexos.push(anexo);
-                console.log('🔧 Anexo adicionado:', anexo);
-                console.log('🔧 Herança atualizada:', heranca);
-                salvarDados('herancas', herancas);
-                console.log('✅ Dados salvos no localStorage');
-                mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                abrirAnexosHeranca(herancaId);
-            } else {
-                console.error('❌ Herança não encontrada com ID:', herancaId);
-                mostrarNotificacao('Herança não encontrada!', 'error');
-            }
+            // Converter arquivo para Base64
+            converterArquivoParaBase64(arquivo, function(base64Content) {
+                const anexo = {
+                    id: Date.now().toString(),
+                    nome: nome,
+                    tipo: tipo,
+                    descricao: descricao,
+                    nomeArquivo: arquivo.name,
+                    tamanho: formatarTamanho(arquivo.size),
+                    dataUpload: new Date().toISOString(),
+                    tipoArquivo: arquivo.type,
+                    conteudo: base64Content
+                };
+                
+                const heranca = herancas.find(h => h.id === herancaId);
+                console.log('🔧 Herança encontrada:', heranca);
+                if (heranca) {
+                    if (!heranca.anexos) heranca.anexos = [];
+                    heranca.anexos.push(anexo);
+                    console.log('🔧 Anexo adicionado:', anexo);
+                    console.log('🔧 Herança atualizada:', heranca);
+                    salvarDados('herancas', herancas);
+                    console.log('✅ Dados salvos no localStorage');
+                    mostrarNotificacao('Documento adicionado com sucesso!', 'success');
+                    abrirAnexosHeranca(herancaId);
+                } else {
+                    console.error('❌ Herança não encontrada com ID:', herancaId);
+                    mostrarNotificacao('Herança não encontrada!', 'error');
+                }
+            });
         }
 
         function adicionarAnexoMigracao(event, migracaoId) {
@@ -10847,26 +10858,29 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 return;
             }
             
-            const anexo = {
-                id: Date.now().toString(),
-                nome: nome,
-                tipo: tipo,
-                descricao: descricao,
-                nomeArquivo: arquivo.name,
-                tamanho: formatarTamanho(arquivo.size),
-                dataUpload: new Date().toISOString(),
-                tipoArquivo: arquivo.type,
-                conteudo: 'CONVERSAO_REAL_IMPLEMENTADA_FINAL...'
-            };
-            
-            const migracao = migracoes.find(m => m.id === migracaoId);
-            if (migracao) {
-                if (!migracao.anexos) migracao.anexos = [];
-                migracao.anexos.push(anexo);
-                salvarDados('migracoes', migracoes);
-                mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                abrirAnexosMigracao(migracaoId);
-            }
+            // Converter arquivo para Base64
+            converterArquivoParaBase64(arquivo, function(base64Content) {
+                const anexo = {
+                    id: Date.now().toString(),
+                    nome: nome,
+                    tipo: tipo,
+                    descricao: descricao,
+                    nomeArquivo: arquivo.name,
+                    tamanho: formatarTamanho(arquivo.size),
+                    dataUpload: new Date().toISOString(),
+                    tipoArquivo: arquivo.type,
+                    conteudo: base64Content
+                };
+                
+                const migracao = migracoes.find(m => m.id === migracaoId);
+                if (migracao) {
+                    if (!migracao.anexos) migracao.anexos = [];
+                    migracao.anexos.push(anexo);
+                    salvarDados('migracoes', migracoes);
+                    mostrarNotificacao('Documento adicionado com sucesso!', 'success');
+                    abrirAnexosMigracao(migracaoId);
+                }
+            });
         }
 
         function adicionarAnexoRegisto(event, registoId) {
