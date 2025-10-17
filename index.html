@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Paula Medina - Sistema Legal v44.0 DEBUG SECAO</title>
+    <title>Ana Paula Medina - Sistema Legal v45.0 DEBUG FUNCAO</title>
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
@@ -2113,8 +2113,9 @@ END:VCALENDAR`;
         }
 
         function gerarAutomacoes() {
-            console.log('🔧 Função gerarAutomacoes chamada - v43.0');
-            alert('🔧 Função gerarAutomacoes chamada - v43.0');
+            console.log('🔧 Função gerarAutomacoes chamada - v44.0');
+            alert('🔧 Função gerarAutomacoes chamada - v44.0');
+            console.log('🔧 Iniciando geração de HTML para automações...');
             
             const lembretes = obterLembretes();
             const faturas = obterFaturas();
@@ -2260,10 +2261,10 @@ END:VCALENDAR`;
             `;
             
             console.log('🔧 HTML de automações gerado com sucesso');
-            return `
+            const html = `
                 <div class="space-y-6">
                     <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">TESTE SIMPLES - AUTOMAÇÕES</h3>
+                        <h3 class="text-lg font-semibold mb-4">TESTE SIMPLES - AUTOMAÇÕES v44.0</h3>
                         <p class="text-gray-600 mb-4">Testando apenas uma funcionalidade por vez</p>
                         
                         <div class="space-y-4">
@@ -2280,6 +2281,9 @@ END:VCALENDAR`;
                     </div>
                 </div>
             `;
+            
+            console.log('🔧 HTML retornado:', html.substring(0, 100) + '...');
+            return html;
         }
 
         // Função de teste simples
