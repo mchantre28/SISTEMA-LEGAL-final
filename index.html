@@ -7970,11 +7970,281 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
         
         function visualizarAnexo(anexoId) {
-            mostrarNotificacao('Funcionalidade de visualização será implementada', 'info');
+            console.log('🔧 visualizarAnexo chamado com ID:', anexoId);
+            
+            // Buscar anexo em todas as fontes
+            let anexo = null;
+            let tipo = '';
+            
+            // Buscar em contratos
+            const contratosSalvos = localStorage.getItem('contratos');
+            if (contratosSalvos) {
+                const contratos = JSON.parse(contratosSalvos);
+                for (const contrato of contratos) {
+                    if (contrato.anexos) {
+                        anexo = contrato.anexos.find(a => a.id === anexoId);
+                        if (anexo) {
+                            tipo = 'contrato';
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // Buscar em heranças
+            if (!anexo) {
+                const herancasSalvas = localStorage.getItem('herancas');
+                if (herancasSalvas) {
+                    const herancas = JSON.parse(herancasSalvas);
+                    for (const heranca of herancas) {
+                        if (heranca.anexos) {
+                            anexo = heranca.anexos.find(a => a.id === anexoId);
+                            if (anexo) {
+                                tipo = 'heranca';
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Buscar em migrações
+            if (!anexo) {
+                const migracoesSalvas = localStorage.getItem('migracoes');
+                if (migracoesSalvas) {
+                    const migracoes = JSON.parse(migracoesSalvas);
+                    for (const migracao of migracoes) {
+                        if (migracao.anexos) {
+                            anexo = migracao.anexos.find(a => a.id === anexoId);
+                            if (anexo) {
+                                tipo = 'migracao';
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Buscar em registos
+            if (!anexo) {
+                const registosSalvos = localStorage.getItem('registos');
+                if (registosSalvos) {
+                    const registos = JSON.parse(registosSalvos);
+                    for (const registo of registos) {
+                        if (registo.anexos) {
+                            anexo = registo.anexos.find(a => a.id === anexoId);
+                            if (anexo) {
+                                tipo = 'registo';
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Buscar em clientes
+            if (!anexo) {
+                const clientesSalvos = localStorage.getItem('clientes');
+                if (clientesSalvos) {
+                    const clientes = JSON.parse(clientesSalvos);
+                    for (const cliente of clientes) {
+                        if (cliente.anexos) {
+                            anexo = cliente.anexos.find(a => a.id === anexoId);
+                            if (anexo) {
+                                tipo = 'cliente';
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (!anexo) {
+                mostrarNotificacao('Documento não encontrado!', 'error');
+                return;
+            }
+            
+            // Determinar tipo de arquivo
+            const extensao = anexo.nome.split('.').pop().toLowerCase();
+            const isImagem = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extensao);
+            const isPDF = extensao === 'pdf';
+            const isDocumento = ['doc', 'docx', 'txt', 'rtf'].includes(extensao);
+            
+            // Criar modal de visualização
+            const modal = `
+                <div class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" onclick="fecharModal()">
+                    <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-bold text-gray-900">${anexo.nome}</h3>
+                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="x" class="w-6 h-6"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="mb-4 text-sm text-gray-600">
+                                <p><strong>Tipo:</strong> ${anexo.tipo}</p>
+                                <p><strong>Tamanho:</strong> ${anexo.tamanho}</p>
+                                <p><strong>Data:</strong> ${new Date(anexo.dataUpload).toLocaleDateString('pt-PT')}</p>
+                                ${anexo.descricao ? `<p><strong>Descrição:</strong> ${anexo.descricao}</p>` : ''}
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                                ${isImagem ? `
+                                    <div class="text-center">
+                                        <img src="${anexo.conteudo}" alt="${anexo.nome}" class="max-w-full max-h-96 mx-auto rounded-lg shadow-lg">
+                                    </div>
+                                ` : isPDF ? `
+                                    <div class="text-center">
+                                        <iframe src="${anexo.conteudo}" width="100%" height="500px" class="rounded-lg border-0"></iframe>
+                                    </div>
+                                ` : isDocumento ? `
+                                    <div class="text-center py-8">
+                                        <i data-lucide="file-text" class="w-16 h-16 mx-auto mb-4 text-blue-600"></i>
+                                        <p class="text-gray-600 mb-4">Visualização não disponível para este tipo de arquivo</p>
+                                        <button onclick="baixarAnexo('${anexoId}')" class="btn btn-primary">
+                                            <i data-lucide="download" class="w-4 h-4 mr-2"></i>
+                                            Baixar Documento
+                                        </button>
+                                    </div>
+                                ` : `
+                                    <div class="text-center py-8">
+                                        <i data-lucide="file" class="w-16 h-16 mx-auto mb-4 text-gray-600"></i>
+                                        <p class="text-gray-600 mb-4">Visualização não disponível para este tipo de arquivo</p>
+                                        <button onclick="baixarAnexo('${anexoId}')" class="btn btn-primary">
+                                            <i data-lucide="download" class="w-4 h-4 mr-2"></i>
+                                            Baixar Arquivo
+                                        </button>
+                                    </div>
+                                `}
+                            </div>
+                            
+                            <div class="flex justify-end space-x-3 mt-4">
+                                <button onclick="baixarAnexo('${anexoId}')" class="btn btn-secondary">
+                                    <i data-lucide="download" class="w-4 h-4 mr-2"></i>
+                                    Baixar
+                                </button>
+                                <button onclick="fecharModal()" class="btn btn-primary">
+                                    <i data-lucide="x" class="w-4 h-4 mr-2"></i>
+                                    Fechar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Adicionar modal ao body
+            const modalElement = document.createElement('div');
+            modalElement.innerHTML = modal;
+            document.body.appendChild(modalElement.firstElementChild);
+            lucide.createIcons();
         }
         
         function baixarAnexo(anexoId) {
-            mostrarNotificacao('Funcionalidade de download será implementada', 'info');
+            console.log('🔧 baixarAnexo chamado com ID:', anexoId);
+            
+            // Buscar anexo em todas as fontes
+            let anexo = null;
+            
+            // Buscar em contratos
+            const contratosSalvos = localStorage.getItem('contratos');
+            if (contratosSalvos) {
+                const contratos = JSON.parse(contratosSalvos);
+                for (const contrato of contratos) {
+                    if (contrato.anexos) {
+                        anexo = contrato.anexos.find(a => a.id === anexoId);
+                        if (anexo) break;
+                    }
+                }
+            }
+            
+            // Buscar em heranças
+            if (!anexo) {
+                const herancasSalvas = localStorage.getItem('herancas');
+                if (herancasSalvas) {
+                    const herancas = JSON.parse(herancasSalvas);
+                    for (const heranca of herancas) {
+                        if (heranca.anexos) {
+                            anexo = heranca.anexos.find(a => a.id === anexoId);
+                            if (anexo) break;
+                        }
+                    }
+                }
+            }
+            
+            // Buscar em migrações
+            if (!anexo) {
+                const migracoesSalvas = localStorage.getItem('migracoes');
+                if (migracoesSalvas) {
+                    const migracoes = JSON.parse(migracoesSalvas);
+                    for (const migracao of migracoes) {
+                        if (migracao.anexos) {
+                            anexo = migracao.anexos.find(a => a.id === anexoId);
+                            if (anexo) break;
+                        }
+                    }
+                }
+            }
+            
+            // Buscar em registos
+            if (!anexo) {
+                const registosSalvos = localStorage.getItem('registos');
+                if (registosSalvos) {
+                    const registos = JSON.parse(registosSalvos);
+                    for (const registo of registos) {
+                        if (registo.anexos) {
+                            anexo = registo.anexos.find(a => a.id === anexoId);
+                            if (anexo) break;
+                        }
+                    }
+                }
+            }
+            
+            // Buscar em clientes
+            if (!anexo) {
+                const clientesSalvos = localStorage.getItem('clientes');
+                if (clientesSalvos) {
+                    const clientes = JSON.parse(clientesSalvos);
+                    for (const cliente of clientes) {
+                        if (cliente.anexos) {
+                            anexo = cliente.anexos.find(a => a.id === anexoId);
+                            if (anexo) break;
+                        }
+                    }
+                }
+            }
+            
+            if (!anexo) {
+                mostrarNotificacao('Documento não encontrado!', 'error');
+                return;
+            }
+            
+            try {
+                // Converter base64 para blob
+                const byteCharacters = atob(anexo.conteudo);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: anexo.tipoMime || 'application/octet-stream' });
+                
+                // Criar link de download
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = anexo.nome;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+                
+                mostrarNotificacao('Download iniciado com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao baixar arquivo:', error);
+                mostrarNotificacao('Erro ao baixar arquivo!', 'error');
+            }
         }
         
         function removerAnexo(clienteId, anexoId) {
