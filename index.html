@@ -1379,7 +1379,10 @@
             console.log('🔧 Inicializando PWA...');
             
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/service-worker.js')
+                // Tentar registrar o service worker com fallback
+                const swPath = './service-worker.js';
+                
+                navigator.serviceWorker.register(swPath)
                     .then((registration) => {
                         console.log('✅ Service Worker registrado:', registration);
                         
@@ -1394,7 +1397,8 @@
                         });
                     })
                     .catch((error) => {
-                        console.error('❌ Erro ao registrar Service Worker:', error);
+                        console.warn('⚠️ Service Worker não encontrado, continuando sem PWA:', error.message);
+                        // Continuar sem PWA se o service worker não estiver disponível
                     });
             } else {
                 console.log('❌ Service Worker não suportado');
@@ -4034,10 +4038,10 @@ Sistema Legal - ANA PAULA MEDINA
                 const inicioMes = new Date(data.getFullYear(), data.getMonth(), 1);
                 const fimMes = new Date(data.getFullYear(), data.getMonth() + 1, 0);
                 
-                return honorarios.filter(h => {
+                return window.honorarios ? window.honorarios.filter(h => {
                     const dataHonorario = new Date(h.dataCriacao);
                     return dataHonorario >= inicioMes && dataHonorario <= fimMes;
-                }).reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+                }).reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0) : 0;
             });
             
             return { labels, valores };
@@ -4056,45 +4060,45 @@ Sistema Legal - ANA PAULA MEDINA
                 data.toLocaleDateString('pt-PT', { month: 'short', year: 'numeric' })
             );
             
-            const honorarios = ultimos3Meses.map(data => {
+            const valoresHonorarios = ultimos3Meses.map(data => {
                 const inicioMes = new Date(data.getFullYear(), data.getMonth(), 1);
                 const fimMes = new Date(data.getFullYear(), data.getMonth() + 1, 0);
                 
-                return honorarios.filter(h => {
+                return window.honorarios ? window.honorarios.filter(h => {
                     const dataHonorario = new Date(h.dataCriacao);
                     return dataHonorario >= inicioMes && dataHonorario <= fimMes;
-                }).reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+                }).reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0) : 0;
             });
             
-            const herancas = ultimos3Meses.map(data => {
+            const valoresHerancas = ultimos3Meses.map(data => {
                 const inicioMes = new Date(data.getFullYear(), data.getMonth(), 1);
                 const fimMes = new Date(data.getFullYear(), data.getMonth() + 1, 0);
                 
-                return herancas.filter(h => {
+                return window.herancas ? window.herancas.filter(h => {
                     const dataHeranca = new Date(h.dataCriacao);
                     return dataHeranca >= inicioMes && dataHeranca <= fimMes;
-                }).reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+                }).reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0) : 0;
             });
             
-            const migracoes = ultimos3Meses.map(data => {
+            const valoresMigracoes = ultimos3Meses.map(data => {
                 const inicioMes = new Date(data.getFullYear(), data.getMonth(), 1);
                 const fimMes = new Date(data.getFullYear(), data.getMonth() + 1, 0);
                 
-                return migracoes.filter(m => {
+                return window.migracoes ? window.migracoes.filter(m => {
                     const dataMigracao = new Date(m.dataCriacao);
                     return dataMigracao >= inicioMes && dataMigracao <= fimMes;
-                }).reduce((sum, m) => sum + (parseFloat(m.valor) || 0), 0);
+                }).reduce((sum, m) => sum + (parseFloat(m.valor) || 0), 0) : 0;
             });
             
-            return { labels, honorarios, herancas, migracoes };
+            return { labels, honorarios: valoresHonorarios, herancas: valoresHerancas, migracoes: valoresMigracoes };
         }
 
         function calcularDistribuicaoTipo() {
-            const valorHonorarios = honorarios.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
-            const valorHerancas = herancas.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
-            const valorMigracoes = migracoes.reduce((sum, m) => sum + (parseFloat(m.valor) || 0), 0);
-            const valorRegistos = registos.reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0);
-            const valorContratos = contratos.reduce((sum, c) => sum + (parseFloat(c.valor) || 0), 0);
+            const valorHonorarios = window.honorarios ? window.honorarios.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0) : 0;
+            const valorHerancas = window.herancas ? window.herancas.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0) : 0;
+            const valorMigracoes = window.migracoes ? window.migracoes.reduce((sum, m) => sum + (parseFloat(m.valor) || 0), 0) : 0;
+            const valorRegistos = window.registos ? window.registos.reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0) : 0;
+            const valorContratos = window.contratos ? window.contratos.reduce((sum, c) => sum + (parseFloat(c.valor) || 0), 0) : 0;
             
             return {
                 labels: ['Honorários', 'Heranças', 'Migrações', 'Registos', 'Contratos'],
