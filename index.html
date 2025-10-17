@@ -5237,26 +5237,29 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 return;
             }
             
-            const anexo = {
-                id: Date.now().toString(),
-                nome: nome,
-                tipo: tipo,
-                descricao: descricao,
-                nomeArquivo: arquivo.name,
-                tamanho: formatarTamanho(arquivo.size),
-                dataUpload: new Date().toISOString(),
-                tipoArquivo: arquivo.type,
-                conteudo: 'CONVERSAO_REAL_IMPLEMENTADA_FINAL...'
-            };
-            
-            const registo = registos.find(r => r.id === registoId);
-            if (registo) {
-                if (!registo.anexos) registo.anexos = [];
-                registo.anexos.push(anexo);
-                salvarDados('registos', registos);
-                mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                abrirAnexosRegisto(registoId);
-            }
+            // Converter arquivo para Base64
+            converterArquivoParaBase64(arquivo, function(base64Content) {
+                const anexo = {
+                    id: Date.now().toString(),
+                    nome: nome,
+                    tipo: tipo,
+                    descricao: descricao,
+                    nomeArquivo: arquivo.name,
+                    tamanho: formatarTamanho(arquivo.size),
+                    dataUpload: new Date().toISOString(),
+                    tipoArquivo: arquivo.type,
+                    conteudo: base64Content
+                };
+                
+                const registo = registos.find(r => r.id === registoId);
+                if (registo) {
+                    if (!registo.anexos) registo.anexos = [];
+                    registo.anexos.push(anexo);
+                    salvarDados('registos', registos);
+                    mostrarNotificacao('Documento adicionado com sucesso!', 'success');
+                    abrirAnexosRegisto(registoId);
+                }
+            });
         }
         
         function removerAnexoRegisto(registoId, anexoId) {
@@ -10887,26 +10890,29 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 return;
             }
             
-            const anexo = {
-                id: Date.now().toString(),
-                nome: nome,
-                tipo: tipo,
-                descricao: descricao,
-                nomeArquivo: arquivo.name,
-                tamanho: formatarTamanho(arquivo.size),
-                dataUpload: new Date().toISOString(),
-                tipoArquivo: arquivo.type,
-                conteudo: 'CONVERSAO_REAL_IMPLEMENTADA_FINAL...'
-            };
-            
-            const registo = registos.find(r => r.id === registoId);
-            if (registo) {
-                if (!registo.anexos) registo.anexos = [];
-                registo.anexos.push(anexo);
-                salvarDados('registos', registos);
-                mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                abrirAnexosRegisto(registoId);
-            }
+            // Converter arquivo para Base64
+            converterArquivoParaBase64(arquivo, function(base64Content) {
+                const anexo = {
+                    id: Date.now().toString(),
+                    nome: nome,
+                    tipo: tipo,
+                    descricao: descricao,
+                    nomeArquivo: arquivo.name,
+                    tamanho: formatarTamanho(arquivo.size),
+                    dataUpload: new Date().toISOString(),
+                    tipoArquivo: arquivo.type,
+                    conteudo: base64Content
+                };
+                
+                const registo = registos.find(r => r.id === registoId);
+                if (registo) {
+                    if (!registo.anexos) registo.anexos = [];
+                    registo.anexos.push(anexo);
+                    salvarDados('registos', registos);
+                    mostrarNotificacao('Documento adicionado com sucesso!', 'success');
+                    abrirAnexosRegisto(registoId);
+                }
+            });
         }
 
         // === FUNÇÕES PARA REMOVER ANEXOS ===
