@@ -1,27 +1,63 @@
 {
-  "name": "Sistema Legal - Gestão Jurídica",
+  "name": "Sistema Legal - ANA PAULA MEDINA",
   "short_name": "Sistema Legal",
-  "description": "Sistema completo de gestão jurídica para Solicitadores",
-  "version": "38.0",
+  "description": "Sistema de gestão jurídica profissional",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#1f2937",
   "theme_color": "#3b82f6",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-PT",
   "icons": [
     {
       "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMzYjgyZjYiLz4KPHBhdGggZD0iTTk2IDQ4QzY5LjQ5IDQ4IDQ4IDY5LjQ5IDQ4IDk2UzY5LjQ5IDE0NCA5NiAxNDRTMTQ0IDEyMi41MSAxNDQgOTZTMTIyLjUxIDQ4IDk2IDQ4Wk05NiAxMjhDNzMuOTA5IDEyOCA1NiAxMTAuMDkgNTYgODhTNzMuOTA5IDQ4IDk2IDQ4UzEzNiA2NS45MSAxMzYgODhTMTE4LjA5IDEyOCA5NiAxMjhaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     },
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMzYjgyZjYiLz4KPHBhdGggZD0iTTI1NiAxMjhDMTg1LjMwNyAxMjggMTI4IDE4NS4zMDcgMTI4IDI1NlMxODUuMzA3IDM4NCAyNTYgMzg0UzM4NCAzMjYuNjkzIDM4NCAyNTZTMzI2LjY5MyAxMjggMjU2IDEyOFpNMjU2IDM0MkMxOTYuMTE3IDM0MiAxNDYgMjkyLjExNyAxNDYgMjU2UzE5Ni4xMTcgMTcwIDI1NiAxNzBTMzY2IDIxOS44ODMgMzY2IDI1NlMzMTUuODgzIDM0MiAyNTYgMzQyWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMzYjgyZjYiLz4KPHBhdGggZD0iTTI1NiAxMjhDMTgzLjQ5IDEyOCAxMjggMTgzLjQ5IDEyOCAyNTZTMTgzLjQ5IDM4NCAyNTYgMzg0UzM4NCAzMjguNTEgMzg0IDI1NlMzMjguNTEgMTI4IDI1NiAxMjhaTTI1NiAzMjBDMjA0LjU0IDMyMCAxNjAgMjc1LjQ2IDE2MCAyMjRTMjA0LjU0IDEyOCAyNTYgMTI4UzM1MiAxNzIuNTQgMzUyIDIyNFMzMDcuNDYgMzIwIDI1NiAzMjBaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ],
   "categories": ["business", "productivity", "utilities"],
-  "lang": "pt",
-  "scope": "/",
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIHZpZXdCb3g9IjAgMCAxMjgwIDcyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyODAiIGhlaWdodD0iNzIwIiBmaWxsPSIjZjNmNGY2Ii8+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyODAiIGhlaWdodD0iNzIwIiBmaWxsPSIjMWYyOTM3Ii8+CjxyZWN0IHg9IjI4MCIgeT0iMCIgd2lkdGg9IjEwMDAiIGhlaWdodD0iNzIwIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Clientes",
+      "short_name": "Clientes",
+      "description": "Acesso rápido aos clientes",
+      "url": "/?section=clientes",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMTIiIGZpbGw9IiMzYjgyZjYiLz4KPHBhdGggZD0iTTQ4IDI0QzM0Ljc0IDI0IDI0IDM0Ljc0IDI0IDQ4UzM0Ljc0IDcyIDQ4IDcyUzcyIDYxLjI2IDcyIDQ4UzYxLjI2IDI0IDQ4IDI0Wk00OCA2NEM0MC4yNyA2NCAzNCA1Ny43MyAzNCA1MFM0MC4yNyAzNiA0OCAzNlM2MiA0Mi4yNyA2MiA1MFM1NS43MyA2NCA0OCA2NFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Honorários",
+      "short_name": "Honorários",
+      "description": "Acesso rápido aos honorários",
+      "url": "/?section=honorarios",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMTIiIGZpbGw9IiMxMGI5ODEiLz4KPHBhdGggZD0iTTQ4IDI0QzM0Ljc0IDI0IDI0IDM0Ljc0IDI0IDQ4UzM0Ljc0IDcyIDQ4IDcyUzcyIDYxLjI2IDcyIDQ4UzYxLjI2IDI0IDQ4IDI0Wk00OCA2NEM0MC4yNyA2NCAzNCA1Ny43MyAzNCA1MFM0MC4yNyAzNiA0OCAzNlM2MiA0Mi4yNyA2MiA1MFM1NS43MyA2NCA0OCA2NFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
   "prefer_related_applications": false
 }

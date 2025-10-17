@@ -33,6 +33,81 @@
             --info-color: #3b82f6;
         }
 
+        /* Modo Escuro */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #1f2937;
+                --secondary-color: #4b5563;
+            }
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #1f2937;
+            --secondary-color: #4b5563;
+        }
+
+        [data-theme="dark"] body {
+            background-color: #111827;
+            color: #f9fafb;
+        }
+
+        [data-theme="dark"] .card {
+            background-color: #1f2937;
+            border-color: #374151;
+            color: #f9fafb;
+        }
+
+        [data-theme="dark"] .sidebar {
+            background: #111827 !important;
+        }
+
+        [data-theme="dark"] .main-content {
+            background-color: #111827;
+        }
+
+        [data-theme="dark"] .table-responsive {
+            background-color: #1f2937;
+        }
+
+        [data-theme="dark"] .table-responsive th,
+        [data-theme="dark"] .table-responsive td {
+            border-color: #374151;
+            color: #f9fafb;
+        }
+
+        [data-theme="dark"] .modal-content {
+            background-color: #1f2937;
+            color: #f9fafb;
+        }
+
+        [data-theme="dark"] .btn {
+            color: #f9fafb;
+        }
+
+        [data-theme="dark"] .btn-primary {
+            background: #3b82f6;
+        }
+
+        [data-theme="dark"] .btn-secondary {
+            background: #6b7280;
+        }
+
+        [data-theme="dark"] .btn-success {
+            background: #10b981;
+        }
+
+        [data-theme="dark"] .btn-warning {
+            background: #f59e0b;
+        }
+
+        [data-theme="dark"] .btn-error {
+            background: #ef4444;
+        }
+
+        [data-theme="dark"] .btn-info {
+            background: #3b82f6;
+        }
+
         .sidebar { 
             background: var(--primary-color) !important; 
             min-height: 100vh !important;
@@ -672,6 +747,10 @@
                 <div class="flex items-center justify-between">
                     <h1 class="text-2xl font-bold text-gray-800" id="pageTitle">Sistema Legal</h1>
                     <div class="flex items-center space-x-4">
+                        <button onclick="toggleDarkMode()" class="btn btn-secondary" id="darkModeBtn">
+                            <i data-lucide="moon" class="w-4 h-4" id="darkModeIcon"></i>
+                            <span id="darkModeText">Modo Escuro</span>
+                        </button>
                         <button onclick="exportarDados()" class="btn btn-primary">
                             <i data-lucide="download" class="w-4 h-4"></i>
                             Exportar
@@ -1265,6 +1344,233 @@
             atualizarInterface();
             iniciarSistemaNotificacoes();
             iniciarSistemaBackup();
+            
+            // Inicializar PWA e funcionalidades mobile
+            inicializarPWA();
+            inicializarModoEscuro();
+            inicializarGestosTouch();
+        }
+
+        // PWA - Service Worker Registration
+        function inicializarPWA() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('✅ Service Worker registrado:', registration);
+                        
+                        // Verificar atualizações
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    mostrarNotificacao('Nova versão disponível! Recarregue a página.', 'info');
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('❌ Erro ao registrar Service Worker:', error);
+                    });
+            }
+
+            // PWA Install Prompt
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                // Mostrar botão de instalação
+                mostrarBotaoInstalacao();
+            });
+
+            // PWA Installed
+            window.addEventListener('appinstalled', () => {
+                console.log('✅ PWA instalado com sucesso');
+                mostrarNotificacao('Aplicação instalada com sucesso!', 'success');
+                deferredPrompt = null;
+            });
+        }
+
+        function mostrarBotaoInstalacao() {
+            const installBtn = document.createElement('button');
+            installBtn.className = 'btn btn-info';
+            installBtn.innerHTML = '<i data-lucide="download" class="w-4 h-4"></i> Instalar App';
+            installBtn.onclick = () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('✅ Usuário aceitou instalação');
+                        }
+                        deferredPrompt = null;
+                    });
+                }
+            };
+            
+            const header = document.querySelector('header .flex');
+            if (header) {
+                header.insertBefore(installBtn, header.firstChild);
+            }
+        }
+
+        // Modo Escuro
+        function inicializarModoEscuro() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                ativarModoEscuro();
+            } else {
+                desativarModoEscuro();
+            }
+        }
+
+        function toggleDarkMode() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            
+            if (isDark) {
+                desativarModoEscuro();
+            } else {
+                ativarModoEscuro();
+            }
+        }
+
+        function ativarModoEscuro() {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            
+            const icon = document.getElementById('darkModeIcon');
+            const text = document.getElementById('darkModeText');
+            
+            if (icon) icon.setAttribute('data-lucide', 'sun');
+            if (text) text.textContent = 'Modo Claro';
+            
+            // Re-renderizar ícones
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+        }
+
+        function desativarModoEscuro() {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            
+            const icon = document.getElementById('darkModeIcon');
+            const text = document.getElementById('darkModeText');
+            
+            if (icon) icon.setAttribute('data-lucide', 'moon');
+            if (text) text.textContent = 'Modo Escuro';
+            
+            // Re-renderizar ícones
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+        }
+
+        // Gestos Touch
+        function inicializarGestosTouch() {
+            let startX, startY, endX, endY;
+            
+            document.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            });
+            
+            document.addEventListener('touchend', (e) => {
+                endX = e.changedTouches[0].clientX;
+                endY = e.changedTouches[0].clientY;
+                
+                const deltaX = endX - startX;
+                const deltaY = endY - startY;
+                
+                // Swipe horizontal (mudança de seção)
+                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                    if (deltaX > 0) {
+                        // Swipe direita - seção anterior
+                        navegarSecaoAnterior();
+                    } else {
+                        // Swipe esquerda - próxima seção
+                        navegarProximaSecao();
+                    }
+                }
+                
+                // Swipe vertical (fechar modais)
+                if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 100) {
+                    if (deltaY > 0) {
+                        // Swipe para baixo - fechar modal
+                        fecharModal();
+                    }
+                }
+            });
+            
+            // Pull to refresh
+            let pullStartY = 0;
+            let isPulling = false;
+            
+            document.addEventListener('touchstart', (e) => {
+                if (window.scrollY === 0) {
+                    pullStartY = e.touches[0].clientY;
+                    isPulling = true;
+                }
+            });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (isPulling && window.scrollY === 0) {
+                    const pullDistance = e.touches[0].clientY - pullStartY;
+                    if (pullDistance > 100) {
+                        // Pull to refresh
+                        window.location.reload();
+                        isPulling = false;
+                    }
+                }
+            });
+        }
+
+        function navegarSecaoAnterior() {
+            const secoes = ['dashboard', 'clientes', 'honorarios', 'contratos', 'herancas', 'migracoes', 'registos', 'prazos', 'notificacoes'];
+            const indiceAtual = secoes.indexOf(secaoAtiva);
+            if (indiceAtual > 0) {
+                carregarSecao(secoes[indiceAtual - 1]);
+            }
+        }
+
+        function navegarProximaSecao() {
+            const secoes = ['dashboard', 'clientes', 'honorarios', 'contratos', 'herancas', 'migracoes', 'registos', 'prazos', 'notificacoes'];
+            const indiceAtual = secoes.indexOf(secaoAtiva);
+            if (indiceAtual < secoes.length - 1) {
+                carregarSecao(secoes[indiceAtual + 1]);
+            }
+        }
+
+        // Notificações Push
+        function solicitarPermissaoNotificacoes() {
+            if ('Notification' in window) {
+                if (Notification.permission === 'default') {
+                    Notification.requestPermission().then((permission) => {
+                        if (permission === 'granted') {
+                            console.log('✅ Permissão para notificações concedida');
+                            mostrarNotificacao('Notificações ativadas!', 'success');
+                        }
+                    });
+                }
+            }
+        }
+
+        function enviarNotificacaoPush(titulo, corpo, icone) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                const notification = new Notification(titulo, {
+                    body: corpo,
+                    icon: icone || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMzYjgyZjYiLz4KPHBhdGggZD0iTTk2IDQ4QzY5LjQ5IDQ4IDQ4IDY5LjQ5IDQ4IDk2UzY5LjQ5IDE0NCA5NiAxNDRTMTQ0IDEyMi41MSAxNDQgOTZTMTIyLjUxIDQ4IDk2IDQ4Wk05NiAxMjhDNzMuOTA5IDEyOCA1NiAxMTAuMDkgNTYgODhTNzMuOTA5IDQ4IDk2IDQ4UzEzNiA2NS45MSAxMzYgODhTMTE4LjA5IDEyOCA5NiAxMjhaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K',
+                    badge: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMTIiIGZpbGw9IiNmNTk5MGIiLz4KPHBhdGggZD0iTTQ4IDI0QzM0Ljc0IDI0IDI0IDM0Ljc0IDI0IDQ4UzM0Ljc0IDcyIDQ4IDcyUzcyIDYxLjI2IDcyIDQ4UzYxLjI2IDI0IDQ4IDI0Wk00OCA2NEM0MC4yNyA2NCAzNCA1Ny43MyAzNCA1MFM0MC4yNyAzNiA0OCAzNlM2MiA0Mi4yNyA2MiA1MFM1NS43MyA2NCA0OCA2NFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=',
+                    vibrate: [200, 100, 200],
+                    requireInteraction: true
+                });
+
+                notification.onclick = () => {
+                    window.focus();
+                    notification.close();
+                };
+            }
         }
 
         function carregarDados() {
