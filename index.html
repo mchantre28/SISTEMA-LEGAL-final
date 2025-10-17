@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Paula Medina - Sistema Legal v43.0 FORÇAR CACHE</title>
+    <title>Ana Paula Medina - Sistema Legal v44.0 DEBUG SECAO</title>
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
@@ -2113,7 +2113,8 @@ END:VCALENDAR`;
         }
 
         function gerarAutomacoes() {
-            console.log('🔧 Função gerarAutomacoes chamada');
+            console.log('🔧 Função gerarAutomacoes chamada - v43.0');
+            alert('🔧 Função gerarAutomacoes chamada - v43.0');
             
             const lembretes = obterLembretes();
             const faturas = obterFaturas();
@@ -3351,6 +3352,8 @@ END:VCALENDAR`;
             console.log('🔧 Conteúdos disponíveis:', Object.keys(conteudos));
             console.log('🔧 Conteúdo para migracoes:', conteudos.migracoes ? 'EXISTE' : 'NÃO EXISTE');
             console.log('🔧 Conteúdo migracoes:', conteudos.migracoes);
+            console.log('🔧 Conteúdo para automacoes:', conteudos.automacoes ? 'EXISTE' : 'NÃO EXISTE');
+            console.log('🔧 Conteúdo automacoes:', conteudos.automacoes);
             
             return conteudos[secao] || '<p>Seção não encontrada</p>';
         }
