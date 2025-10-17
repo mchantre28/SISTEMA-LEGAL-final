@@ -726,6 +726,10 @@
                 <i data-lucide="database" class="w-5 h-5 mr-3"></i>
                 Backup
             </a>
+            <a href="#" onclick="carregarSecao('automacoes')" class="sidebar-item" id="nav-automacoes">
+                <i data-lucide="bot" class="w-5 h-5 mr-3"></i>
+                Automações
+            </a>
             <a href="#" onclick="carregarSecao('convidados')" class="sidebar-item" id="nav-convidados" style="display: none;">
                 <i data-lucide="user-plus" class="w-5 h-5 mr-3"></i>
                 Gestão de Convidados
@@ -754,6 +758,14 @@
                         <button onclick="debugPWA()" class="btn btn-warning" id="debugPWABtn">
                             <i data-lucide="bug" class="w-4 h-4"></i>
                             Debug PWA
+                        </button>
+                        <button onclick="calcularJurosAutomaticos()" class="btn btn-info">
+                            <i data-lucide="calculator" class="w-4 h-4"></i>
+                            Calcular Juros
+                        </button>
+                        <button onclick="sincronizarComCalendario()" class="btn btn-success">
+                            <i data-lucide="calendar" class="w-4 h-4"></i>
+                            Calendário
                         </button>
                         <button onclick="exportarDados()" class="btn btn-primary">
                             <i data-lucide="download" class="w-4 h-4"></i>
@@ -1353,6 +1365,13 @@
             inicializarPWA();
             inicializarModoEscuro();
             inicializarGestosTouch();
+            
+            // Inicializar sistema de automações
+            inicializarSistemaLembretes();
+            inicializarIntegracoes();
+            
+            // Calcular juros automáticos na inicialização
+            calcularJurosAutomaticos();
         }
 
         // PWA - Service Worker Registration
@@ -1677,7 +1696,7 @@
                 const notification = new Notification(titulo, {
                     body: corpo,
                     icon: icone || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMzYjgyZjYiLz4KPHBhdGggZD0iTTk2IDQ4QzY5LjQ5IDQ4IDQ4IDY5LjQ5IDQ4IDk2UzY5LjQ5IDE0NCA5NiAxNDRTMTQ0IDEyMi41MSAxNDQgOTZTMTIyLjUxIDQ4IDk2IDQ4Wk05NiAxMjhDNzMuOTA5IDEyOCA1NiAxMTAuMDkgNTYgODhTNzMuOTA5IDQ4IDk2IDQ4UzEzNiA2NS45MSAxMzYgODhTMTE4LjA5IDEyOCA5NiAxMjhaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K',
-                    badge: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMTIiIGZpbGw9IiNmNTk5MGIiLz4KPHBhdGggZD0iTTQ4IDI0QzM0Ljc0IDI0IDI0IDM0Ljc0IDI0IDQ4UzM0Ljc0IDcyIDQ4IDcyUzcyIDYxLjI2IDcyIDQ4UzYxLjI2IDI0IDQ4IDI0Wk00OCA2NEM0MC4yNyA2NCAzNCA1Ny43MyAzNCA1MFM0MC4yNyAzNiA0OCAzNlM2MiA0Mi4yNyA2MiA1MFM1NS43MyA2NCA0OCA2NFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=',
+                    badge: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMTIiIGZpbGw9IiNmNTk5MGIiLz4KPHBhdGggZD0iTTQ4IDI0QzM0Ljc0IDI0IDI0IDM0Ljc0IDI0IDQ4UzM0Ljc0IDcyIDQ4IDcyUzcyIDYxLjI2IDcyIDQ4UzYxLjI2IDI0IDQ4IDI0Wk00OCA2NEM0MC4yNyA2NCAzNCA1Ny43MyAzNCA1MFM0MC4yNyAzNiA0OCAzNlM2MiA0Mi4yNyA2MiA1MFM1NS73MyA2NCA0OCA2NFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=',
                     vibrate: [200, 100, 200],
                     requireInteraction: true
                 });
@@ -1687,6 +1706,519 @@
                     notification.close();
                 };
             }
+        }
+
+        // ===== SISTEMA DE AUTOMAÇÕES =====
+
+        // 1. LEMBRETES AUTOMÁTICOS POR EMAIL
+        function inicializarSistemaLembretes() {
+            console.log('🤖 Inicializando sistema de lembretes automáticos...');
+            
+            // Verificar lembretes a cada 5 minutos
+            setInterval(verificarLembretes, 5 * 60 * 1000);
+            
+            // Verificar lembretes imediatamente
+            verificarLembretes();
+        }
+
+        function verificarLembretes() {
+            const hoje = new Date();
+            const lembretes = obterLembretes();
+            
+            lembretes.forEach(lembrete => {
+                if (lembrete.ativo && !lembrete.enviado) {
+                    const dataLembrete = new Date(lembrete.data);
+                    const diferencaHoras = (dataLembrete - hoje) / (1000 * 60 * 60);
+                    
+                    // Enviar lembretes 24h, 2h e 30min antes
+                    if (diferencaHoras <= 24 && diferencaHoras > 0) {
+                        enviarLembreteEmail(lembrete, '24h');
+                    } else if (diferencaHoras <= 2 && diferencaHoras > 0) {
+                        enviarLembreteEmail(lembrete, '2h');
+                    } else if (diferencaHoras <= 0.5 && diferencaHoras > 0) {
+                        enviarLembreteEmail(lembrete, '30min');
+                    }
+                }
+            });
+        }
+
+        function enviarLembreteEmail(lembrete, tempoAntecedencia) {
+            console.log(`📧 Enviando lembrente ${tempoAntecedencia} antes:`, lembrete);
+            
+            const cliente = clientes.find(c => c.id === lembrete.clienteId);
+            if (!cliente || !cliente.email) return;
+            
+            const assunto = `Lembrete: ${lembrete.titulo} - ${tempoAntecedencia} antes`;
+            const corpo = `
+                <h2>Lembrete Automático - Sistema Legal</h2>
+                <p><strong>Cliente:</strong> ${cliente.nome}</p>
+                <p><strong>Assunto:</strong> ${lembrete.titulo}</p>
+                <p><strong>Data/Hora:</strong> ${new Date(lembrete.data).toLocaleString('pt-PT')}</p>
+                <p><strong>Descrição:</strong> ${lembrete.descricao}</p>
+                <p><strong>Tempo restante:</strong> ${tempoAntecedencia}</p>
+                <hr>
+                <p><em>Este é um lembrete automático do Sistema Legal - ANA PAULA MEDINA</em></p>
+            `;
+            
+            // Simular envio de email (em produção, integrar com serviço de email)
+            console.log('📧 Email simulado enviado:', {
+                para: cliente.email,
+                assunto: assunto,
+                corpo: corpo
+            });
+            
+            // Criar notificação no sistema
+            criarNotificacao(
+                `Lembrete enviado para ${cliente.nome}`,
+                `Email de lembrete enviado ${tempoAntecedencia} antes do prazo`,
+                'info',
+                'lembrete_email',
+                cliente.id
+            );
+            
+            // Marcar como enviado
+            lembrete.enviado = true;
+            salvarLembretes();
+        }
+
+        // 2. CÁLCULO AUTOMÁTICO DE JUROS
+        function calcularJurosAutomaticos() {
+            console.log('💰 Calculando juros automáticos...');
+            
+            const honorariosVencidos = honorarios.filter(h => {
+                if (h.status === 'pago') return false;
+                const dataVencimento = new Date(h.vencimento);
+                return dataVencimento < new Date();
+            });
+            
+            honorariosVencidos.forEach(honorario => {
+                const diasAtraso = Math.ceil((new Date() - new Date(honorario.vencimento)) / (1000 * 60 * 60 * 24));
+                const taxaJuros = 0.0005; // 0.05% ao dia
+                const juros = parseFloat(honorario.valor) * taxaJuros * diasAtraso;
+                
+                if (juros > 0) {
+                    honorario.jurosCalculados = juros;
+                    honorario.diasAtraso = diasAtraso;
+                    honorario.valorComJuros = parseFloat(honorario.valor) + juros;
+                    
+                    // Criar notificação de juros
+                    criarNotificacao(
+                        `Juros calculados - ${honorario.clienteNome}`,
+                        `Juros de €${juros.toFixed(2)} calculados (${diasAtraso} dias de atraso)`,
+                        'warning',
+                        'juros_calculados',
+                        honorario.clienteId
+                    );
+                }
+            });
+            
+            salvarHonorarios();
+        }
+
+        // 3. GERAÇÃO AUTOMÁTICA DE FATURAS
+        function gerarFaturaAutomatica(honorarioId) {
+            const honorario = honorarios.find(h => h.id === honorarioId);
+            if (!honorario) return;
+            
+            const cliente = clientes.find(c => c.id === honorario.clienteId);
+            if (!cliente) return;
+            
+            const fatura = {
+                id: Date.now(),
+                numero: `FAT-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`,
+                clienteId: honorario.clienteId,
+                clienteNome: honorario.clienteNome,
+                honorarioId: honorarioId,
+                data: new Date().toISOString().split('T')[0],
+                valor: honorario.valorComJuros || honorario.valor,
+                juros: honorario.jurosCalculados || 0,
+                status: 'pendente',
+                observacoes: `Fatura gerada automaticamente para ${honorario.descricao}`
+            };
+            
+            // Adicionar fatura
+            const faturas = obterFaturas();
+            faturas.push(fatura);
+            localStorage.setItem('faturas', JSON.stringify(faturas));
+            
+            // Criar notificação
+            criarNotificacao(
+                `Fatura gerada - ${cliente.nome}`,
+                `Fatura ${fatura.numero} gerada automaticamente`,
+                'success',
+                'fatura_gerada',
+                cliente.id
+            );
+            
+            console.log('📄 Fatura gerada automaticamente:', fatura);
+            return fatura;
+        }
+
+        // 4. SINCRONIZAÇÃO COM CALENDÁRIO
+        function sincronizarComCalendario() {
+            console.log('📅 Sincronizando com calendário...');
+            
+            const eventos = [];
+            
+            // Adicionar prazos
+            prazos.forEach(prazo => {
+                if (prazo.status === 'ativo') {
+                    eventos.push({
+                        titulo: `Prazo: ${prazo.descricao}`,
+                        data: prazo.dataLimite,
+                        tipo: 'prazo',
+                        cliente: prazo.clienteNome,
+                        descricao: prazo.observacoes
+                    });
+                }
+            });
+            
+            // Adicionar vencimentos de honorários
+            honorarios.forEach(honorario => {
+                if (honorario.status === 'pendente' && honorario.vencimento) {
+                    eventos.push({
+                        titulo: `Vencimento: ${honorario.descricao}`,
+                        data: honorario.vencimento,
+                        tipo: 'vencimento',
+                        cliente: honorario.clienteNome,
+                        valor: honorario.valor
+                    });
+                }
+            });
+            
+            // Gerar arquivo ICS para importar no calendário
+            gerarArquivoICS(eventos);
+        }
+
+        function gerarArquivoICS(eventos) {
+            let icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Sistema Legal//Sistema Legal//PT
+CALSCALE:GREGORIAN
+METHOD:PUBLISH`;
+
+            eventos.forEach(evento => {
+                const dataInicio = new Date(evento.data);
+                const dataFim = new Date(dataInicio.getTime() + 24 * 60 * 60 * 1000); // +1 dia
+                
+                icsContent += `
+BEGIN:VEVENT
+UID:${evento.titulo.replace(/\s/g, '')}@sistemalegal.com
+DTSTART:${dataInicio.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTEND:${dataFim.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+SUMMARY:${evento.titulo}
+DESCRIPTION:Cliente: ${evento.cliente}${evento.valor ? `\\nValor: €${evento.valor}` : ''}
+LOCATION:Sistema Legal
+STATUS:CONFIRMED
+END:VEVENT`;
+            });
+
+            icsContent += `
+END:VCALENDAR`;
+
+            // Criar e baixar arquivo
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `calendario_sistema_legal_${new Date().toISOString().split('T')[0]}.ics`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            mostrarNotificacao('Arquivo de calendário gerado com sucesso!', 'success');
+        }
+
+        // 5. INTEGRAÇÃO COM SISTEMAS EXTERNOS
+        function inicializarIntegracoes() {
+            console.log('🔗 Inicializando integrações externas...');
+            
+            // Verificar se há integrações configuradas
+            const integracoes = obterIntegracoes();
+            
+            integracoes.forEach(integracao => {
+                if (integracao.ativa) {
+                    switch(integracao.tipo) {
+                        case 'email':
+                            configurarIntegracaoEmail(integracao);
+                            break;
+                        case 'calendario':
+                            configurarIntegracaoCalendario(integracao);
+                            break;
+                        case 'contabilidade':
+                            configurarIntegracaoContabilidade(integracao);
+                            break;
+                    }
+                }
+            });
+        }
+
+        function configurarIntegracaoEmail(config) {
+            console.log('📧 Configurando integração de email:', config);
+            // Aqui você integraria com Gmail API, Outlook API, etc.
+        }
+
+        function configurarIntegracaoCalendario(config) {
+            console.log('📅 Configurando integração de calendário:', config);
+            // Aqui você integraria com Google Calendar, Outlook Calendar, etc.
+        }
+
+        function configurarIntegracaoContabilidade(config) {
+            console.log('💰 Configurando integração de contabilidade:', config);
+            // Aqui você integraria com sistemas de contabilidade
+        }
+
+        // Funções auxiliares para automações
+        function obterLembretes() {
+            const lembretes = localStorage.getItem('lembretes');
+            return lembretes ? JSON.parse(lembretes) : [];
+        }
+
+        function salvarLembretes() {
+            const lembretes = obterLembretes();
+            localStorage.setItem('lembretes', JSON.stringify(lembretes));
+        }
+
+        function obterFaturas() {
+            const faturas = localStorage.getItem('faturas');
+            return faturas ? JSON.parse(faturas) : [];
+        }
+
+        function obterIntegracoes() {
+            const integracoes = localStorage.getItem('integracoes');
+            return integracoes ? JSON.parse(integracoes) : [];
+        }
+
+        function salvarIntegracoes(integracoes) {
+            localStorage.setItem('integracoes', JSON.stringify(integracoes));
+        }
+
+        function gerarAutomacoes() {
+            const lembretes = obterLembretes();
+            const faturas = obterFaturas();
+            const integracoes = obterIntegracoes();
+            
+            return `
+                <div class="space-y-6">
+                    <!-- Status das Automações -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Status das Automações</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <i data-lucide="mail" class="w-8 h-8 text-blue-600 mr-3"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Lembretes Ativos</p>
+                                        <p class="text-2xl font-bold text-blue-600">${lembretes.filter(l => l.ativo).length}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <i data-lucide="file-text" class="w-8 h-8 text-green-600 mr-3"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Faturas Geradas</p>
+                                        <p class="text-2xl font-bold text-green-600">${faturas.length}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-purple-50 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <i data-lucide="link" class="w-8 h-8 text-purple-600 mr-3"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Integrações</p>
+                                        <p class="text-2xl font-bold text-purple-600">${integracoes.filter(i => i.ativa).length}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lembretes Automáticos -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Lembretes Automáticos</h3>
+                        <div class="space-y-3">
+                            <button onclick="criarLembrete()" class="btn btn-primary">
+                                <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                                Criar Lembrete
+                            </button>
+                            <button onclick="verificarLembretes()" class="btn btn-info">
+                                <i data-lucide="refresh-cw" class="w-4 h-4 mr-2"></i>
+                                Verificar Agora
+                            </button>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4 class="font-medium mb-2">Lembretes Ativos:</h4>
+                            <div class="space-y-2">
+                                ${lembretes.filter(l => l.ativo).map(lembrete => `
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <div class="flex justify-between items-center">
+                                            <div>
+                                                <p class="font-medium">${lembrete.titulo}</p>
+                                                <p class="text-sm text-gray-600">${new Date(lembrete.data).toLocaleString('pt-PT')}</p>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <button onclick="editarLembrete(${lembrete.id})" class="btn btn-sm btn-secondary">
+                                                    <i data-lucide="edit" class="w-4 h-4"></i>
+                                                </button>
+                                                <button onclick="desativarLembrete(${lembrete.id})" class="btn btn-sm btn-warning">
+                                                    <i data-lucide="pause" class="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cálculo de Juros -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Cálculo Automático de Juros</h3>
+                        <div class="space-y-3">
+                            <button onclick="calcularJurosAutomaticos()" class="btn btn-warning">
+                                <i data-lucide="calculator" class="w-4 h-4 mr-2"></i>
+                                Calcular Juros Agora
+                            </button>
+                            <p class="text-sm text-gray-600">
+                                Sistema calcula automaticamente juros de mora para honorários vencidos (0.05% ao dia)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Geração de Faturas -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Geração Automática de Faturas</h3>
+                        <div class="space-y-3">
+                            <button onclick="gerarFaturasAutomaticas()" class="btn btn-success">
+                                <i data-lucide="file-text" class="w-4 h-4 mr-2"></i>
+                                Gerar Faturas Pendentes
+                            </button>
+                            <p class="text-sm text-gray-600">
+                                Gera faturas automaticamente para honorários com juros calculados
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Sincronização com Calendário -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Sincronização com Calendário</h3>
+                        <div class="space-y-3">
+                            <button onclick="sincronizarComCalendario()" class="btn btn-info">
+                                <i data-lucide="calendar" class="w-4 h-4 mr-2"></i>
+                                Exportar para Calendário
+                            </button>
+                            <p class="text-sm text-gray-600">
+                                Exporta prazos e vencimentos para arquivo ICS (compatível com Google Calendar, Outlook, etc.)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Integrações Externas -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Integrações Externas</h3>
+                        <div class="space-y-3">
+                            <button onclick="configurarIntegracoes()" class="btn btn-purple">
+                                <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
+                                Configurar Integrações
+                            </button>
+                            <p class="text-sm text-gray-600">
+                                Configure integrações com sistemas de email, calendário e contabilidade
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Funções auxiliares para automações
+        function criarLembrete() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Criar Lembrete</h3>
+                        <button onclick="fecharModal()" class="btn btn-sm btn-secondary">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <form onsubmit="salvarLembrete(event)">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Cliente</label>
+                                <select name="clienteId" required class="w-full p-2 border rounded-lg">
+                                    <option value="">Selecione um cliente</option>
+                                    ${clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Título</label>
+                                <input type="text" name="titulo" required class="w-full p-2 border rounded-lg" placeholder="Título do lembrete">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Data/Hora</label>
+                                <input type="datetime-local" name="data" required class="w-full p-2 border rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Descrição</label>
+                                <textarea name="descricao" class="w-full p-2 border rounded-lg" rows="3" placeholder="Descrição do lembrete"></textarea>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button type="submit" class="btn btn-primary">Salvar Lembrete</button>
+                                <button type="button" onclick="fecharModal()" class="btn btn-secondary">Cancelar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function salvarLembrete(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            const lembrete = {
+                id: Date.now(),
+                clienteId: parseInt(formData.get('clienteId')),
+                titulo: formData.get('titulo'),
+                data: formData.get('data'),
+                descricao: formData.get('descricao'),
+                ativo: true,
+                enviado: false,
+                criadoEm: new Date().toISOString()
+            };
+            
+            const lembretes = obterLembretes();
+            lembretes.push(lembrete);
+            localStorage.setItem('lembretes', JSON.stringify(lembretes));
+            
+            fecharModal();
+            mostrarNotificacao('Lembrete criado com sucesso!', 'success');
+            carregarSecao('automacoes');
+        }
+
+        function gerarFaturasAutomaticas() {
+            const honorariosComJuros = honorarios.filter(h => h.jurosCalculados && h.jurosCalculados > 0);
+            
+            if (honorariosComJuros.length === 0) {
+                mostrarNotificacao('Nenhum honorário com juros encontrado!', 'info');
+                return;
+            }
+            
+            let faturasGeradas = 0;
+            honorariosComJuros.forEach(honorario => {
+                if (!obterFaturas().find(f => f.honorarioId === honorario.id)) {
+                    gerarFaturaAutomatica(honorario.id);
+                    faturasGeradas++;
+                }
+            });
+            
+            mostrarNotificacao(`${faturasGeradas} faturas geradas automaticamente!`, 'success');
+            carregarSecao('automacoes');
         }
 
         function carregarDados() {
@@ -2311,7 +2843,8 @@
                 migracoes: 'Gestão de Migração',
                 registos: 'Gestão de Registos',
                 relatorios: 'Gestão de Relatórios',
-                backup: 'Sistema de Backup'
+                backup: 'Sistema de Backup',
+                automacoes: 'Sistema de Automações'
             };
             
             const tituloElement = document.getElementById('tituloSecao');
@@ -2361,7 +2894,8 @@
                 migracoes: gerarMigracao(),
                 registos: gerarRegistos(),
                 relatorios: gerarRelatorios(),
-                backup: gerarBackup()
+                backup: gerarBackup(),
+                automacoes: gerarAutomacoes()
             };
             
             console.log('🔧 Conteúdos disponíveis:', Object.keys(conteudos));
