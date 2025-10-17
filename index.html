@@ -3681,12 +3681,45 @@
             const tipoUsuario = localStorage.getItem('tipoUsuario');
             const convidadoId = localStorage.getItem('convidadoId');
             
+            // Validar dados únicos
+            const nome = document.getElementById('clienteNome').value;
+            const email = document.getElementById('clienteEmail').value;
+            const telefone = document.getElementById('clienteTelefone').value;
+            const nif = document.getElementById('clienteNIF').value;
+            
+            // Verificar se já existe cliente com os mesmos dados
+            const clienteExistente = clientes.find(c => 
+                c.nome.toLowerCase() === nome.toLowerCase() ||
+                (email && c.email && c.email.toLowerCase() === email.toLowerCase()) ||
+                (telefone && c.telefone && c.telefone === telefone) ||
+                (nif && c.nif && c.nif === nif)
+            );
+            
+            if (clienteExistente) {
+                let mensagemErro = 'Já existe um cliente com:';
+                if (clienteExistente.nome.toLowerCase() === nome.toLowerCase()) {
+                    mensagemErro += ' • Nome igual';
+                }
+                if (email && clienteExistente.email && clienteExistente.email.toLowerCase() === email.toLowerCase()) {
+                    mensagemErro += ' • Email igual';
+                }
+                if (telefone && clienteExistente.telefone && clienteExistente.telefone === telefone) {
+                    mensagemErro += ' • Telefone igual';
+                }
+                if (nif && clienteExistente.nif && clienteExistente.nif === nif) {
+                    mensagemErro += ' • NIF igual';
+                }
+                
+                mostrarNotificacao(mensagemErro, 'error');
+                return;
+            }
+            
             const cliente = {
                 id: Date.now(),
-                nome: document.getElementById('clienteNome').value,
-                email: document.getElementById('clienteEmail').value,
-                telefone: document.getElementById('clienteTelefone').value,
-                nif: document.getElementById('clienteNIF').value,
+                nome: nome,
+                email: email,
+                telefone: telefone,
+                nif: nif,
                 endereco: document.getElementById('clienteEndereco').value,
                 status: document.getElementById('clienteStatus').value,
                 dataCriacao: new Date().toISOString(),
@@ -3800,12 +3833,47 @@
             
             const clienteIndex = clientes.findIndex(c => c.id === id);
             if (clienteIndex !== -1) {
+                // Validar dados únicos
+                const nome = document.getElementById('editarClienteNome').value;
+                const email = document.getElementById('editarClienteEmail').value;
+                const telefone = document.getElementById('editarClienteTelefone').value;
+                const nif = document.getElementById('editarClienteNIF').value;
+                
+                // Verificar se já existe outro cliente com os mesmos dados (excluindo o cliente atual)
+                const clienteExistente = clientes.find(c => 
+                    c.id !== id && (
+                        c.nome.toLowerCase() === nome.toLowerCase() ||
+                        (email && c.email && c.email.toLowerCase() === email.toLowerCase()) ||
+                        (telefone && c.telefone && c.telefone === telefone) ||
+                        (nif && c.nif && c.nif === nif)
+                    )
+                );
+                
+                if (clienteExistente) {
+                    let mensagemErro = 'Já existe outro cliente com:';
+                    if (clienteExistente.nome.toLowerCase() === nome.toLowerCase()) {
+                        mensagemErro += ' • Nome igual';
+                    }
+                    if (email && clienteExistente.email && clienteExistente.email.toLowerCase() === email.toLowerCase()) {
+                        mensagemErro += ' • Email igual';
+                    }
+                    if (telefone && clienteExistente.telefone && clienteExistente.telefone === telefone) {
+                        mensagemErro += ' • Telefone igual';
+                    }
+                    if (nif && clienteExistente.nif && clienteExistente.nif === nif) {
+                        mensagemErro += ' • NIF igual';
+                    }
+                    
+                    mostrarNotificacao(mensagemErro, 'error');
+                    return;
+                }
+                
                 clientes[clienteIndex] = {
                     ...clientes[clienteIndex],
-                    nome: document.getElementById('editarClienteNome').value,
-                    email: document.getElementById('editarClienteEmail').value,
-                    telefone: document.getElementById('editarClienteTelefone').value,
-                    nif: document.getElementById('editarClienteNIF').value,
+                    nome: nome,
+                    email: email,
+                    telefone: telefone,
+                    nif: nif,
                     endereco: document.getElementById('editarClienteEndereco').value,
                     status: document.getElementById('editarClienteStatus').value,
                     dataAtualizacao: new Date().toISOString()
