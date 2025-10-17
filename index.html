@@ -1875,13 +1875,13 @@
             
             // Adicionar prazos
             prazos.forEach(prazo => {
-                if (prazo.status === 'ativo') {
+                if (prazo.status === 'ativo' && prazo.dataLimite) {
                     eventos.push({
-                        titulo: `Prazo: ${prazo.descricao}`,
+                        titulo: `📋 Prazo: ${prazo.descricao}`,
                         data: prazo.dataLimite,
                         tipo: 'prazo',
                         cliente: prazo.clienteNome,
-                        descricao: prazo.observacoes
+                        descricao: prazo.observacoes || 'Prazo importante do Sistema Legal'
                     });
                 }
             });
@@ -1890,57 +1890,135 @@
             honorarios.forEach(honorario => {
                 if (honorario.status === 'pendente' && honorario.vencimento) {
                     eventos.push({
-                        titulo: `Vencimento: ${honorario.descricao}`,
+                        titulo: `💰 Vencimento: ${honorario.descricao}`,
                         data: honorario.vencimento,
                         tipo: 'vencimento',
                         cliente: honorario.clienteNome,
-                        valor: honorario.valor
+                        valor: honorario.valor,
+                        descricao: `Honorário de €${parseFloat(honorario.valor).toFixed(2)}`
                     });
                 }
             });
+            
+            // Adicionar contratos com vencimento
+            contratos.forEach(contrato => {
+                if (contrato.vencimento) {
+                    eventos.push({
+                        titulo: `📄 Contrato: ${contrato.descricao}`,
+                        data: contrato.vencimento,
+                        tipo: 'contrato',
+                        cliente: contrato.clienteNome,
+                        descricao: `Contrato - ${contrato.tipo}`
+                    });
+                }
+            });
+            
+            // Adicionar heranças com prazo
+            herancas.forEach(heranca => {
+                if (heranca.prazo) {
+                    eventos.push({
+                        titulo: `⚖️ Herança: ${heranca.descricao}`,
+                        data: heranca.prazo,
+                        tipo: 'heranca',
+                        cliente: heranca.clienteNome,
+                        descricao: `Processo de herança - ${heranca.tipo}`
+                    });
+                }
+            });
+            
+            console.log('📅 Eventos encontrados:', eventos.length);
+            
+            if (eventos.length === 0) {
+                mostrarNotificacao('Nenhum evento encontrado para exportar!', 'info');
+                return;
+            }
             
             // Gerar arquivo ICS para importar no calendário
             gerarArquivoICS(eventos);
         }
 
         function gerarArquivoICS(eventos) {
+            console.log('📅 Gerando arquivo ICS com', eventos.length, 'eventos');
+            
+            // Função para formatar data no formato ICS
+            function formatarDataICS(data) {
+                return data.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+            }
+            
+            // Função para escapar texto para ICS
+            function escaparTextoICS(texto) {
+                return texto
+                    .replace(/\\/g, '\\\\')
+                    .replace(/;/g, '\\;')
+                    .replace(/,/g, '\\,')
+                    .replace(/\n/g, '\\n')
+                    .replace(/\r/g, '');
+            }
+            
             let icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Sistema Legal//Sistema Legal//PT
 CALSCALE:GREGORIAN
-METHOD:PUBLISH`;
+METHOD:PUBLISH
+X-WR-CALNAME:Sistema Legal - Prazos e Vencimentos
+X-WR-CALDESC:Calendário do Sistema Legal com prazos e vencimentos
+X-WR-TIMEZONE:Europe/Lisbon`;
 
-            eventos.forEach(evento => {
+            eventos.forEach((evento, index) => {
                 const dataInicio = new Date(evento.data);
-                const dataFim = new Date(dataInicio.getTime() + 24 * 60 * 60 * 1000); // +1 dia
+                const dataFim = new Date(dataInicio.getTime() + (24 * 60 * 60 * 1000)); // +1 dia
+                
+                // Gerar UID único
+                const uid = `sistema-legal-${Date.now()}-${index}@sistemalegal.com`;
+                
+                // Formatar datas
+                const dtstart = formatarDataICS(dataInicio);
+                const dtend = formatarDataICS(dataFim);
+                const dtstamp = formatarDataICS(new Date());
+                
+                // Escapar textos
+                const summary = escaparTextoICS(evento.titulo);
+                const description = escaparTextoICS(`Cliente: ${evento.cliente}${evento.valor ? `\\nValor: €${evento.valor}` : ''}\\n\\nSistema Legal - ANA PAULA MEDINA`);
+                const location = escaparTextoICS('Sistema Legal');
                 
                 icsContent += `
 BEGIN:VEVENT
-UID:${evento.titulo.replace(/\s/g, '')}@sistemalegal.com
-DTSTART:${dataInicio.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTEND:${dataFim.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-SUMMARY:${evento.titulo}
-DESCRIPTION:Cliente: ${evento.cliente}${evento.valor ? `\\nValor: €${evento.valor}` : ''}
-LOCATION:Sistema Legal
+UID:${uid}
+DTSTAMP:${dtstamp}
+DTSTART:${dtstart}
+DTEND:${dtend}
+SUMMARY:${summary}
+DESCRIPTION:${description}
+LOCATION:${location}
 STATUS:CONFIRMED
+TRANSP:OPAQUE
+SEQUENCE:0
 END:VEVENT`;
             });
 
             icsContent += `
 END:VCALENDAR`;
 
+            console.log('📅 Conteúdo ICS gerado:', icsContent.substring(0, 200) + '...');
+            
             // Criar e baixar arquivo
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const blob = new Blob([icsContent], { 
+                type: 'text/calendar;charset=utf-8',
+                endings: 'native'
+            });
+            
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `calendario_sistema_legal_${new Date().toISOString().split('T')[0]}.ics`;
+            link.download = `Sistema_Legal_Calendario_${new Date().toISOString().split('T')[0]}.ics`;
+            link.style.display = 'none';
+            
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
             
-            mostrarNotificacao('Arquivo de calendário gerado com sucesso!', 'success');
+            mostrarNotificacao(`Arquivo de calendário gerado com sucesso! (${eventos.length} eventos)`, 'success');
         }
 
         // 5. INTEGRAÇÃO COM SISTEMAS EXTERNOS
