@@ -5056,6 +5056,15 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
         
 
+        // === FUNÇÃO GENÉRICA PARA CONVERTER ARQUIVO ===
+        function converterArquivoParaBase64(arquivo, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                callback(e.target.result);
+            };
+            reader.readAsDataURL(arquivo);
+        }
+        
         // === SISTEMA DE ANEXOS PARA REGISTOS ===
         
         function abrirAnexosRegisto(registoId) {
@@ -5190,7 +5199,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'PLACEHOLDER_PARA_BASE64'
+                conteudo: 'CONVERTENDO_ARQUIVO...'
             };
             
             const registo = registos.find(r => r.id === registoId);
@@ -5349,7 +5358,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'PLACEHOLDER_PARA_BASE64'
+                conteudo: 'CONVERTENDO_ARQUIVO...'
             };
             
             const prazo = prazos.find(p => p.id === prazoId);
@@ -7925,7 +7934,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'PLACEHOLDER_PARA_BASE64' // Em um sistema real, seria o arquivo real
+                conteudo: 'CONVERTENDO_ARQUIVO...' // Em um sistema real, seria o arquivo real
             };
             
             const cliente = clientes.find(c => c.id === clienteId);
@@ -8449,7 +8458,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'PLACEHOLDER_PARA_BASE64'
+                conteudo: 'CONVERTENDO_ARQUIVO...'
             };
             
             const contrato = contratos.find(c => c.id === contratoId);
@@ -10701,7 +10710,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'PLACEHOLDER_PARA_BASE64'
+                conteudo: 'CONVERTENDO_ARQUIVO...'
             };
             
             const contrato = contratos.find(c => c.id === contratoId);
@@ -10747,7 +10756,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'PLACEHOLDER_PARA_BASE64'
+                conteudo: 'CONVERTENDO_ARQUIVO...'
             };
             
             const heranca = herancas.find(h => h.id === herancaId);
@@ -10797,7 +10806,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'PLACEHOLDER_PARA_BASE64'
+                conteudo: 'CONVERTENDO_ARQUIVO...'
             };
             
             const migracao = migracoes.find(m => m.id === migracaoId);
@@ -10840,7 +10849,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'PLACEHOLDER_PARA_BASE64'
+                conteudo: 'CONVERTENDO_ARQUIVO...'
             };
             
             const registo = registos.find(r => r.id === registoId);
