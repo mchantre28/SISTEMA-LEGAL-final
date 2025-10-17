@@ -8225,18 +8225,24 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             console.log('🔧 Anexo encontrado:', anexo);
             console.log('🔧 Tipo de arquivo:', anexo.tipo || 'desconhecido');
             console.log('🔧 Nome do arquivo:', anexo.nome || 'sem nome');
-            console.log('🔧 Tamanho do dataURL (primeiros 50 chars):', anexo.conteudo ? anexo.conteudo.substring(0, 50) + '...' : 'N/A');
+            console.log('🔧 Campos disponíveis:', Object.keys(anexo));
+            console.log('🔧 Conteúdo (conteudo):', anexo.conteudo ? anexo.conteudo.substring(0, 50) + '...' : 'N/A');
+            console.log('🔧 Conteúdo (dataURL):', anexo.dataURL ? anexo.dataURL.substring(0, 50) + '...' : 'N/A');
+            console.log('🔧 Conteúdo (dados):', anexo.dados ? anexo.dados.substring(0, 50) + '...' : 'N/A');
             
             try {
                 console.log('🔧 Iniciando conversão Base64 para Blob...');
                 
+                // Verificar qual campo contém o conteúdo
+                let conteudoBase64 = anexo.conteudo || anexo.dataURL || anexo.dados;
+                
                 // Validar se o conteúdo Base64 é válido
-                if (!anexo.conteudo || typeof anexo.conteudo !== 'string') {
+                if (!conteudoBase64 || typeof conteudoBase64 !== 'string' || conteudoBase64 === 'simulado') {
                     throw new Error('Conteúdo do anexo não encontrado ou inválido');
                 }
                 
                 // Verificar se é um data URL válido
-                let base64Content = anexo.conteudo;
+                let base64Content = conteudoBase64;
                 if (base64Content.startsWith('data:')) {
                     // Extrair apenas a parte Base64 do data URL
                     base64Content = base64Content.split(',')[1];
