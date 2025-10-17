@@ -5065,6 +5065,53 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             reader.readAsDataURL(arquivo);
         }
         
+        // === FUNÇÃO ESPECÍFICA PARA REGISTOS ===
+        function adicionarAnexoRegistoReal(event, registoId) {
+            event.preventDefault();
+            
+            const nome = document.getElementById('nomeDocumento').value;
+            const tipoSelecionado = document.getElementById('tipoDocumento').value;
+            const tipoPersonalizado = document.getElementById('tipoPersonalizadoInput').value;
+            const arquivo = document.getElementById('arquivoDocumento').files[0];
+            const descricao = document.getElementById('descricaoDocumento').value;
+            
+            if (!arquivo) {
+                mostrarNotificacao('Por favor, selecione um arquivo', 'error');
+                return;
+            }
+            
+            const tipo = tipoSelecionado === 'outro' ? tipoPersonalizado : tipoSelecionado;
+            
+            if (tipoSelecionado === 'outro' && !tipoPersonalizado.trim()) {
+                mostrarNotificacao('Por favor, especifique o tipo de documento', 'error');
+                return;
+            }
+            
+            // Converter arquivo para Base64
+            converterArquivoParaBase64(arquivo, function(base64Content) {
+                const anexo = {
+                    id: Date.now().toString(),
+                    nome: nome,
+                    tipo: tipo,
+                    descricao: descricao,
+                    nomeArquivo: arquivo.name,
+                    tamanho: formatarTamanho(arquivo.size),
+                    dataUpload: new Date().toISOString(),
+                    tipoArquivo: arquivo.type,
+                    conteudo: base64Content
+                };
+                
+                const registo = registos.find(r => r.id === registoId);
+                if (registo) {
+                    if (!registo.anexos) registo.anexos = [];
+                    registo.anexos.push(anexo);
+                    salvarDados('registos', registos);
+                    mostrarNotificacao('Documento adicionado com sucesso!', 'success');
+                    abrirAnexosRegisto(registoId);
+                }
+            });
+        }
+        
         // === SISTEMA DE ANEXOS PARA REGISTOS ===
         
         function abrirAnexosRegisto(registoId) {
@@ -5199,7 +5246,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'CONVERTENDO_ARQUIVO...'
+                conteudo: 'AGUARDANDO_CONVERSAO...'
             };
             
             const registo = registos.find(r => r.id === registoId);
@@ -5358,7 +5405,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'CONVERTENDO_ARQUIVO...'
+                conteudo: 'AGUARDANDO_CONVERSAO...'
             };
             
             const prazo = prazos.find(p => p.id === prazoId);
@@ -7934,7 +7981,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'CONVERTENDO_ARQUIVO...' // Em um sistema real, seria o arquivo real
+                conteudo: 'AGUARDANDO_CONVERSAO...' // Em um sistema real, seria o arquivo real
             };
             
             const cliente = clientes.find(c => c.id === clienteId);
@@ -8458,7 +8505,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'CONVERTENDO_ARQUIVO...'
+                conteudo: 'AGUARDANDO_CONVERSAO...'
             };
             
             const contrato = contratos.find(c => c.id === contratoId);
@@ -10710,7 +10757,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'CONVERTENDO_ARQUIVO...'
+                conteudo: 'AGUARDANDO_CONVERSAO...'
             };
             
             const contrato = contratos.find(c => c.id === contratoId);
@@ -10756,7 +10803,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'CONVERTENDO_ARQUIVO...'
+                conteudo: 'AGUARDANDO_CONVERSAO...'
             };
             
             const heranca = herancas.find(h => h.id === herancaId);
@@ -10806,7 +10853,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'CONVERTENDO_ARQUIVO...'
+                conteudo: 'AGUARDANDO_CONVERSAO...'
             };
             
             const migracao = migracoes.find(m => m.id === migracaoId);
@@ -10849,7 +10896,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 tamanho: formatarTamanho(arquivo.size),
                 dataUpload: new Date().toISOString(),
                 tipoArquivo: arquivo.type,
-                conteudo: 'CONVERTENDO_ARQUIVO...'
+                conteudo: 'AGUARDANDO_CONVERSAO...'
             };
             
             const registo = registos.find(r => r.id === registoId);
