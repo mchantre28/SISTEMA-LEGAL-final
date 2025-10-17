@@ -8327,7 +8327,39 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 const byteArray = new Uint8Array(byteNumbers);
                 console.log('🔧 ByteArray criado, tamanho:', byteArray.length);
                 
-                const blob = new Blob([byteArray], { type: anexo.tipoMime || 'application/octet-stream' });
+                // Detectar tipo MIME baseado na extensão do arquivo
+                let mimeType = anexo.tipoMime || anexo.tipoArquivo || 'application/octet-stream';
+                
+                // Se não temos tipo MIME, detectar pela extensão
+                if (!anexo.tipoMime && !anexo.tipoArquivo) {
+                    const extensao = anexo.nomeArquivo ? anexo.nomeArquivo.split('.').pop().toLowerCase() : '';
+                    const mimeTypes = {
+                        'jpg': 'image/jpeg',
+                        'jpeg': 'image/jpeg',
+                        'png': 'image/png',
+                        'gif': 'image/gif',
+                        'bmp': 'image/bmp',
+                        'webp': 'image/webp',
+                        'pdf': 'application/pdf',
+                        'doc': 'application/msword',
+                        'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'xls': 'application/vnd.ms-excel',
+                        'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        'ppt': 'application/vnd.ms-powerpoint',
+                        'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                        'txt': 'text/plain',
+                        'rtf': 'application/rtf',
+                        'zip': 'application/zip',
+                        'rar': 'application/x-rar-compressed',
+                        '7z': 'application/x-7z-compressed'
+                    };
+                    
+                    mimeType = mimeTypes[extensao] || 'application/octet-stream';
+                }
+                
+                console.log('🔧 Tipo MIME detectado:', mimeType);
+                
+                const blob = new Blob([byteArray], { type: mimeType });
                 console.log('🔧 Blob criado, tamanho:', blob.size, 'tipo:', blob.type);
                 
                 // Criar link de download
@@ -8336,7 +8368,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = anexo.nome;
+                link.download = anexo.nomeArquivo || anexo.nome;
                 console.log('🔧 Link criado, href:', link.href, 'download:', link.download);
                 
                 document.body.appendChild(link);
