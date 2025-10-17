@@ -1942,6 +1942,113 @@
             return conteudos[secao] || '<p>Seção não encontrada</p>';
         }
 
+        function gerarRelatorioCompleto() {
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            let clientesParaMostrar = clientes;
+            let honorariosParaMostrar = honorarios;
+            let herancasParaMostrar = herancas;
+            let migracoesParaMostrar = migracoes;
+            let registosParaMostrar = registos;
+            let contratosParaMostrar = contratos;
+            
+            // Filtrar dados para convidados
+            if (tipoUsuario === 'convidado') {
+                const convidadoId = localStorage.getItem('convidadoId');
+                const convidados = obterConvidados();
+                const convidado = convidados.find(c => c.id === parseInt(convidadoId));
+                
+                if (convidado && convidado.ativo) {
+                    const clientesAutorizados = convidado.clientesAutorizados;
+                    clientesParaMostrar = clientes.filter(c => clientesAutorizados.includes(c.id));
+                    honorariosParaMostrar = honorarios.filter(h => clientesAutorizados.includes(h.clienteId));
+                    herancasParaMostrar = herancas.filter(h => clientesAutorizados.includes(h.clienteId));
+                    migracoesParaMostrar = migracoes.filter(m => clientesAutorizados.includes(m.clienteId));
+                    registosParaMostrar = registos.filter(r => clientesAutorizados.includes(r.clienteId));
+                    contratosParaMostrar = contratos.filter(c => clientesAutorizados.includes(c.clienteId));
+                } else {
+                    clientesParaMostrar = [];
+                    honorariosParaMostrar = [];
+                    herancasParaMostrar = [];
+                    migracoesParaMostrar = [];
+                    registosParaMostrar = [];
+                    contratosParaMostrar = [];
+                }
+            }
+            
+            const valorTotalHonorarios = honorariosParaMostrar.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+            const valorTotalHerancas = herancasParaMostrar.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+            const valorTotalMigracoes = migracoesParaMostrar.reduce((sum, m) => sum + (parseFloat(m.valor) || 0), 0);
+            const valorTotalRegistos = registosParaMostrar.reduce((sum, r) => sum + (parseFloat(r.valor) || 0), 0);
+            const valorTotalContratos = contratosParaMostrar.reduce((sum, c) => sum + (parseFloat(c.valor) || 0), 0);
+            const valorTotalGeral = valorTotalHonorarios + valorTotalHerancas + valorTotalMigracoes + valorTotalRegistos + valorTotalContratos;
+            
+            const relatorio = `
+RELATÓRIO COMPLETO - SISTEMA LEGAL
+Data: ${new Date().toLocaleDateString('pt-PT')} ${new Date().toLocaleTimeString('pt-PT')}
+
+=== RESUMO GERAL ===
+Total de Clientes: ${clientesParaMostrar.length}
+Total de Honorários: ${honorariosParaMostrar.length}
+Total de Heranças: ${herancasParaMostrar.length}
+Total de Migrações: ${migracoesParaMostrar.length}
+Total de Registos: ${registosParaMostrar.length}
+Total de Contratos: ${contratosParaMostrar.length}
+
+=== RESUMO FINANCEIRO ===
+Valor Total Honorários: €${(Math.round(valorTotalHonorarios * 100) / 100).toFixed(2)}
+Valor Total Heranças: €${(Math.round(valorTotalHerancas * 100) / 100).toFixed(2)}
+Valor Total Migrações: €${(Math.round(valorTotalMigracoes * 100) / 100).toFixed(2)}
+Valor Total Registos: €${(Math.round(valorTotalRegistos * 100) / 100).toFixed(2)}
+Valor Total Contratos: €${(Math.round(valorTotalContratos * 100) / 100).toFixed(2)}
+VALOR TOTAL GERAL: €${(Math.round(valorTotalGeral * 100) / 100).toFixed(2)}
+
+=== STATUS DOS HONORÁRIOS ===
+Pagos: ${honorariosParaMostrar.filter(h => h.status === 'pago').length}
+Pendentes: ${honorariosParaMostrar.filter(h => h.status === 'pendente').length}
+Vencidos: ${honorariosParaMostrar.filter(h => {
+                if (!h.vencimento) return false;
+                const dataVencimento = new Date(h.vencimento);
+                const hoje = new Date();
+                return dataVencimento < hoje && h.status === 'pendente';
+            }).length}
+
+=== PRAZOS PRÓXIMOS (7 dias) ===
+${prazos.filter(p => {
+                if (!p.dataLimite) return false;
+                const dataLimite = new Date(p.dataLimite);
+                const hoje = new Date();
+                const diferencaDias = Math.ceil((dataLimite - hoje) / (1000 * 60 * 60 * 24));
+                return diferencaDias <= 7 && diferencaDias >= 0 && p.status === 'ativo';
+            }).map(p => `- ${p.descricao} (${p.clienteNome}) - ${p.tipo} - ${Math.ceil((new Date(p.dataLimite) - new Date()) / (1000 * 60 * 60 * 24))} dias`).join('\n') || 'Nenhum prazo próximo'}
+
+=== TOP 5 CLIENTES POR VALOR ===
+${clientesParaMostrar.map(cliente => {
+                const valorCliente = honorariosParaMostrar
+                    .filter(h => h.clienteId === cliente.id)
+                    .reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+                return { ...cliente, valorTotal: valorCliente };
+            }).sort((a, b) => b.valorTotal - a.valorTotal).slice(0, 5).map((cliente, index) => 
+                `${index + 1}. ${cliente.nome} - €${(Math.round(cliente.valorTotal * 100) / 100).toFixed(2)}`
+            ).join('\n')}
+
+=== RELATÓRIO GERADO AUTOMATICAMENTE ===
+Sistema Legal - ANA PAULA MEDINA
+            `;
+            
+            // Criar e baixar arquivo
+            const blob = new Blob([relatorio], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `relatorio_completo_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            mostrarNotificacao('Relatório completo gerado com sucesso!', 'success');
+        }
+
         function gerarDashboard() {
             const tipoUsuario = localStorage.getItem('tipoUsuario');
             let clientesParaMostrar = clientes;
@@ -2113,16 +2220,136 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Métricas Avançadas -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div class="card p-6">
-                            <h3 class="text-lg font-semibold mb-4">Status dos Honorários</h3>
-                            <div class="chart-container">
-                                <canvas id="chartHonorarios"></canvas>
+                            <div class="flex items-center">
+                                <div class="p-3 bg-indigo-100 rounded-lg">
+                                    <i data-lucide="target" class="w-6 h-6 text-indigo-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-600">Taxa de Conversão</p>
+                                    <p class="text-2xl font-bold text-gray-900">${totalClientes > 0 ? Math.round((honorariosParaMostrar.filter(h => h.clienteId).length / totalClientes) * 100) : 0}%</p>
+                                </div>
                             </div>
                         </div>
                         
                         <div class="card p-6">
-                            <h3 class="text-lg font-semibold mb-4">Resumo Financeiro</h3>
+                            <div class="flex items-center">
+                                <div class="p-3 bg-teal-100 rounded-lg">
+                                    <i data-lucide="calculator" class="w-6 h-6 text-teal-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-600">Média por Cliente</p>
+                                    <p class="text-2xl font-bold text-gray-900">€${totalClientes > 0 ? (Math.round((valorTotal / totalClientes) * 100) / 100).toFixed(2) : '0.00'}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-orange-100 rounded-lg">
+                                    <i data-lucide="alert-triangle" class="w-6 h-6 text-orange-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-600">Honorários Vencidos</p>
+                                    <p class="text-2xl font-bold text-gray-900">${honorariosParaMostrar.filter(h => {
+                                        if (!h.vencimento) return false;
+                                        const dataVencimento = new Date(h.vencimento);
+                                        const hoje = new Date();
+                                        return dataVencimento < hoje && h.status === 'pendente';
+                                    }).length}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-pink-100 rounded-lg">
+                                    <i data-lucide="clock" class="w-6 h-6 text-pink-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-600">Prazos Próximos</p>
+                                    <p class="text-2xl font-bold text-gray-900">${prazos.filter(p => {
+                                        if (!p.dataLimite) return false;
+                                        const dataLimite = new Date(p.dataLimite);
+                                        const hoje = new Date();
+                                        const diferencaDias = Math.ceil((dataLimite - hoje) / (1000 * 60 * 60 * 24));
+                                        return diferencaDias <= 7 && diferencaDias >= 0 && p.status === 'ativo';
+                                    }).length}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alertas e Resumos Inteligentes -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">🚨 Alertas Urgentes</h3>
+                            <div class="space-y-3">
+                                ${honorariosParaMostrar.filter(h => {
+                                    if (!h.vencimento) return false;
+                                    const dataVencimento = new Date(h.vencimento);
+                                    const hoje = new Date();
+                                    return dataVencimento < hoje && h.status === 'pendente';
+                                }).slice(0, 3).map(honorario => `
+                                    <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
+                                        <div>
+                                            <p class="text-sm font-medium text-red-800">${honorario.cliente}</p>
+                                            <p class="text-xs text-red-600">Vencido em ${new Date(honorario.vencimento).toLocaleDateString('pt-PT')}</p>
+                                        </div>
+                                        <span class="text-red-600 font-bold">€${(Math.round((parseFloat(honorario.valor) || 0) * 100) / 100).toFixed(2)}</span>
+                                    </div>
+                                `).join('')}
+                                ${honorariosParaMostrar.filter(h => {
+                                    if (!h.vencimento) return false;
+                                    const dataVencimento = new Date(h.vencimento);
+                                    const hoje = new Date();
+                                    return dataVencimento < hoje && h.status === 'pendente';
+                                }).length === 0 ? `
+                                    <div class="text-center py-4">
+                                        <i data-lucide="check-circle" class="w-8 h-8 text-green-500 mx-auto mb-2"></i>
+                                        <p class="text-sm text-green-600">Nenhum honorário vencido!</p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">⏰ Prazos Próximos</h3>
+                            <div class="space-y-3">
+                                ${prazos.filter(p => {
+                                    if (!p.dataLimite) return false;
+                                    const dataLimite = new Date(p.dataLimite);
+                                    const hoje = new Date();
+                                    const diferencaDias = Math.ceil((dataLimite - hoje) / (1000 * 60 * 60 * 24));
+                                    return diferencaDias <= 7 && diferencaDias >= 0 && p.status === 'ativo';
+                                }).slice(0, 3).map(prazo => `
+                                    <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                                        <div>
+                                            <p class="text-sm font-medium text-yellow-800">${prazo.descricao}</p>
+                                            <p class="text-xs text-yellow-600">${prazo.clienteNome} - ${Math.ceil((new Date(prazo.dataLimite) - new Date()) / (1000 * 60 * 60 * 24))} dias</p>
+                                        </div>
+                                        <span class="text-yellow-600 font-bold">${prazo.tipo}</span>
+                                    </div>
+                                `).join('')}
+                                ${prazos.filter(p => {
+                                    if (!p.dataLimite) return false;
+                                    const dataLimite = new Date(p.dataLimite);
+                                    const hoje = new Date();
+                                    const diferencaDias = Math.ceil((dataLimite - hoje) / (1000 * 60 * 60 * 24));
+                                    return diferencaDias <= 7 && diferencaDias >= 0 && p.status === 'ativo';
+                                }).length === 0 ? `
+                                    <div class="text-center py-4">
+                                        <i data-lucide="check-circle" class="w-8 h-8 text-green-500 mx-auto mb-2"></i>
+                                        <p class="text-sm text-green-600">Nenhum prazo próximo!</p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">📊 Resumo Financeiro</h3>
                             <div class="space-y-4">
                                 <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg">
                                     <span class="text-green-800 font-medium">Honorários Pagos</span>
@@ -2136,6 +2363,48 @@
                                     <span class="text-blue-800 font-medium">Valor Total</span>
                                     <span class="text-blue-600 font-bold">€${(Math.round(valorTotal * 100) / 100).toFixed(2)}</span>
                                 </div>
+                                <div class="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
+                                    <span class="text-purple-800 font-medium">Taxa de Conversão</span>
+                                    <span class="text-purple-600 font-bold">${totalClientes > 0 ? Math.round((honorariosParaMostrar.filter(h => h.clienteId).length / totalClientes) * 100) : 0}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">Status dos Honorários</h3>
+                            <div class="chart-container">
+                                <canvas id="chartHonorarios"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">📈 Top 5 Clientes por Valor</h3>
+                            <div class="space-y-3">
+                                ${clientesParaMostrar.map(cliente => {
+                                    const valorCliente = honorariosParaMostrar
+                                        .filter(h => h.clienteId === cliente.id)
+                                        .reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0);
+                                    return { ...cliente, valorTotal: valorCliente };
+                                }).sort((a, b) => b.valorTotal - a.valorTotal).slice(0, 5).map((cliente, index) => `
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div class="flex items-center">
+                                            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full mr-3">${index + 1}</span>
+                                            <div>
+                                                <p class="font-medium text-gray-800">${cliente.nome}</p>
+                                                <p class="text-xs text-gray-600">${cliente.email}</p>
+                                            </div>
+                                        </div>
+                                        <span class="text-blue-600 font-bold">€${(Math.round(cliente.valorTotal * 100) / 100).toFixed(2)}</span>
+                                    </div>
+                                `).join('')}
+                                ${clientesParaMostrar.length === 0 ? `
+                                    <div class="text-center py-4">
+                                        <i data-lucide="users" class="w-8 h-8 text-gray-400 mx-auto mb-2"></i>
+                                        <p class="text-sm text-gray-500">Nenhum cliente encontrado</p>
+                                    </div>
+                                ` : ''}
                             </div>
                         </div>
                     </div>
@@ -2169,6 +2438,40 @@
                                     </div>
                                 `).join('')}
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Ações Rápidas -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">⚡ Ações Rápidas</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <button onclick="carregarSecao('honorarios')" class="flex items-center justify-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-colors">
+                                <div class="text-center">
+                                    <i data-lucide="dollar-sign" class="w-6 h-6 text-blue-600 mx-auto mb-2"></i>
+                                    <p class="text-sm font-medium text-blue-800">Criar Honorário</p>
+                                </div>
+                            </button>
+                            
+                            <button onclick="carregarSecao('prazos')" class="flex items-center justify-center p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg border border-yellow-200 transition-colors">
+                                <div class="text-center">
+                                    <i data-lucide="clock" class="w-6 h-6 text-yellow-600 mx-auto mb-2"></i>
+                                    <p class="text-sm font-medium text-yellow-800">Ver Prazos</p>
+                                </div>
+                            </button>
+                            
+                            <button onclick="carregarSecao('clientes')" class="flex items-center justify-center p-4 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 transition-colors">
+                                <div class="text-center">
+                                    <i data-lucide="user-plus" class="w-6 h-6 text-green-600 mx-auto mb-2"></i>
+                                    <p class="text-sm font-medium text-green-800">Novo Cliente</p>
+                                </div>
+                            </button>
+                            
+                            <button onclick="gerarRelatorioCompleto()" class="flex items-center justify-center p-4 bg-purple-50 hover:bg-purple-100 rounded-lg border border-purple-200 transition-colors">
+                                <div class="text-center">
+                                    <i data-lucide="download" class="w-6 h-6 text-purple-600 mx-auto mb-2"></i>
+                                    <p class="text-sm font-medium text-purple-800">Relatório</p>
+                                </div>
+                            </button>
                         </div>
                     </div>
 
