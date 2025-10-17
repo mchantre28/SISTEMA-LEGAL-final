@@ -1768,13 +1768,13 @@
             });
             
             // Criar notificação no sistema
-            criarNotificacao(
-                `Lembrete enviado para ${cliente.nome}`,
-                `Email de lembrete enviado ${tempoAntecedencia} antes do prazo`,
-                'info',
-                'lembrete_email',
-                cliente.id
-            );
+            criarNotificacao({
+                titulo: `Lembrete enviado para ${cliente.nome}`,
+                descricao: `Email de lembrete enviado ${tempoAntecedencia} antes do prazo`,
+                tipo: 'info',
+                categoria: 'lembrete_email',
+                referenciaId: cliente.id
+            });
             
             // Marcar como enviado
             lembrete.enviado = true;
@@ -1802,13 +1802,13 @@
                     honorario.valorComJuros = parseFloat(honorario.valor) + juros;
                     
                     // Criar notificação de juros
-                    criarNotificacao(
-                        `Juros calculados - ${honorario.clienteNome}`,
-                        `Juros de €${juros.toFixed(2)} calculados (${diasAtraso} dias de atraso)`,
-                        'warning',
-                        'juros_calculados',
-                        honorario.clienteId
-                    );
+                    criarNotificacao({
+                        titulo: `Juros calculados - ${honorario.clienteNome}`,
+                        descricao: `Juros de €${juros.toFixed(2)} calculados (${diasAtraso} dias de atraso)`,
+                        tipo: 'warning',
+                        categoria: 'juros_calculados',
+                        referenciaId: honorario.clienteId
+                    });
                 }
             });
             
@@ -1842,13 +1842,13 @@
             localStorage.setItem('faturas', JSON.stringify(faturas));
             
             // Criar notificação
-            criarNotificacao(
-                `Fatura gerada - ${cliente.nome}`,
-                `Fatura ${fatura.numero} gerada automaticamente`,
-                'success',
-                'fatura_gerada',
-                cliente.id
-            );
+            criarNotificacao({
+                titulo: `Fatura gerada - ${cliente.nome}`,
+                descricao: `Fatura ${fatura.numero} gerada automaticamente`,
+                tipo: 'success',
+                categoria: 'fatura_gerada',
+                referenciaId: cliente.id
+            });
             
             console.log('📄 Fatura gerada automaticamente:', fatura);
             return fatura;
@@ -1992,6 +1992,17 @@ END:VCALENDAR`;
 
         function salvarIntegracoes(integracoes) {
             localStorage.setItem('integracoes', JSON.stringify(integracoes));
+        }
+
+        // Função para salvar honorários (estava faltando)
+        function salvarHonorarios() {
+            try {
+                localStorage.setItem('honorarios', JSON.stringify(honorarios));
+                console.log('✅ Honorários salvos com sucesso');
+            } catch (error) {
+                console.error('❌ Erro ao salvar honorários:', error);
+                mostrarNotificacao('Erro ao salvar honorários!', 'error');
+            }
         }
 
         function gerarAutomacoes() {
