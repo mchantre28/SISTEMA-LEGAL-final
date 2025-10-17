@@ -8143,6 +8143,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         
         function baixarAnexo(anexoId) {
             console.log('🔧 baixarAnexo chamado com ID:', anexoId);
+            console.log('🔧 Buscando anexo com ID:', anexoId);
             
             // Buscar anexo em todas as fontes
             let anexo = null;
@@ -8216,29 +8217,48 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             if (!anexo) {
+                console.error('❌ Anexo não encontrado com ID:', anexoId);
                 mostrarNotificacao('Documento não encontrado!', 'error');
                 return;
             }
             
+            console.log('🔧 Anexo encontrado:', anexo);
+            console.log('🔧 Tipo de arquivo:', anexo.tipo || 'desconhecido');
+            console.log('🔧 Nome do arquivo:', anexo.nome || 'sem nome');
+            console.log('🔧 Tamanho do dataURL (primeiros 50 chars):', anexo.conteudo ? anexo.conteudo.substring(0, 50) + '...' : 'N/A');
+            
             try {
+                console.log('🔧 Iniciando conversão Base64 para Blob...');
                 // Converter base64 para blob
                 const byteCharacters = atob(anexo.conteudo);
+                console.log('🔧 Base64 decodificado, tamanho:', byteCharacters.length);
+                
                 const byteNumbers = new Array(byteCharacters.length);
                 for (let i = 0; i < byteCharacters.length; i++) {
                     byteNumbers[i] = byteCharacters.charCodeAt(i);
                 }
                 const byteArray = new Uint8Array(byteNumbers);
+                console.log('🔧 ByteArray criado, tamanho:', byteArray.length);
+                
                 const blob = new Blob([byteArray], { type: anexo.tipoMime || 'application/octet-stream' });
+                console.log('🔧 Blob criado, tamanho:', blob.size, 'tipo:', blob.type);
                 
                 // Criar link de download
                 const url = window.URL.createObjectURL(blob);
+                console.log('🔧 URL do objeto criada:', url);
+                
                 const link = document.createElement('a');
                 link.href = url;
                 link.download = anexo.nome;
+                console.log('🔧 Link criado, href:', link.href, 'download:', link.download);
+                
                 document.body.appendChild(link);
+                console.log('🔧 Link adicionado ao body, clicando...');
                 link.click();
+                console.log('🔧 Link clicado, removendo do body...');
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
+                console.log('🔧 URL revogada, download deve ter iniciado');
                 
                 mostrarNotificacao('Download iniciado com sucesso!', 'success');
             } catch (error) {
