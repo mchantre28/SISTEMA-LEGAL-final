@@ -2970,6 +2970,7 @@
                         <select id="filtroTipo" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosNotificacoes()">
                             <option value="">Todos os tipos</option>
                             <option value="mensagem_admin">Mensagem do Admin</option>
+                            <option value="resposta_convidado">Resposta do Convidado</option>
                             <option value="cliente_autorizado">Cliente Autorizado</option>
                             <option value="documento_anexado">Documento Anexado</option>
                             <option value="prazo_proximo">Prazo Próximo</option>
@@ -3061,10 +3062,36 @@
                                         <div class="flex items-center space-x-2 mb-2">
                                             <span class="status-badge status-${notificacao.tipo}">${notificacao.tipo}</span>
                                             ${notificacao.prioridade === 'alta' ? '<span class="status-badge status-alta">Urgente</span>' : ''}
+                                            ${notificacao.origem === 'admin' ? '<span class="status-badge status-info">Admin</span>' : ''}
+                                            ${notificacao.origem === 'convidado' ? '<span class="status-badge status-success">Convidado</span>' : ''}
                                         </div>
                                         <h4 class="font-semibold text-gray-800">${notificacao.titulo}</h4>
                                         <p class="text-gray-600 text-sm mt-1">${notificacao.mensagem}</p>
                                         <p class="text-gray-400 text-xs mt-2">${notificacao.dataCriacao ? new Date(notificacao.dataCriacao).toLocaleString('pt-PT') : 'Data não disponível'}</p>
+                                        
+                                        ${notificacao.origem === 'admin' && tipoUsuario === 'convidado' ? `
+                                            <div class="mt-3 pt-3 border-t border-gray-200">
+                                                <button onclick="responderMensagem(${notificacao.id})" class="btn btn-sm btn-primary">
+                                                    <i data-lucide="reply" class="w-4 h-4"></i>
+                                                    Responder
+                                                </button>
+                                            </div>
+                                        ` : ''}
+                                        
+                                        ${notificacao.respostas && notificacao.respostas.length > 0 ? `
+                                            <div class="mt-3">
+                                                <h5 class="text-sm font-medium text-gray-700 mb-2">Respostas (${notificacao.respostas.length})</h5>
+                                                ${notificacao.respostas.map(resposta => `
+                                                    <div class="bg-gray-50 p-3 rounded-lg mb-2">
+                                                        <div class="flex items-center justify-between mb-1">
+                                                            <span class="text-xs font-medium text-gray-600">${resposta.origem === 'admin' ? 'Admin' : 'Você'}</span>
+                                                            <span class="text-xs text-gray-400">${new Date(resposta.dataCriacao).toLocaleString('pt-PT')}</span>
+                                                        </div>
+                                                        <p class="text-sm text-gray-800">${resposta.mensagem}</p>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        ` : ''}
                                     </div>
                                     <div class="flex items-center space-x-2">
                                         ${!notificacao.lida ? `
@@ -6110,6 +6137,99 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             document.getElementById('filtroPeriodo').value = '';
             
             carregarSecao('notificacoes');
+        }
+
+        // === SISTEMA DE COMUNICAÇÃO BIDIRECIONAL ===
+        
+        function responderMensagem(notificacaoId) {
+            const notificacao = notificacoes.find(n => n.id === notificacaoId);
+            if (!notificacao) {
+                mostrarNotificacao('Notificação não encontrada!', 'error');
+                return;
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 w-full max-w-md">
+                    <h3 class="text-lg font-semibold mb-4">Responder Mensagem</h3>
+                    
+                    <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+                        <h4 class="font-medium text-gray-800">${notificacao.titulo}</h4>
+                        <p class="text-sm text-gray-600 mt-1">${notificacao.mensagem}</p>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Sua Resposta</label>
+                            <textarea id="respostaMensagem" rows="4" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Digite sua resposta..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button onclick="fecharModal()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                            Cancelar
+                        </button>
+                        <button onclick="enviarResposta(${notificacaoId})" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                            Enviar Resposta
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        function enviarResposta(notificacaoId) {
+            const resposta = document.getElementById('respostaMensagem').value;
+            
+            if (!resposta.trim()) {
+                mostrarNotificacao('Digite uma resposta!', 'error');
+                return;
+            }
+            
+            const notificacao = notificacoes.find(n => n.id === notificacaoId);
+            if (notificacao) {
+                // Inicializar array de respostas se não existir
+                if (!notificacao.respostas) {
+                    notificacao.respostas = [];
+                }
+                
+                // Adicionar resposta
+                const novaResposta = {
+                    id: Date.now(),
+                    mensagem: resposta,
+                    origem: 'convidado',
+                    dataCriacao: new Date().toISOString(),
+                    convidadoId: localStorage.getItem('convidadoId')
+                };
+                
+                notificacao.respostas.push(novaResposta);
+                
+                // Salvar dados
+                salvarDados('notificacoes', notificacoes);
+                
+                // Criar notificação para o admin sobre a resposta
+                const notificacaoAdmin = {
+                    id: Date.now(),
+                    tipo: 'resposta_convidado',
+                    titulo: 'Resposta Recebida',
+                    mensagem: `Convidado respondeu: "${resposta.substring(0, 50)}${resposta.length > 50 ? '...' : ''}"`,
+                    prioridade: 'media',
+                    destinatarioId: 'admin',
+                    referenciaId: notificacaoId,
+                    lida: false,
+                    dataCriacao: new Date().toISOString(),
+                    origem: 'sistema'
+                };
+                
+                notificacoes.unshift(notificacaoAdmin);
+                salvarDados('notificacoes', notificacoes);
+                
+                mostrarNotificacao('Resposta enviada com sucesso!', 'success');
+                fecharModal();
+                carregarSecao('notificacoes');
+            }
         }
 
         function filtrarPrazos() {
