@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Paula Medina - Sistema Legal v38.0 CORRIGIDO</title>
+    <title>Ana Paula Medina - Sistema Legal v39.0 AUTOMAÇÕES CORRIGIDAS</title>
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
@@ -1812,7 +1812,20 @@
                 }
             });
             
-            salvarHonorarios();
+            // Verificar se a função existe antes de chamar
+            if (typeof salvarHonorarios === 'function') {
+                console.log('🔧 Chamando salvarHonorarios...');
+                salvarHonorarios();
+            } else {
+                console.error('❌ Função salvarHonorarios não encontrada!');
+                // Fallback: salvar diretamente
+                try {
+                    localStorage.setItem('honorarios', JSON.stringify(honorarios));
+                    console.log('✅ Honorários salvos via fallback');
+                } catch (error) {
+                    console.error('❌ Erro no fallback:', error);
+                }
+            }
         }
 
         // 3. GERAÇÃO AUTOMÁTICA DE FATURAS
@@ -1994,11 +2007,12 @@ END:VCALENDAR`;
             localStorage.setItem('integracoes', JSON.stringify(integracoes));
         }
 
-        // Função para salvar honorários (estava faltando)
+        // Função para salvar honorários (CORRIGIDA - v2.0)
         function salvarHonorarios() {
+            console.log('🔧 Função salvarHonorarios chamada - v2.0');
             try {
                 localStorage.setItem('honorarios', JSON.stringify(honorarios));
-                console.log('✅ Honorários salvos com sucesso');
+                console.log('✅ Honorários salvos com sucesso - v2.0');
             } catch (error) {
                 console.error('❌ Erro ao salvar honorários:', error);
                 mostrarNotificacao('Erro ao salvar honorários!', 'error');
