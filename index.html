@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Paula Medina - Sistema Legal v40.0 DEBUG AUTOMAÇÕES</title>
+    <title>Ana Paula Medina - Sistema Legal v41.0 AUTOMAÇÕES CORRIGIDAS</title>
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
@@ -2259,7 +2259,138 @@ END:VCALENDAR`;
             `;
             
             console.log('🔧 HTML de automações gerado com sucesso');
-            return html;
+            return `
+                <div class="space-y-6">
+                    <!-- Status das Automações -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Status das Automações</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <i data-lucide="mail" class="w-8 h-8 text-blue-600 mr-3"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Lembretes Ativos</p>
+                                        <p class="text-2xl font-bold text-blue-600">${lembretes.filter(l => l.ativo).length}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <i data-lucide="file-text" class="w-8 h-8 text-green-600 mr-3"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Faturas Geradas</p>
+                                        <p class="text-2xl font-bold text-green-600">${faturas.length}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-purple-50 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <i data-lucide="link" class="w-8 h-8 text-purple-600 mr-3"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Integrações</p>
+                                        <p class="text-2xl font-bold text-purple-600">${integracoes.filter(i => i.ativa).length}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lembretes Automáticos -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Lembretes Automáticos</h3>
+                        <div class="space-y-3">
+                            <button onclick="criarLembrete()" class="btn btn-primary">
+                                <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                                Criar Lembrete
+                            </button>
+                            <button onclick="verificarLembretes()" class="btn btn-info">
+                                <i data-lucide="refresh-cw" class="w-4 h-4 mr-2"></i>
+                                Verificar Agora
+                            </button>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4 class="font-medium mb-2">Lembretes Ativos:</h4>
+                            <div class="space-y-2">
+                                ${lembretes.filter(l => l.ativo).map(lembrete => `
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <div class="flex justify-between items-center">
+                                            <div>
+                                                <p class="font-medium">${lembrete.titulo}</p>
+                                                <p class="text-sm text-gray-600">${new Date(lembrete.data).toLocaleString('pt-PT')}</p>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <button onclick="editarLembrete(${lembrete.id})" class="btn btn-sm btn-secondary">
+                                                    <i data-lucide="edit" class="w-4 h-4"></i>
+                                                </button>
+                                                <button onclick="desativarLembrete(${lembrete.id})" class="btn btn-sm btn-warning">
+                                                    <i data-lucide="pause" class="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cálculo de Juros -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Cálculo Automático de Juros</h3>
+                        <div class="space-y-3">
+                            <button onclick="calcularJurosAutomaticos()" class="btn btn-warning">
+                                <i data-lucide="calculator" class="w-4 h-4 mr-2"></i>
+                                Calcular Juros Agora
+                            </button>
+                            <p class="text-sm text-gray-600">
+                                Sistema calcula automaticamente juros de mora para honorários vencidos (0.05% ao dia)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Geração de Faturas -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Geração Automática de Faturas</h3>
+                        <div class="space-y-3">
+                            <button onclick="gerarFaturasAutomaticas()" class="btn btn-success">
+                                <i data-lucide="file-text" class="w-4 h-4 mr-2"></i>
+                                Gerar Faturas Pendentes
+                            </button>
+                            <p class="text-sm text-gray-600">
+                                Gera faturas automaticamente para honorários com juros calculados
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Sincronização com Calendário -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Sincronização com Calendário</h3>
+                        <div class="space-y-3">
+                            <button onclick="sincronizarComCalendario()" class="btn btn-info">
+                                <i data-lucide="calendar" class="w-4 h-4 mr-2"></i>
+                                Exportar para Calendário
+                            </button>
+                            <p class="text-sm text-gray-600">
+                                Exporta prazos e vencimentos para arquivo ICS (compatível com Google Calendar, Outlook, etc.)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Integrações Externas -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Integrações Externas</h3>
+                        <div class="space-y-3">
+                            <button onclick="configurarIntegracoes()" class="btn btn-purple">
+                                <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
+                                Configurar Integrações
+                            </button>
+                            <p class="text-sm text-gray-600">
+                                Configure integrações com sistemas de email, calendário e contabilidade
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         // Funções auxiliares para automações
