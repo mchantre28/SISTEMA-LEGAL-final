@@ -969,12 +969,35 @@
                 console.log('🔧 Convidado encontrado:', convidado.nome);
                 console.log('🔧 Clientes autorizados antes:', convidado.clientesAutorizados);
                 
+                // Verificar se há novos clientes autorizados
+                const clientesAntigos = convidado.clientesAutorizados || [];
+                const novosClientes = clientesAutorizados.filter(id => !clientesAntigos.includes(id));
+                
                 // Atualizar permissões
                 convidado.clientesAutorizados = clientesAutorizados;
                 localStorage.setItem('convidados', JSON.stringify(convidados));
                 
                 console.log('🔧 Clientes autorizados depois:', convidado.clientesAutorizados);
                 console.log('🔧 Dados salvos no localStorage');
+                
+                // Criar notificações automáticas para novos clientes
+                if (novosClientes.length > 0) {
+                    const clientes = JSON.parse(localStorage.getItem('clientes') || '[]');
+                    novosClientes.forEach(clienteId => {
+                        const cliente = clientes.find(c => c.id === clienteId);
+                        if (cliente) {
+                            criarNotificacao({
+                                tipo: 'cliente_autorizado',
+                                titulo: 'Novo Cliente Autorizado',
+                                mensagem: `O cliente "${cliente.nome}" foi autorizado para você.`,
+                                prioridade: 'media',
+                                referenciaId: clienteId,
+                                destinatarioId: id,
+                                acao: 'ver_cliente'
+                            });
+                        }
+                    });
+                }
                 
                 // Recarregar seção
                 setTimeout(() => {
@@ -2855,8 +2878,25 @@
         }
 
         function gerarNotificacoes() {
-            const notificacoesNaoLidas = notificacoes.filter(n => !n.lida).length;
-            const notificacoesHoje = notificacoes.filter(n => {
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            const convidadoId = localStorage.getItem('convidadoId');
+            
+            // Filtrar notificações baseado no tipo de usuário
+            let notificacoesFiltradas = notificacoes;
+            
+            if (tipoUsuario === 'convidado') {
+                // Para convidados: apenas notificações direcionadas a eles
+                notificacoesFiltradas = notificacoes.filter(n => 
+                    n.destinatarioId === parseInt(convidadoId) || 
+                    n.destinatarioId === 'todos' ||
+                    n.tipo === 'cliente_autorizado' ||
+                    n.tipo === 'documento_anexado' ||
+                    n.tipo === 'prazo_proximo'
+                );
+            }
+            
+            const notificacoesNaoLidas = notificacoesFiltradas.filter(n => !n.lida).length;
+            const notificacoesHoje = notificacoesFiltradas.filter(n => {
                 try {
                     if (!n.dataCriacao) return false;
                     const hoje = new Date().toISOString().split('T')[0];
@@ -2872,24 +2912,37 @@
                 <div class="space-y-6">
             <div class="flex justify-between items-center">
                 <div class="flex space-x-3">
-                    <button onclick="criarNotificacaoTeste()" class="btn btn-info">
-                        <i data-lucide="test-tube" class="w-4 h-4"></i>
-                        Teste Aleatório
-                    </button>
-                    <button onclick="criarNotificacaoPersonalizada()" class="btn btn-warning">
-                        <i data-lucide="edit" class="w-4 h-4"></i>
-                        Criar Personalizada
-                    </button>
+                    ${tipoUsuario === 'admin' ? `
+                        <button onclick="criarNotificacaoTeste()" class="btn btn-info">
+                            <i data-lucide="test-tube" class="w-4 h-4"></i>
+                            Teste Aleatório
+                        </button>
+                        <button onclick="criarNotificacaoPersonalizada()" class="btn btn-warning">
+                            <i data-lucide="edit" class="w-4 h-4"></i>
+                            Criar Personalizada
+                        </button>
+                        <button onclick="enviarMensagemConvidado()" class="btn btn-primary">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            Enviar para Convidado
+                        </button>
+                    ` : `
+                        <div class="text-sm text-gray-600">
+                            <i data-lucide="info" class="w-4 h-4 inline mr-1"></i>
+                            Suas notificações automáticas e mensagens do administrador
+                        </div>
+                    `}
                 </div>
                 <div class="flex space-x-3">
                     <button onclick="marcarTodasComoLidas()" class="btn btn-secondary">
                         <i data-lucide="check" class="w-4 h-4"></i>
                         Marcar Todas como Lidas
                     </button>
-                    <button onclick="limparNotificacoes()" class="btn btn-error">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        Limpar Todas
-                    </button>
+                    ${tipoUsuario === 'admin' ? `
+                        <button onclick="limparNotificacoes()" class="btn btn-error">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            Limpar Todas
+                        </button>
+                    ` : ''}
                 </div>
             </div>
                     
@@ -2925,20 +2978,20 @@
                                 </div>
                                 <div class="ml-4">
                                     <p class="text-sm font-medium text-gray-600">Total</p>
-                                    <p class="text-2xl font-bold text-gray-900">${notificacoes.length}</p>
+                                    <p class="text-2xl font-bold text-gray-900">${notificacoesFiltradas.length}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="space-y-4">
-                        ${notificacoes.length === 0 ? `
+                        ${notificacoesFiltradas.length === 0 ? `
                             <div class="card p-8 text-center">
                                 <i data-lucide="bell-off" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
                                 <h3 class="text-lg font-semibold text-gray-600 mb-2">Nenhuma notificação</h3>
                                 <p class="text-gray-500">Você está em dia! Não há notificações pendentes.</p>
                             </div>
-                        ` : notificacoes.map(notificacao => `
+                        ` : notificacoesFiltradas.map(notificacao => `
                             <div class="card p-4 ${notificacao.lida ? 'opacity-60' : 'border-l-4 border-blue-500'}">
                                 <div class="flex items-start justify-between">
                                     <div class="flex-1">
@@ -5662,6 +5715,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 prioridade: dados.prioridade,
                 referenciaId: dados.referenciaId,
                 acao: dados.acao,
+                destinatarioId: dados.destinatarioId || 'todos',
+                origem: dados.origem || 'sistema',
                 lida: false,
                 dataCriacao: new Date().toISOString()
             };
@@ -5799,6 +5854,100 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 atualizarBadgeNotificacoes();
                 mostrarNotificacao('Todas as notificações foram removidas', 'success');
             }
+        }
+
+        // === SISTEMA HÍBRIDO DE NOTIFICAÇÕES ===
+        
+        function enviarMensagemConvidado() {
+            const convidados = obterConvidados();
+            const convidadosAtivos = convidados.filter(c => c.ativo);
+            
+            if (convidadosAtivos.length === 0) {
+                mostrarNotificacao('Nenhum convidado ativo encontrado!', 'error');
+                return;
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 w-full max-w-md">
+                    <h3 class="text-lg font-semibold mb-4">Enviar Mensagem para Convidado</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Destinatário</label>
+                            <select id="convidadoDestinatario" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                <option value="">Selecione um convidado</option>
+                                ${convidadosAtivos.map(c => `
+                                    <option value="${c.id}">${c.nome} (${c.email})</option>
+                                `).join('')}
+                                <option value="todos">Todos os Convidados</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Título</label>
+                            <input type="text" id="mensagemTitulo" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Título da mensagem">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Mensagem</label>
+                            <textarea id="mensagemConteudo" rows="4" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Digite sua mensagem..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Prioridade</label>
+                            <select id="mensagemPrioridade" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                <option value="baixa">Baixa</option>
+                                <option value="media" selected>Média</option>
+                                <option value="alta">Alta</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button onclick="fecharModal()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                            Cancelar
+                        </button>
+                        <button onclick="enviarMensagemConfirmar()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                            Enviar Mensagem
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        function enviarMensagemConfirmar() {
+            const destinatarioId = document.getElementById('convidadoDestinatario').value;
+            const titulo = document.getElementById('mensagemTitulo').value;
+            const conteudo = document.getElementById('mensagemConteudo').value;
+            const prioridade = document.getElementById('mensagemPrioridade').value;
+            
+            if (!destinatarioId || !titulo || !conteudo) {
+                mostrarNotificacao('Preencha todos os campos!', 'error');
+                return;
+            }
+            
+            const notificacao = {
+                id: Date.now(),
+                tipo: 'mensagem_admin',
+                titulo: titulo,
+                mensagem: conteudo,
+                prioridade: prioridade,
+                destinatarioId: destinatarioId === 'todos' ? 'todos' : parseInt(destinatarioId),
+                lida: false,
+                dataCriacao: new Date().toISOString(),
+                origem: 'admin'
+            };
+            
+            notificacoes.unshift(notificacao);
+            salvarDados('notificacoes', notificacoes);
+            
+            mostrarNotificacao('Mensagem enviada com sucesso!', 'success');
+            fecharModal();
+            carregarSecao('notificacoes');
         }
 
         function filtrarPrazos() {
