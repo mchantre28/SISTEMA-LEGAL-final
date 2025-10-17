@@ -638,10 +638,6 @@
                     <i data-lucide="clock" class="w-5 h-5 mr-3"></i>
                     Prazos
                 </a>
-                <a href="#" onclick="carregarSecao('iva-trimestral')" class="sidebar-item" id="nav-iva-trimestral">
-                    <i data-lucide="receipt" class="w-5 h-5 mr-3"></i>
-                    IVA Trimestral
-                </a>
                 <a href="#" onclick="carregarSecao('notificacoes')" class="sidebar-item" id="nav-notificacoes">
                     <i data-lucide="bell" class="w-5 h-5 mr-3"></i>
                     Notificações
@@ -1857,7 +1853,6 @@
                 herancas: 'Gestão de Heranças',
                 migracoes: 'Gestão de Migração',
                 registos: 'Gestão de Registos',
-                'iva-trimestral': 'IVA Trimestral',
                 relatorios: 'Gestão de Relatórios',
                 backup: 'Sistema de Backup'
             };
@@ -1908,7 +1903,6 @@
                 convidados: gerarConvidados(),
                 migracoes: gerarMigracao(),
                 registos: gerarRegistos(),
-                'iva-trimestral': gerarRelatorioIVATrimestral(),
                 relatorios: gerarRelatorios(),
                 backup: gerarBackup()
             };
@@ -11579,89 +11573,6 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
         
         // Função para gerar relatório de IVA trimestral
-        function gerarRelatorioIVATrimestral() {
-            const { ivaPorTrimestre, trimestreAtual } = calcularIVATrimestral();
-            const prazos = obterPrazosIVA(trimestreAtual);
-            
-            return `
-                <div class="space-y-6">
-                    <!-- Header -->
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h2 class="text-2xl font-bold text-gray-900">Relatório de IVA Trimestral</h2>
-                            <p class="text-gray-600">Análise do IVA por trimestre</p>
-                        </div>
-                        <button onclick="criarPrazosIVA()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                            <i data-lucide="calendar" class="w-4 h-4 mr-2"></i>
-                            Criar Prazos IVA
-                        </button>
-                    </div>
-                    
-                    <!-- Trimestre Atual -->
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Trimestre Atual (${trimestreAtual}º)</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="text-center p-4 bg-blue-50 rounded-lg">
-                                <div class="text-2xl font-bold text-blue-600">€${(Math.round(ivaPorTrimestre[trimestreAtual].valor * 100) / 100).toFixed(2)}</div>
-                                <div class="text-sm text-gray-600">IVA Acumulado</div>
-                            </div>
-                            <div class="text-center p-4 bg-green-50 rounded-lg">
-                                <div class="text-2xl font-bold text-green-600">${ivaPorTrimestre[trimestreAtual].itens}</div>
-                                <div class="text-sm text-gray-600">Itens Processados</div>
-                            </div>
-                            <div class="text-center p-4 bg-orange-50 rounded-lg">
-                                <div class="text-sm font-bold text-orange-600">${prazos.periodo}</div>
-                                <div class="text-sm text-gray-600">Período</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Prazos do Trimestre Atual -->
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Prazos do Trimestre Atual</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="p-4 border border-yellow-200 rounded-lg bg-yellow-50">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <h4 class="font-semibold text-yellow-800">Entrega da Declaração</h4>
-                                        <p class="text-sm text-yellow-600">${new Date(prazos.entrega).toLocaleDateString('pt-PT')}</p>
-                                    </div>
-                                    <i data-lucide="file-text" class="w-6 h-6 text-yellow-600"></i>
-                                </div>
-                            </div>
-                            <div class="p-4 border border-red-200 rounded-lg bg-red-50">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <h4 class="font-semibold text-red-800">Pagamento do Imposto</h4>
-                                        <p class="text-sm text-red-600">${new Date(prazos.pagamento).toLocaleDateString('pt-PT')}</p>
-                                    </div>
-                                    <i data-lucide="credit-card" class="w-6 h-6 text-red-600"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Resumo por Trimestre -->
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Resumo por Trimestre</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            ${Object.entries(ivaPorTrimestre).map(([trimestre, dados]) => `
-                                <div class="p-4 border rounded-lg ${trimestre == trimestreAtual ? 'border-blue-200 bg-blue-50' : 'border-gray-200 bg-gray-50'}">
-                                    <div class="text-center">
-                                        <div class="text-lg font-bold ${trimestre == trimestreAtual ? 'text-blue-600' : 'text-gray-600'}">
-                                            ${trimestre}º Trimestre
-                                        </div>
-                                        <div class="text-sm text-gray-600 mb-2">${dados.periodo}</div>
-                                        <div class="text-xl font-bold text-green-600">€${(Math.round(dados.valor * 100) / 100).toFixed(2)}</div>
-                                        <div class="text-sm text-gray-500">${dados.itens} itens</div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
 
         // === FUNÇÕES DIRETAS PARA HONORÁRIOS (COPIA EXATA DAS HERANÇAS) ===
         function editarHonorarioDireto(id) {
