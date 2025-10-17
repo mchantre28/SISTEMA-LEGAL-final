@@ -8229,8 +8229,28 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             
             try {
                 console.log('🔧 Iniciando conversão Base64 para Blob...');
+                
+                // Validar se o conteúdo Base64 é válido
+                if (!anexo.conteudo || typeof anexo.conteudo !== 'string') {
+                    throw new Error('Conteúdo do anexo não encontrado ou inválido');
+                }
+                
+                // Verificar se é um data URL válido
+                let base64Content = anexo.conteudo;
+                if (base64Content.startsWith('data:')) {
+                    // Extrair apenas a parte Base64 do data URL
+                    base64Content = base64Content.split(',')[1];
+                }
+                
+                // Validar formato Base64
+                const base64Regex = /^[A-Za-z0-9+/]*={0,2}$/;
+                if (!base64Regex.test(base64Content)) {
+                    throw new Error('Formato Base64 inválido');
+                }
+                
+                console.log('🔧 Base64 validado, iniciando decodificação...');
                 // Converter base64 para blob
-                const byteCharacters = atob(anexo.conteudo);
+                const byteCharacters = atob(base64Content);
                 console.log('🔧 Base64 decodificado, tamanho:', byteCharacters.length);
                 
                 const byteNumbers = new Array(byteCharacters.length);
@@ -8262,8 +8282,18 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 
                 mostrarNotificacao('Download iniciado com sucesso!', 'success');
             } catch (error) {
-                console.error('Erro ao baixar arquivo:', error);
-                mostrarNotificacao('Erro ao baixar arquivo!', 'error');
+                console.error('❌ Erro ao baixar arquivo:', error);
+                console.error('❌ Detalhes do erro:', error.message);
+                console.error('❌ Conteúdo do anexo (primeiros 100 chars):', anexo.conteudo ? anexo.conteudo.substring(0, 100) : 'N/A');
+                
+                let mensagemErro = 'Erro ao baixar arquivo!';
+                if (error.message.includes('Base64')) {
+                    mensagemErro = 'Arquivo corrompido - Base64 inválido. Tente fazer upload novamente.';
+                } else if (error.message.includes('conteúdo')) {
+                    mensagemErro = 'Conteúdo do arquivo não encontrado.';
+                }
+                
+                mostrarNotificacao(mensagemErro, 'error');
             }
         }
         
