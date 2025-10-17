@@ -2950,6 +2950,64 @@
                     ` : ''}
                 </div>
             </div>
+            
+            <!-- Filtros Inteligentes -->
+            <div class="card p-6">
+                <h3 class="text-lg font-semibold mb-4">Filtros Inteligentes</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Prioridade</label>
+                        <select id="filtroPrioridade" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosNotificacoes()">
+                            <option value="">Todas as prioridades</option>
+                            <option value="alta">Alta</option>
+                            <option value="media">Média</option>
+                            <option value="baixa">Baixa</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipo</label>
+                        <select id="filtroTipo" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosNotificacoes()">
+                            <option value="">Todos os tipos</option>
+                            <option value="mensagem_admin">Mensagem do Admin</option>
+                            <option value="cliente_autorizado">Cliente Autorizado</option>
+                            <option value="documento_anexado">Documento Anexado</option>
+                            <option value="prazo_proximo">Prazo Próximo</option>
+                            <option value="honorario">Honorário</option>
+                            <option value="prazo">Prazo</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                        <select id="filtroStatus" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosNotificacoes()">
+                            <option value="">Todas</option>
+                            <option value="nao_lida">Não Lidas</option>
+                            <option value="lida">Lidas</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Período</label>
+                        <select id="filtroPeriodo" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosNotificacoes()">
+                            <option value="">Todos</option>
+                            <option value="hoje">Hoje</option>
+                            <option value="semana">Esta Semana</option>
+                            <option value="mes">Este Mês</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center mt-4">
+                    <button onclick="limparFiltrosNotificacoes()" class="btn btn-secondary">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                        Limpar Filtros
+                    </button>
+                    <div class="text-sm text-gray-600">
+                        <span id="contadorFiltros">${notificacoesFiltradas.length} notificações encontradas</span>
+                    </div>
+                </div>
+            </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="card p-6">
@@ -5968,6 +6026,89 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             
             mostrarNotificacao('Mensagem enviada com sucesso!', 'success');
             fecharModal();
+            carregarSecao('notificacoes');
+        }
+
+        // === FILTROS INTELIGENTES DE NOTIFICAÇÕES ===
+        
+        function aplicarFiltrosNotificacoes() {
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            const convidadoId = localStorage.getItem('convidadoId');
+            
+            // Obter filtros
+            const filtroPrioridade = document.getElementById('filtroPrioridade')?.value || '';
+            const filtroTipo = document.getElementById('filtroTipo')?.value || '';
+            const filtroStatus = document.getElementById('filtroStatus')?.value || '';
+            const filtroPeriodo = document.getElementById('filtroPeriodo')?.value || '';
+            
+            // Filtrar notificações baseado no tipo de usuário
+            let notificacoesFiltradas = notificacoes;
+            
+            if (tipoUsuario === 'convidado') {
+                notificacoesFiltradas = notificacoes.filter(n => 
+                    n.destinatarioId === parseInt(convidadoId) || 
+                    n.destinatarioId === 'todos' ||
+                    n.tipo === 'cliente_autorizado' ||
+                    n.tipo === 'documento_anexado' ||
+                    n.tipo === 'prazo_proximo'
+                );
+            }
+            
+            // Aplicar filtros adicionais
+            if (filtroPrioridade) {
+                notificacoesFiltradas = notificacoesFiltradas.filter(n => n.prioridade === filtroPrioridade);
+            }
+            
+            if (filtroTipo) {
+                notificacoesFiltradas = notificacoesFiltradas.filter(n => n.tipo === filtroTipo);
+            }
+            
+            if (filtroStatus === 'nao_lida') {
+                notificacoesFiltradas = notificacoesFiltradas.filter(n => !n.lida);
+            } else if (filtroStatus === 'lida') {
+                notificacoesFiltradas = notificacoesFiltradas.filter(n => n.lida);
+            }
+            
+            if (filtroPeriodo) {
+                const agora = new Date();
+                const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+                const inicioSemana = new Date(hoje);
+                inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+                const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
+                
+                notificacoesFiltradas = notificacoesFiltradas.filter(n => {
+                    if (!n.dataCriacao) return false;
+                    const dataNotificacao = new Date(n.dataCriacao);
+                    
+                    switch (filtroPeriodo) {
+                        case 'hoje':
+                            return dataNotificacao >= hoje;
+                        case 'semana':
+                            return dataNotificacao >= inicioSemana;
+                        case 'mes':
+                            return dataNotificacao >= inicioMes;
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            // Atualizar contador
+            const contador = document.getElementById('contadorFiltros');
+            if (contador) {
+                contador.textContent = `${notificacoesFiltradas.length} notificações encontradas`;
+            }
+            
+            // Recarregar seção com filtros aplicados
+            carregarSecao('notificacoes');
+        }
+        
+        function limparFiltrosNotificacoes() {
+            document.getElementById('filtroPrioridade').value = '';
+            document.getElementById('filtroTipo').value = '';
+            document.getElementById('filtroStatus').value = '';
+            document.getElementById('filtroPeriodo').value = '';
+            
             carregarSecao('notificacoes');
         }
 
