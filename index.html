@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 TESTE RADICAL v53.0 - CACHE FORÇADO - ${Date.now()}</title>
+    <title>🚀 TESTE RADICAL v54.0 - CACHE FORÇADO - ${Date.now()}</title>
     <script>
-        alert('🚀 TESTE RADICAL v53.0 - CACHE FORÇADO!');
-        console.log('🚀 TESTE RADICAL v53.0 - CACHE FORÇADO!');
+        alert('🚀 TESTE RADICAL v54.0 - CACHE FORÇADO!');
+        console.log('🚀 TESTE RADICAL v54.0 - CACHE FORÇADO!');
         
         // LIMPAR LOCALSTORAGE COMPLETAMENTE
         try {
@@ -12151,13 +12151,17 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         
         // Fechar sidebar ao clicar fora (mobile)
         document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            
-            if (window.innerWidth <= 1024 && sidebar && mobileMenuBtn) {
-                if (!sidebar.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
-                    sidebar.classList.remove('open');
+            try {
+                const sidebar = document.getElementById('sidebar');
+                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                
+                if (window.innerWidth <= 1024 && sidebar && mobileMenuBtn) {
+                    if (!sidebar.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                        sidebar.classList.remove('open');
+                    }
                 }
+            } catch (error) {
+                console.log('Erro no evento de click:', error);
             }
         });
         
