@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 TESTE RADICAL v59.0 - CACHE FORÇADO - ${Date.now()}</title>
+    <title>🚀 TESTE RADICAL v60.0 - CACHE FORÇADO - ${Date.now()}</title>
     <script>
-        console.log('🚀 TESTE RADICAL v59.0 - CACHE FORÇADO!');
+        console.log('🚀 TESTE RADICAL v60.0 - CACHE FORÇADO!');
         
         // FORÇAR LIMPEZA RADICAL DE CACHE
         if ('caches' in window) {
@@ -37,26 +37,38 @@
             }
         });
         
-        // FORÇAR RELOAD MÚLTIPLO SE CACHE PERSISTIR
-        const reloadCount = parseInt(localStorage.getItem('reloadCount') || '0');
-        const maxReloads = 3;
+        // FORÇAR BYPASS COMPLETO DO CACHE
+        const timestamp = Date.now();
+        const cacheKey = `cache_buster_${timestamp}`;
         
-        if (reloadCount < maxReloads) {
-            localStorage.setItem('reloadCount', (reloadCount + 1).toString());
-            alert(`🔄 LIMPANDO CACHE (${reloadCount + 1}/${maxReloads}) - A PÁGINA VAI RECARREGAR!`);
-            console.log(`🔄 Forçando reload ${reloadCount + 1}/${maxReloads} para limpar cache...`);
-            window.location.reload(true);
+        // FORÇAR RELOAD COM BYPASS DE CACHE
+        if (localStorage.getItem('cacheBypass') !== cacheKey) {
+            localStorage.setItem('cacheBypass', cacheKey);
+            alert(`🔄 BYPASS CACHE v60.0 - A PÁGINA VAI RECARREGAR!`);
+            console.log(`🔄 Forçando bypass de cache com timestamp: ${timestamp}`);
+            
+            // FORÇAR RELOAD COM PARÂMETROS DE CACHE
+            const url = new URL(window.location);
+            url.searchParams.set('v', '60');
+            url.searchParams.set('t', timestamp.toString());
+            url.searchParams.set('cache', 'bypass');
+            
+            window.location.href = url.toString();
         } else {
-            localStorage.removeItem('reloadCount');
-            localStorage.removeItem('forceReload');
-            console.log('✅ Cache limpo após múltiplos reloads!');
+            localStorage.removeItem('cacheBypass');
+            console.log('✅ Cache bypassed com sucesso!');
         }
     </script>
     
-    <!-- Cache Control -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <!-- Cache Control AGRESSIVO -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Last-Modified" content="0">
+    <meta http-equiv="ETag" content="0">
+    <meta name="cache-control" content="no-cache">
+    <meta name="expires" content="0">
+    <meta name="pragma" content="no-cache">
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
@@ -1381,7 +1393,7 @@
 
         // Inicialização
         function init() {
-            console.log('🚀 TESTE RADICAL v59.0 - CACHE FORÇADO!');
+            console.log('🚀 TESTE RADICAL v60.0 - CACHE FORÇADO!');
             
             // LIMPAR CACHE APÓS INICIALIZAÇÃO
             try {
