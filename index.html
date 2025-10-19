@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Legal - Gestão Jurídica v73.0</title>
+    <title>Sistema Legal - Gestão Jurídica v74.0</title>
     
     <script>
-        // SOLUÇÃO ULTRA RADICAL - FORÇAR ESQUECER TUDO DE FORMA ULTRA RADICAL
+        // REMOVER COMPLETAMENTE SERVICE WORKER - SOLUÇÃO FINAL
         const timestamp = Date.now();
         const randomId = Math.random().toString(36).substring(7);
-        const cacheKey = `ultra_radical_${timestamp}_${randomId}`;
+        const cacheKey = `remove_sw_${timestamp}_${randomId}`;
         
-        // FORÇAR ESQUECER TUDO DE FORMA ULTRA RADICAL
-        if (localStorage.getItem('ultraRadical') !== cacheKey) {
-            localStorage.setItem('ultraRadical', cacheKey);
-            alert(`🚀 SOLUÇÃO ULTRA RADICAL v73.0 - A PÁGINA VAI RECARREGAR!`);
-            console.log(`🚀 Solução ultra radical com timestamp: ${timestamp}`);
+        // REMOVER COMPLETAMENTE SERVICE WORKER
+        if (localStorage.getItem('removeSW') !== cacheKey) {
+            localStorage.setItem('removeSW', cacheKey);
+            alert(`🚀 REMOVENDO SERVICE WORKER v74.0 - A PÁGINA VAI RECARREGAR!`);
+            console.log(`🚀 Removendo Service Worker com timestamp: ${timestamp}`);
             
             // LIMPAR TUDO DO LOCALSTORAGE
             localStorage.clear();
@@ -43,38 +43,26 @@
                 });
             }
             
-            // FORÇAR RELOAD COM PARÂMETROS PARA ULTRA RADICAL
+            // FORÇAR RELOAD COM PARÂMETROS PARA REMOVER SERVICE WORKER
             const url = new URL(window.location);
-            url.searchParams.set('v', '73');
+            url.searchParams.set('v', '74');
             url.searchParams.set('t', timestamp.toString());
             url.searchParams.set('r', randomId);
-            url.searchParams.set('ultra', 'radical');
+            url.searchParams.set('remove', 'sw');
             url.searchParams.set('force', 'true');
             url.searchParams.set('bypass', 'complete');
             url.searchParams.set('clear', 'all');
             
-            // FORÇAR RELOAD PARA ULTRA RADICAL
+            // FORÇAR RELOAD PARA REMOVER SERVICE WORKER
             window.location.replace(url.toString());
         } else {
-            localStorage.removeItem('ultraRadical');
-            console.log('✅ Solução ultra radical aplicada com sucesso!');
+            localStorage.removeItem('removeSW');
+            console.log('✅ Service Worker removido com sucesso!');
         }
     </script>
     
-    <!-- PWA Meta Tags -->
+    <!-- Meta Tags Básicas -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
-    <meta name="theme-color" content="#3b82f6">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Sistema Legal">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    
-    <!-- PWA Icons -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzNiODJmNiIvPgo8cGF0aCBkPSJNMTYgOEMxMS41ODE3IDggOCAxMS41ODE3IDggMTZTMTEuNTgxNyAyNCAxNiAyNFMyNCAyMC40MTgzIDI0IDE2UzIwLjQxODMgOCAxNiA4Wk0xNiAyMEMxMy43OTE0IDIwIDEyIDE4LjIwODYgMTIgMTZTMTMuNzkxNCAxMiAxNiAxMlMyMCAxMy43OTE0IDIwIDE2UzE4LjIwODYgMjAgMTYgMjBaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMzYjgyZjYiLz4KPHBhdGggZD0iTTk2IDQ4QzY5LjQ5IDQ4IDQ4IDY5LjQ5IDQ4IDk2UzY5LjQ5IDE0NCA5NiAxNDRTMTQ0IDEyMi41MSAxNDQgOTZTMTIyLjUxIDQ4IDk2IDQ4Wk05NiAxMjhDNzMuOTA5IDEyOCA1NiAxMTAuMDkgNTYgODhTNzMuOTA5IDQ4IDk2IDQ4UzEzNiA2NS45MSAxMzYgODhTMTE4LjA5IDEyOCA5NiAxMjhaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
