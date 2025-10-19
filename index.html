@@ -3,8 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Legal - Gestão Jurídica</title>
+    <title>Sistema Legal - Gestão Jurídica v68.0</title>
     
+    <script>
+        // SOLUÇÃO DIFERENTE - FORÇAR BYPASS COMPLETO
+        const timestamp = Date.now();
+        const randomId = Math.random().toString(36).substring(7);
+        const cacheKey = `different_${timestamp}_${randomId}`;
+        
+        // FORÇAR RELOAD DIFERENTE
+        if (localStorage.getItem('differentBypass') !== cacheKey) {
+            localStorage.setItem('differentBypass', cacheKey);
+            alert(`🚀 BYPASS DIFERENTE v68.0 - A PÁGINA VAI RECARREGAR!`);
+            console.log(`🚀 Forçando bypass diferente de cache com timestamp: ${timestamp}`);
+            
+            // FORÇAR RELOAD COM PARÂMETROS DIFERENTES
+            const url = new URL(window.location);
+            url.searchParams.set('v', '68');
+            url.searchParams.set('t', timestamp.toString());
+            url.searchParams.set('r', randomId);
+            url.searchParams.set('cache', 'different');
+            url.searchParams.set('sw', 'disabled');
+            url.searchParams.set('force', 'true');
+            url.searchParams.set('bypass', 'complete');
+            
+            // FORÇAR RELOAD DIFERENTE
+            window.location.replace(url.toString());
+        } else {
+            localStorage.removeItem('differentBypass');
+            console.log('✅ Cache bypassed com sucesso!');
+        }
+    </script>
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
