@@ -7,34 +7,6 @@
     <script>
         alert('🚀 TESTE RADICAL v55.0 - CACHE FORÇADO!');
         console.log('🚀 TESTE RADICAL v55.0 - CACHE FORÇADO!');
-        
-        // LIMPAR LOCALSTORAGE COMPLETAMENTE
-        try {
-            localStorage.clear();
-            console.log('🧹 localStorage limpo completamente');
-        } catch (error) {
-            console.log('❌ Erro ao limpar localStorage:', error);
-        }
-        
-        // LIMPAR SERVICE WORKER CACHE
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                for(let registration of registrations) {
-                    registration.unregister();
-                    console.log('🧹 Service Worker removido:', registration);
-                }
-            });
-        }
-        
-        // LIMPAR CACHE DO NAVEGADOR
-        if ('caches' in window) {
-            caches.keys().then(function(names) {
-                for (let name of names) {
-                    caches.delete(name);
-                    console.log('🧹 Cache removido:', name);
-                }
-            });
-        }
     </script>
     
     <!-- Cache Control -->
@@ -1377,8 +1349,17 @@
 
         // Inicialização
         function init() {
-            alert('🚀 TESTE RADICAL v53.0 - CACHE FORÇADO!');
-            console.log('🚀 TESTE RADICAL v53.0 - CACHE FORÇADO!');
+            alert('🚀 TESTE RADICAL v55.0 - CACHE FORÇADO!');
+            console.log('🚀 TESTE RADICAL v55.0 - CACHE FORÇADO!');
+            
+            // LIMPAR CACHE APÓS INICIALIZAÇÃO
+            try {
+                localStorage.clear();
+                console.log('🧹 localStorage limpo completamente');
+            } catch (error) {
+                console.log('❌ Erro ao limpar localStorage:', error);
+            }
+            
             carregarDados();
             carregarDadosExemplo();
             
