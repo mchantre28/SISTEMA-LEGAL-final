@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 TESTE RADICAL v56.0 - BOTÕES REMOVIDOS - ${Date.now()}</title>
+    <title>🚀 TESTE RADICAL v57.0 - CACHE FORÇADO - ${Date.now()}</title>
     <script>
-        console.log('🚀 TESTE RADICAL v56.0 - BOTÕES REMOVIDOS!');
+        console.log('🚀 TESTE RADICAL v57.0 - CACHE FORÇADO!');
         
         // FORÇAR LIMPEZA RADICAL DE CACHE
         if ('caches' in window) {
@@ -20,6 +20,7 @@
         // FORÇAR RELOAD SE CACHE PERSISTIR
         if (localStorage.getItem('forceReload') !== 'true') {
             localStorage.setItem('forceReload', 'true');
+            alert('🔄 LIMPANDO CACHE - A PÁGINA VAI RECARREGAR!');
             console.log('🔄 Forçando reload para limpar cache...');
             window.location.reload(true);
         } else {
@@ -1355,7 +1356,7 @@
 
         // Inicialização
         function init() {
-            console.log('🚀 TESTE RADICAL v56.0 - BOTÕES REMOVIDOS!');
+            console.log('🚀 TESTE RADICAL v57.0 - CACHE FORÇADO!');
             
             // LIMPAR CACHE APÓS INICIALIZAÇÃO
             try {
