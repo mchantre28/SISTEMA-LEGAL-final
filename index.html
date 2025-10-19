@@ -7,6 +7,14 @@
     <script>
         alert('🚀 TESTE RADICAL v53.0 - CACHE FORÇADO!');
         console.log('🚀 TESTE RADICAL v53.0 - CACHE FORÇADO!');
+        
+        // LIMPAR LOCALSTORAGE COMPLETAMENTE
+        try {
+            localStorage.clear();
+            console.log('🧹 localStorage limpo completamente');
+        } catch (error) {
+            console.log('❌ Erro ao limpar localStorage:', error);
+        }
     </script>
     
     <!-- Cache Control -->
@@ -1999,18 +2007,7 @@ END:VCALENDAR`;
             // Aqui você integraria com sistemas de contabilidade
         }
 
-        function obterLembretes() {
-            console.log('🔧 Função obterLembretes chamada');
-            const lembretes = localStorage.getItem('lembretes');
-            const resultado = lembretes ? JSON.parse(lembretes) : [];
-            console.log('🔧 Lembretes obtidos:', resultado.length);
-            return resultado;
-        }
 
-        function salvarLembretes() {
-            const lembretes = obterLembretes();
-            localStorage.setItem('lembretes', JSON.stringify(lembretes));
-        }
 
         function obterFaturas() {
             console.log('🔧 Função obterFaturas chamada');
@@ -2045,91 +2042,8 @@ END:VCALENDAR`;
         }
 
 
-        // Função de teste simples
-        function testarCriarLembrete() {
-            console.log('🔧 TESTE: Função testarCriarLembrete chamada - v43.0');
-            alert('🔧 TESTE: Função testarCriarLembrete chamada!');
-            
-            const resultadoDiv = document.getElementById('resultado-teste');
-            const resultadoTexto = document.getElementById('resultado-texto');
-            
-            if (resultadoDiv && resultadoTexto) {
-                resultadoTexto.textContent = '✅ FUNÇÃO CHAMADA COM SUCESSO! O botão está funcionando.';
-                resultadoDiv.classList.remove('hidden');
-                console.log('✅ Resultado exibido na tela');
-            } else {
-                console.log('❌ Elementos não encontrados');
-                alert('❌ Elementos não encontrados');
-            }
-        }
 
-        function criarLembrete() {
-            console.log('🔧 Função criarLembrete chamada');
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Criar Lembrete</h3>
-                        <button onclick="fecharModal()" class="btn btn-sm btn-secondary">
-                            <i data-lucide="x" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                    <form onsubmit="salvarLembrete(event)">
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium mb-2">Cliente</label>
-                                <select name="clienteId" required class="w-full p-2 border rounded-lg">
-                                    <option value="">Selecione um cliente</option>
-                                    ${clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-2">Título</label>
-                                <input type="text" name="titulo" required class="w-full p-2 border rounded-lg" placeholder="Título do lembrete">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-2">Data/Hora</label>
-                                <input type="datetime-local" name="data" required class="w-full p-2 border rounded-lg">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-2">Descrição</label>
-                                <textarea name="descricao" class="w-full p-2 border rounded-lg" rows="3" placeholder="Descrição do lembrete"></textarea>
-                            </div>
-                            <div class="flex space-x-3">
-                                <button type="submit" class="btn btn-primary">Salvar Lembrete</button>
-                                <button type="button" onclick="fecharModal()" class="btn btn-secondary">Cancelar</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
 
-        function salvarLembrete(event) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            
-            const lembrete = {
-                id: Date.now(),
-                clienteId: parseInt(formData.get('clienteId')),
-                titulo: formData.get('titulo'),
-                data: formData.get('data'),
-                descricao: formData.get('descricao'),
-                ativo: true,
-                enviado: false,
-                criadoEm: new Date().toISOString()
-            };
-            
-            const lembretes = obterLembretes();
-            lembretes.push(lembrete);
-            localStorage.setItem('lembretes', JSON.stringify(lembretes));
-            
-            fecharModal();
-            mostrarNotificacao('Lembrete criado com sucesso!', 'success');
-            carregarSecao('dashboard');
-        }
 
         function gerarFaturasAutomaticas() {
             console.log('🔧 Função gerarFaturasAutomaticas chamada');
