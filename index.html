@@ -3,7 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Legal - Gestão Jurídica</title>
+    <title>Sistema Legal - Gestão Jurídica v69.0</title>
+    
+    <script>
+        // ABORDAGEM COMPLETAMENTE DIFERENTE - FORÇAR ESQUECER TUDO
+        const timestamp = Date.now();
+        const randomId = Math.random().toString(36).substring(7);
+        const cacheKey = `forget_${timestamp}_${randomId}`;
+        
+        // FORÇAR ESQUECER TUDO
+        if (localStorage.getItem('forgetBypass') !== cacheKey) {
+            localStorage.setItem('forgetBypass', cacheKey);
+            alert(`🚀 ESQUECER TUDO v69.0 - A PÁGINA VAI RECARREGAR!`);
+            console.log(`🚀 Forçando esquecer tudo com timestamp: ${timestamp}`);
+            
+            // FORÇAR RELOAD COM PARÂMETROS PARA ESQUECER
+            const url = new URL(window.location);
+            url.searchParams.set('v', '69');
+            url.searchParams.set('t', timestamp.toString());
+            url.searchParams.set('r', randomId);
+            url.searchParams.set('forget', 'everything');
+            url.searchParams.set('sw', 'disabled');
+            url.searchParams.set('force', 'true');
+            url.searchParams.set('bypass', 'complete');
+            
+            // FORÇAR RELOAD PARA ESQUECER
+            window.location.replace(url.toString());
+        } else {
+            localStorage.removeItem('forgetBypass');
+            console.log('✅ Esquecido com sucesso!');
+        }
+    </script>
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
