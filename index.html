@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Paula Medina - Sistema Legal v47.0 VERSÃO RADICAL</title>
+    <title>Ana Paula Medina - Sistema Legal v48.0 SEM AUTOMAÇÕES</title>
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
@@ -725,10 +725,6 @@
             <a href="#" onclick="carregarSecao('backup')" class="sidebar-item" id="nav-backup">
                 <i data-lucide="database" class="w-5 h-5 mr-3"></i>
                 Backup
-            </a>
-            <a href="#" onclick="carregarSecao('automacoes')" class="sidebar-item" id="nav-automacoes">
-                <i data-lucide="bot" class="w-5 h-5 mr-3"></i>
-                Automações
             </a>
             <a href="#" onclick="carregarSecao('convidados')" class="sidebar-item" id="nav-convidados" style="display: none;">
                 <i data-lucide="user-plus" class="w-5 h-5 mr-3"></i>
@@ -2112,31 +2108,6 @@ END:VCALENDAR`;
             }
         }
 
-        function gerarAutomacoes() {
-            alert('🚀 FUNÇÃO GERARAUTOMACOES CHAMADA - VERSÃO RADICAL!');
-            console.log('🚀 FUNÇÃO GERARAUTOMACOES CHAMADA - VERSÃO RADICAL!');
-            
-            return `
-                <div class="space-y-6">
-                    <div class="card p-6">
-                        <h3 class="text-2xl font-bold text-red-600 mb-4">🚀 AUTOMAÇÕES - VERSÃO RADICAL v47.0</h3>
-                        <p class="text-gray-600 mb-4">Esta é uma versão radical para forçar o cache!</p>
-                        
-                        <div class="space-y-4">
-                            <button onclick="alert('🎉 BOTÃO FUNCIONANDO!')" class="btn btn-primary text-lg p-4">
-                                <i data-lucide="check-circle" class="w-6 h-6 mr-2"></i>
-                                🎉 TESTE RADICAL - CLIQUE AQUI!
-                            </button>
-                            
-                            <div class="p-4 bg-green-100 rounded-lg">
-                                <p class="font-bold text-green-800">✅ Se você vê esta mensagem, a função está funcionando!</p>
-                                <p class="text-green-700">Versão: v47.0 - Cache forçado</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
 
         // Função de teste simples
         function testarCriarLembrete() {
@@ -3151,7 +3122,6 @@ END:VCALENDAR`;
                 registos: 'Gestão de Registos',
                 relatorios: 'Gestão de Relatórios',
                 backup: 'Sistema de Backup',
-                automacoes: 'Sistema de Automações'
             };
             
             const tituloElement = document.getElementById('tituloSecao');
@@ -3207,20 +3177,12 @@ END:VCALENDAR`;
                 registos: gerarRegistos(),
                 relatorios: gerarRelatorios(),
                 backup: gerarBackup(),
-                automacoes: gerarAutomacoes()
             };
             
             console.log('🔧 Conteúdos disponíveis:', Object.keys(conteudos));
             console.log('🔧 Conteúdo para migracoes:', conteudos.migracoes ? 'EXISTE' : 'NÃO EXISTE');
             console.log('🔧 Conteúdo migracoes:', conteudos.migracoes);
-            console.log('🔧 Conteúdo para automacoes:', conteudos.automacoes ? 'EXISTE' : 'NÃO EXISTE');
-            console.log('🔧 Conteúdo automacoes:', conteudos.automacoes);
             
-            if (secao === 'automacoes') {
-                console.log('🔧 RETORNANDO CONTEÚDO PARA AUTOMAÇÕES - v45.0');
-                alert('🔧 RETORNANDO CONTEÚDO PARA AUTOMAÇÕES - v45.0');
-                console.log('🔧 Conteúdo retornado:', conteudos.automacoes);
-            }
             
             return conteudos[secao] || '<p>Seção não encontrada</p>';
         }
