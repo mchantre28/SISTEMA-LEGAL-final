@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Legal - Gestão Jurídica v72.0</title>
+    <title>Sistema Legal - Gestão Jurídica v73.0</title>
     
     <script>
-        // SOLUÇÃO RADICAL - DESATIVAR COMPLETAMENTE SERVICE WORKER
+        // SOLUÇÃO ULTRA RADICAL - FORÇAR ESQUECER TUDO DE FORMA ULTRA RADICAL
         const timestamp = Date.now();
         const randomId = Math.random().toString(36).substring(7);
-        const cacheKey = `disable_sw_${timestamp}_${randomId}`;
+        const cacheKey = `ultra_radical_${timestamp}_${randomId}`;
         
-        // DESATIVAR SERVICE WORKER COMPLETAMENTE
-        if (localStorage.getItem('disableSW') !== cacheKey) {
-            localStorage.setItem('disableSW', cacheKey);
-            alert(`🚀 DESATIVANDO SERVICE WORKER v72.0 - A PÁGINA VAI RECARREGAR!`);
-            console.log(`🚀 Desativando Service Worker com timestamp: ${timestamp}`);
+        // FORÇAR ESQUECER TUDO DE FORMA ULTRA RADICAL
+        if (localStorage.getItem('ultraRadical') !== cacheKey) {
+            localStorage.setItem('ultraRadical', cacheKey);
+            alert(`🚀 SOLUÇÃO ULTRA RADICAL v73.0 - A PÁGINA VAI RECARREGAR!`);
+            console.log(`🚀 Solução ultra radical com timestamp: ${timestamp}`);
+            
+            // LIMPAR TUDO DO LOCALSTORAGE
+            localStorage.clear();
+            sessionStorage.clear();
             
             // DESATIVAR SERVICE WORKER
             if ('serviceWorker' in navigator) {
@@ -39,20 +43,21 @@
                 });
             }
             
-            // FORÇAR RELOAD COM PARÂMETROS PARA DESATIVAR SERVICE WORKER
+            // FORÇAR RELOAD COM PARÂMETROS PARA ULTRA RADICAL
             const url = new URL(window.location);
-            url.searchParams.set('v', '72');
+            url.searchParams.set('v', '73');
             url.searchParams.set('t', timestamp.toString());
             url.searchParams.set('r', randomId);
-            url.searchParams.set('disable', 'sw');
+            url.searchParams.set('ultra', 'radical');
             url.searchParams.set('force', 'true');
             url.searchParams.set('bypass', 'complete');
+            url.searchParams.set('clear', 'all');
             
-            // FORÇAR RELOAD PARA DESATIVAR SERVICE WORKER
+            // FORÇAR RELOAD PARA ULTRA RADICAL
             window.location.replace(url.toString());
         } else {
-            localStorage.removeItem('disableSW');
-            console.log('✅ Service Worker desativado com sucesso!');
+            localStorage.removeItem('ultraRadical');
+            console.log('✅ Solução ultra radical aplicada com sucesso!');
         }
     </script>
     
