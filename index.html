@@ -13552,7 +13552,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
         
         // Função para calcular IVA acumulado por trimestre
-        function calcularIVATrimestral() {
+        function calcularIVATrimestral_REMOVED() {
             const trimestreAtual = obterTrimestreAtual();
             const ano = new Date().getFullYear();
             
@@ -13663,7 +13663,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             return Math.floor(agora.getMonth() / 3) + 1;
         }
         
-        function calcularIVATrimestral() {
+        function calcularIVATrimestral_REMOVED() {
             const anoAtual = new Date().getFullYear();
             const trimestreAtual = obterTrimestreAtual();
             
@@ -13733,7 +13733,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         function criarPrazosIVA() {
             const trimestreAtual = obterTrimestreAtual();
             const prazosIVA = obterPrazosIVA(trimestreAtual);
-            const { ivaPorTrimestre } = calcularIVATrimestral();
+            // const { ivaPorTrimestre } = calcularIVATrimestral(); // REMOVIDO
             
             // Verificar se já existe um prazo de IVA para este trimestre
             const prazoExistente = prazos.find(p => 
