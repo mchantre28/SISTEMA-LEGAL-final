@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 TESTE RADICAL v57.0 - CACHE FORÇADO - ${Date.now()}</title>
+    <title>🚀 TESTE RADICAL v58.0 - CACHE FORÇADO - ${Date.now()}</title>
     <script>
-        console.log('🚀 TESTE RADICAL v57.0 - CACHE FORÇADO!');
+        console.log('🚀 TESTE RADICAL v58.0 - CACHE FORÇADO!');
         
         // FORÇAR LIMPEZA RADICAL DE CACHE
         if ('caches' in window) {
@@ -13,6 +13,16 @@
                 for (let name of names) {
                     caches.delete(name);
                     console.log('🧹 Cache removido:', name);
+                }
+            });
+        }
+        
+        // DESATIVAR SERVICE WORKER
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                    console.log('🧹 Service Worker removido:', registration);
                 }
             });
         }
@@ -1356,7 +1366,7 @@
 
         // Inicialização
         function init() {
-            console.log('🚀 TESTE RADICAL v57.0 - CACHE FORÇADO!');
+            console.log('🚀 TESTE RADICAL v58.0 - CACHE FORÇADO!');
             
             // LIMPAR CACHE APÓS INICIALIZAÇÃO
             try {
