@@ -1358,6 +1358,53 @@
 
         // Função mostrarBotaoInstalacao removida - PWA desativado
 
+        // Função de teste para modal
+        function testarModal() {
+            console.log('🔧 Testando modal...');
+            
+            // Criar modal de teste simples
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background-color: rgba(0, 0, 0, 0.8) !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                z-index: 99999 !important;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: white;
+                    padding: 30px;
+                    border-radius: 10px;
+                    max-width: 400px;
+                    width: 90%;
+                    text-align: center;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+                ">
+                    <h2 style="color: #1f2937; margin-bottom: 20px;">🧪 TESTE DE MODAL</h2>
+                    <p style="color: #6b7280; margin-bottom: 20px;">Se vês esta mensagem, o modal está a funcionar!</p>
+                    <button onclick="fecharModal()" style="
+                        background: #3b82f6;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 16px;
+                    ">Fechar</button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            console.log('✅ Modal de teste criado');
+        }
+
         // Modo Escuro
         function inicializarModoEscuro_REMOVED() {
             const savedTheme = localStorage.getItem('theme');
@@ -2957,16 +3004,18 @@ Sistema Legal - ANA PAULA MEDINA
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background-color: rgba(0, 0, 0, 0.7) !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                z-index: 99999 !important;
+                visibility: visible !important;
+                opacity: 1 !important;
             `;
             modal.innerHTML = `
                 <div class="modal-content" style="
@@ -3103,17 +3152,20 @@ Sistema Legal - ANA PAULA MEDINA
             document.body.appendChild(modal);
             console.log('✅ Modal criado e adicionado ao DOM');
             
-            // Teste visual - alert para confirmar que o modal foi criado
+            // Verificar se o modal foi criado corretamente
             setTimeout(() => {
                 const modalTeste = document.querySelector('.modal');
                 if (modalTeste) {
                     console.log('✅ Modal encontrado no DOM');
-                    alert('🎯 MODAL CRIADO COM SUCESSO! Verifica se aparece na tela!');
+                    // Forçar visibilidade do modal
+                    modalTeste.style.display = 'flex';
+                    modalTeste.style.visibility = 'visible';
+                    modalTeste.style.opacity = '1';
+                    console.log('✅ Modal forçado a ser visível');
                 } else {
                     console.log('❌ Modal não encontrado no DOM');
-                    alert('❌ ERRO: Modal não foi criado!');
                 }
-            }, 500);
+            }, 100);
             
             // Event listener para período personalizado
             setTimeout(() => {
@@ -3775,6 +3827,13 @@ Sistema Legal - ANA PAULA MEDINA
                                 <div class="text-center">
                                     <i data-lucide="user-check" class="w-6 h-6 text-indigo-600 mx-auto mb-2"></i>
                                     <p class="text-sm font-medium text-indigo-800">Relatório Cliente</p>
+                                </div>
+                            </button>
+                            
+                            <button onclick="testarModal()" class="flex items-center justify-center p-4 bg-red-50 hover:bg-red-100 rounded-lg border border-red-200 transition-colors">
+                                <div class="text-center">
+                                    <i data-lucide="bug" class="w-6 h-6 text-red-600 mx-auto mb-2"></i>
+                                    <p class="text-sm font-medium text-red-800">Testar Modal</p>
                                 </div>
                             </button>
                         </div>
