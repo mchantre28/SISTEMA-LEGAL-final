@@ -6,6 +6,25 @@
     <title>🚀 TESTE RADICAL v56.0 - BOTÕES REMOVIDOS - ${Date.now()}</title>
     <script>
         console.log('🚀 TESTE RADICAL v56.0 - BOTÕES REMOVIDOS!');
+        
+        // FORÇAR LIMPEZA RADICAL DE CACHE
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                for (let name of names) {
+                    caches.delete(name);
+                    console.log('🧹 Cache removido:', name);
+                }
+            });
+        }
+        
+        // FORÇAR RELOAD SE CACHE PERSISTIR
+        if (localStorage.getItem('forceReload') !== 'true') {
+            localStorage.setItem('forceReload', 'true');
+            console.log('🔄 Forçando reload para limpar cache...');
+            window.location.reload(true);
+        } else {
+            localStorage.removeItem('forceReload');
+        }
     </script>
     
     <!-- Cache Control -->
