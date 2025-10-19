@@ -3,36 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Legal - Gestão Jurídica v71.0</title>
+    <title>Sistema Legal - Gestão Jurídica v72.0</title>
     
     <script>
-        // ABORDAGEM TOTALMENTE NOVA - FORÇAR ESQUECER TUDO DE FORMA TOTALMENTE NOVA
+        // SOLUÇÃO RADICAL - DESATIVAR COMPLETAMENTE SERVICE WORKER
         const timestamp = Date.now();
         const randomId = Math.random().toString(36).substring(7);
-        const cacheKey = `totally_new_${timestamp}_${randomId}`;
+        const cacheKey = `disable_sw_${timestamp}_${randomId}`;
         
-        // FORÇAR ESQUECER TUDO DE FORMA TOTALMENTE NOVA
-        if (localStorage.getItem('totallyNewBypass') !== cacheKey) {
-            localStorage.setItem('totallyNewBypass', cacheKey);
-            alert(`🚀 ESQUECER TUDO TOTALMENTE NOVO v71.0 - A PÁGINA VAI RECARREGAR!`);
-            console.log(`🚀 Forçando esquecer tudo totalmente novo com timestamp: ${timestamp}`);
+        // DESATIVAR SERVICE WORKER COMPLETAMENTE
+        if (localStorage.getItem('disableSW') !== cacheKey) {
+            localStorage.setItem('disableSW', cacheKey);
+            alert(`🚀 DESATIVANDO SERVICE WORKER v72.0 - A PÁGINA VAI RECARREGAR!`);
+            console.log(`🚀 Desativando Service Worker com timestamp: ${timestamp}`);
             
-            // FORÇAR RELOAD COM PARÂMETROS PARA ESQUECER TOTALMENTE NOVO
+            // DESATIVAR SERVICE WORKER
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                        console.log('🧹 Service Worker removido:', registration.scope);
+                    }
+                });
+            }
+            
+            // LIMPAR CACHE DO SERVICE WORKER
+            if ('caches' in window) {
+                caches.keys().then(function(cacheNames) {
+                    return Promise.all(
+                        cacheNames.map(function(cacheName) {
+                            console.log('🧹 Removendo cache:', cacheName);
+                            return caches.delete(cacheName);
+                        })
+                    );
+                });
+            }
+            
+            // FORÇAR RELOAD COM PARÂMETROS PARA DESATIVAR SERVICE WORKER
             const url = new URL(window.location);
-            url.searchParams.set('v', '71');
+            url.searchParams.set('v', '72');
             url.searchParams.set('t', timestamp.toString());
             url.searchParams.set('r', randomId);
-            url.searchParams.set('forget', 'everything');
-            url.searchParams.set('totally', 'new');
-            url.searchParams.set('sw', 'disabled');
+            url.searchParams.set('disable', 'sw');
             url.searchParams.set('force', 'true');
             url.searchParams.set('bypass', 'complete');
             
-            // FORÇAR RELOAD PARA ESQUECER TOTALMENTE NOVO
+            // FORÇAR RELOAD PARA DESATIVAR SERVICE WORKER
             window.location.replace(url.toString());
         } else {
-            localStorage.removeItem('totallyNewBypass');
-            console.log('✅ Esquecido totalmente novo com sucesso!');
+            localStorage.removeItem('disableSW');
+            console.log('✅ Service Worker desativado com sucesso!');
         }
     </script>
     
