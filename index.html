@@ -3,63 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Legal - Gestão Jurídica v74.0</title>
-    
-    <script>
-        // REMOVER COMPLETAMENTE SERVICE WORKER - SOLUÇÃO FINAL
-        const timestamp = Date.now();
-        const randomId = Math.random().toString(36).substring(7);
-        const cacheKey = `remove_sw_${timestamp}_${randomId}`;
-        
-        // REMOVER COMPLETAMENTE SERVICE WORKER
-        if (localStorage.getItem('removeSW') !== cacheKey) {
-            localStorage.setItem('removeSW', cacheKey);
-            alert(`🚀 REMOVENDO SERVICE WORKER v74.0 - A PÁGINA VAI RECARREGAR!`);
-            console.log(`🚀 Removendo Service Worker com timestamp: ${timestamp}`);
-            
-            // LIMPAR TUDO DO LOCALSTORAGE
-            localStorage.clear();
-            sessionStorage.clear();
-            
-            // DESATIVAR SERVICE WORKER
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                    for(let registration of registrations) {
-                        registration.unregister();
-                        console.log('🧹 Service Worker removido:', registration.scope);
-                    }
-                });
-            }
-            
-            // LIMPAR CACHE DO SERVICE WORKER
-            if ('caches' in window) {
-                caches.keys().then(function(cacheNames) {
-                    return Promise.all(
-                        cacheNames.map(function(cacheName) {
-                            console.log('🧹 Removendo cache:', cacheName);
-                            return caches.delete(cacheName);
-                        })
-                    );
-                });
-            }
-            
-            // FORÇAR RELOAD COM PARÂMETROS PARA REMOVER SERVICE WORKER
-            const url = new URL(window.location);
-            url.searchParams.set('v', '74');
-            url.searchParams.set('t', timestamp.toString());
-            url.searchParams.set('r', randomId);
-            url.searchParams.set('remove', 'sw');
-            url.searchParams.set('force', 'true');
-            url.searchParams.set('bypass', 'complete');
-            url.searchParams.set('clear', 'all');
-            
-            // FORÇAR RELOAD PARA REMOVER SERVICE WORKER
-            window.location.replace(url.toString());
-        } else {
-            localStorage.removeItem('removeSW');
-            console.log('✅ Service Worker removido com sucesso!');
-        }
-    </script>
+    <title>Sistema Legal - Gestão Jurídica</title>
     
     <!-- Meta Tags Básicas -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
