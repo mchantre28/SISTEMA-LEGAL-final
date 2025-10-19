@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 TESTE RADICAL v58.0 - CACHE FORÇADO - ${Date.now()}</title>
+    <title>🚀 TESTE RADICAL v59.0 - CACHE FORÇADO - ${Date.now()}</title>
     <script>
-        console.log('🚀 TESTE RADICAL v58.0 - CACHE FORÇADO!');
+        console.log('🚀 TESTE RADICAL v59.0 - CACHE FORÇADO!');
         
         // FORÇAR LIMPEZA RADICAL DE CACHE
         if ('caches' in window) {
@@ -27,14 +27,29 @@
             });
         }
         
-        // FORÇAR RELOAD SE CACHE PERSISTIR
-        if (localStorage.getItem('forceReload') !== 'true') {
-            localStorage.setItem('forceReload', 'true');
-            alert('🔄 LIMPANDO CACHE - A PÁGINA VAI RECARREGAR!');
-            console.log('🔄 Forçando reload para limpar cache...');
+        // LIMPEZA AGRESSIVA DO LOCALSTORAGE
+        const keysToKeep = ['usuarioLogado', 'usuarioNome', 'tipoUsuario', 'convidadoId'];
+        const allKeys = Object.keys(localStorage);
+        allKeys.forEach(key => {
+            if (!keysToKeep.includes(key)) {
+                localStorage.removeItem(key);
+                console.log('🧹 localStorage removido:', key);
+            }
+        });
+        
+        // FORÇAR RELOAD MÚLTIPLO SE CACHE PERSISTIR
+        const reloadCount = parseInt(localStorage.getItem('reloadCount') || '0');
+        const maxReloads = 3;
+        
+        if (reloadCount < maxReloads) {
+            localStorage.setItem('reloadCount', (reloadCount + 1).toString());
+            alert(`🔄 LIMPANDO CACHE (${reloadCount + 1}/${maxReloads}) - A PÁGINA VAI RECARREGAR!`);
+            console.log(`🔄 Forçando reload ${reloadCount + 1}/${maxReloads} para limpar cache...`);
             window.location.reload(true);
         } else {
+            localStorage.removeItem('reloadCount');
             localStorage.removeItem('forceReload');
+            console.log('✅ Cache limpo após múltiplos reloads!');
         }
     </script>
     
@@ -1366,7 +1381,7 @@
 
         // Inicialização
         function init() {
-            console.log('🚀 TESTE RADICAL v58.0 - CACHE FORÇADO!');
+            console.log('🚀 TESTE RADICAL v59.0 - CACHE FORÇADO!');
             
             // LIMPAR CACHE APÓS INICIALIZAÇÃO
             try {
