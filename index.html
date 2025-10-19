@@ -3053,6 +3053,258 @@ Sistema Legal - ANA PAULA MEDINA
             mostrarNotificacao('Relatório completo gerado com sucesso!', 'success');
         }
 
+        // NOVA FUNÇÃO: Relatório personalizado por cliente
+        function gerarRelatorioCliente() {
+            console.log('🔧 Gerando relatório personalizado por cliente...');
+            
+            // Verificar se há clientes
+            if (!clientes || clientes.length === 0) {
+                mostrarNotificacao('Nenhum cliente encontrado para gerar relatório!', 'warning');
+                return;
+            }
+            
+            // Criar modal para seleção de cliente
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>📊 Relatório Personalizado por Cliente</h3>
+                        <button class="close-btn" onclick="fecharModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="clienteSelecionado">Selecione o Cliente:</label>
+                            <select id="clienteSelecionado" class="form-control">
+                                <option value="">-- Escolha um cliente --</option>
+                                ${clientes.map(cliente => 
+                                    `<option value="${cliente.nome}">${cliente.nome} (${cliente.email})</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tipoRelatorio">Tipo de Relatório:</label>
+                            <select id="tipoRelatorio" class="form-control">
+                                <option value="completo">Relatório Completo</option>
+                                <option value="honorarios">Apenas Honorários</option>
+                                <option value="contratos">Apenas Contratos</option>
+                                <option value="herancas">Apenas Heranças</option>
+                                <option value="migracoes">Apenas Migrações</option>
+                                <option value="registos">Apenas Registos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="periodoRelatorio">Período:</label>
+                            <select id="periodoRelatorio" class="form-control">
+                                <option value="todos">Todos os dados</option>
+                                <option value="mes">Último mês</option>
+                                <option value="trimestre">Último trimestre</option>
+                                <option value="ano">Último ano</option>
+                                <option value="personalizado">Período personalizado</option>
+                            </select>
+                        </div>
+                        <div id="periodoPersonalizado" class="form-group" style="display: none;">
+                            <label for="dataInicio">Data de Início:</label>
+                            <input type="date" id="dataInicio" class="form-control">
+                            <label for="dataFim">Data de Fim:</label>
+                            <input type="date" id="dataFim" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
+                        <button class="btn btn-primary" onclick="gerarRelatorioClienteSelecionado()">
+                            <i data-lucide="download" class="w-4 h-4 mr-2"></i>
+                            Gerar Relatório
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Event listener para período personalizado
+            document.getElementById('periodoRelatorio').addEventListener('change', function() {
+                const periodoPersonalizado = document.getElementById('periodoPersonalizado');
+                if (this.value === 'personalizado') {
+                    periodoPersonalizado.style.display = 'block';
+                } else {
+                    periodoPersonalizado.style.display = 'none';
+                }
+            });
+        }
+
+        function gerarRelatorioClienteSelecionado() {
+            const clienteSelecionado = document.getElementById('clienteSelecionado').value;
+            const tipoRelatorio = document.getElementById('tipoRelatorio').value;
+            const periodoRelatorio = document.getElementById('periodoRelatorio').value;
+            
+            if (!clienteSelecionado) {
+                mostrarNotificacao('Por favor, selecione um cliente!', 'warning');
+                return;
+            }
+            
+            console.log('🔧 Gerando relatório para cliente:', clienteSelecionado);
+            
+            // Filtrar dados por cliente
+            const dadosCliente = {
+                honorarios: honorarios ? honorarios.filter(h => h.cliente === clienteSelecionado) : [],
+                contratos: contratos ? contratos.filter(c => c.cliente === clienteSelecionado) : [],
+                herancas: herancas ? herancas.filter(h => h.cliente === clienteSelecionado) : [],
+                migracoes: migracoes ? migracoes.filter(m => m.cliente === clienteSelecionado) : [],
+                registos: registos ? registos.filter(r => r.cliente === clienteSelecionado) : []
+            };
+            
+            // Aplicar filtro de período se necessário
+            if (periodoRelatorio !== 'todos') {
+                const agora = new Date();
+                let dataLimite = new Date();
+                
+                switch (periodoRelatorio) {
+                    case 'mes':
+                        dataLimite.setMonth(agora.getMonth() - 1);
+                        break;
+                    case 'trimestre':
+                        dataLimite.setMonth(agora.getMonth() - 3);
+                        break;
+                    case 'ano':
+                        dataLimite.setFullYear(agora.getFullYear() - 1);
+                        break;
+                    case 'personalizado':
+                        const dataInicio = document.getElementById('dataInicio').value;
+                        const dataFim = document.getElementById('dataFim').value;
+                        if (!dataInicio || !dataFim) {
+                            mostrarNotificacao('Por favor, selecione as datas do período personalizado!', 'warning');
+                            return;
+                        }
+                        // Aplicar filtro personalizado
+                        Object.keys(dadosCliente).forEach(tipo => {
+                            dadosCliente[tipo] = dadosCliente[tipo].filter(item => {
+                                const dataItem = new Date(item.data);
+                                return dataItem >= new Date(dataInicio) && dataItem <= new Date(dataFim);
+                            });
+                        });
+                        break;
+                }
+                
+                if (periodoRelatorio !== 'personalizado') {
+                    Object.keys(dadosCliente).forEach(tipo => {
+                        dadosCliente[tipo] = dadosCliente[tipo].filter(item => {
+                            const dataItem = new Date(item.data);
+                            return dataItem >= dataLimite;
+                        });
+                    });
+                }
+            }
+            
+            // Gerar relatório
+            let relatorio = `RELATÓRIO PERSONALIZADO - ${clienteSelecionado.toUpperCase()}\n`;
+            relatorio += '==========================================\n\n';
+            relatorio += `Cliente: ${clienteSelecionado}\n`;
+            relatorio += `Data: ${new Date().toLocaleDateString('pt-PT')}\n`;
+            relatorio += `Hora: ${new Date().toLocaleTimeString('pt-PT')}\n`;
+            relatorio += `Tipo: ${tipoRelatorio.toUpperCase()}\n`;
+            relatorio += `Período: ${periodoRelatorio.toUpperCase()}\n\n`;
+            
+            // Adicionar seções baseadas no tipo de relatório
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'honorarios') {
+                relatorio += 'HONORÁRIOS:\n';
+                relatorio += '-----------\n';
+                if (dadosCliente.honorarios.length > 0) {
+                    let totalHonorarios = 0;
+                    dadosCliente.honorarios.forEach((honorario, index) => {
+                        relatorio += `${index + 1}. ${honorario.descricao}\n`;
+                        relatorio += `   Valor: €${honorario.valor}\n`;
+                        relatorio += `   Status: ${honorario.status}\n`;
+                        relatorio += `   Data: ${honorario.data}\n\n`;
+                        totalHonorarios += parseFloat(honorario.valor) || 0;
+                    });
+                    relatorio += `TOTAL HONORÁRIOS: €${totalHonorarios.toFixed(2)}\n\n`;
+                } else {
+                    relatorio += 'Nenhum honorário encontrado.\n\n';
+                }
+            }
+            
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'contratos') {
+                relatorio += 'CONTRATOS:\n';
+                relatorio += '----------\n';
+                if (dadosCliente.contratos.length > 0) {
+                    dadosCliente.contratos.forEach((contrato, index) => {
+                        relatorio += `${index + 1}. ${contrato.tipo}\n`;
+                        relatorio += `   Valor: €${contrato.valor}\n`;
+                        relatorio += `   Status: ${contrato.status}\n`;
+                        relatorio += `   Data: ${contrato.data}\n\n`;
+                    });
+                } else {
+                    relatorio += 'Nenhum contrato encontrado.\n\n';
+                }
+            }
+            
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'herancas') {
+                relatorio += 'HERANÇAS:\n';
+                relatorio += '---------\n';
+                if (dadosCliente.herancas.length > 0) {
+                    dadosCliente.herancas.forEach((heranca, index) => {
+                        relatorio += `${index + 1}. ${heranca.tipo}\n`;
+                        relatorio += `   Valor: €${heranca.valor}\n`;
+                        relatorio += `   Status: ${heranca.status}\n`;
+                        relatorio += `   Data: ${heranca.data}\n\n`;
+                    });
+                } else {
+                    relatorio += 'Nenhuma herança encontrada.\n\n';
+                }
+            }
+            
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'migracoes') {
+                relatorio += 'MIGRAÇÕES:\n';
+                relatorio += '----------\n';
+                if (dadosCliente.migracoes.length > 0) {
+                    dadosCliente.migracoes.forEach((migracao, index) => {
+                        relatorio += `${index + 1}. ${migracao.tipo}\n`;
+                        relatorio += `   Valor: €${migracao.valor}\n`;
+                        relatorio += `   Status: ${migracao.status}\n`;
+                        relatorio += `   Data: ${migracao.data}\n\n`;
+                    });
+                } else {
+                    relatorio += 'Nenhuma migração encontrada.\n\n';
+                }
+            }
+            
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'registos') {
+                relatorio += 'REGISTOS:\n';
+                relatorio += '---------\n';
+                if (dadosCliente.registos.length > 0) {
+                    dadosCliente.registos.forEach((registo, index) => {
+                        relatorio += `${index + 1}. ${registo.tipo}\n`;
+                        relatorio += `   Valor: €${registo.valor}\n`;
+                        relatorio += `   Status: ${registo.status}\n`;
+                        relatorio += `   Data: ${registo.data}\n\n`;
+                    });
+                } else {
+                    relatorio += 'Nenhum registo encontrado.\n\n';
+                }
+            }
+            
+            relatorio += '==========================================\n';
+            relatorio += 'Relatório personalizado gerado automaticamente\n';
+            relatorio += 'Sistema Legal - Gestão Jurídica\n';
+            
+            // Download do relatório
+            const blob = new Blob([relatorio], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio_${clienteSelecionado.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            // Fechar modal
+            fecharModal();
+            
+            mostrarNotificacao(`Relatório personalizado para ${clienteSelecionado} gerado com sucesso!`, 'success');
+        }
+
         function gerarDashboard() {
             const tipoUsuario = localStorage.getItem('tipoUsuario');
             let clientesParaMostrar = clientes;
@@ -3506,7 +3758,14 @@ Sistema Legal - ANA PAULA MEDINA
                             <button onclick="gerarRelatorioCompleto()" class="flex items-center justify-center p-4 bg-purple-50 hover:bg-purple-100 rounded-lg border border-purple-200 transition-colors">
                                 <div class="text-center">
                                     <i data-lucide="download" class="w-6 h-6 text-purple-600 mx-auto mb-2"></i>
-                                    <p class="text-sm font-medium text-purple-800">Relatório</p>
+                                    <p class="text-sm font-medium text-purple-800">Relatório Geral</p>
+                                </div>
+                            </button>
+                            
+                            <button onclick="gerarRelatorioCliente()" class="flex items-center justify-center p-4 bg-indigo-50 hover:bg-indigo-100 rounded-lg border border-indigo-200 transition-colors">
+                                <div class="text-center">
+                                    <i data-lucide="user-check" class="w-6 h-6 text-indigo-600 mx-auto mb-2"></i>
+                                    <p class="text-sm font-medium text-indigo-800">Relatório Cliente</p>
                                 </div>
                             </button>
                         </div>
@@ -4690,6 +4949,15 @@ Sistema Legal - ANA PAULA MEDINA
                             <p class="text-gray-600 mb-4">Relatório completo do sistema</p>
                             <button onclick="gerarRelatorioCompleto()" class="btn btn-primary">
                                 <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                                Gerar
+                            </button>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">Relatório por Cliente</h3>
+                            <p class="text-gray-600 mb-4">Relatório personalizado por cliente específico</p>
+                            <button onclick="gerarRelatorioCliente()" class="btn btn-secondary">
+                                <i data-lucide="user-check" class="w-4 h-4"></i>
                                 Gerar
                             </button>
                         </div>
