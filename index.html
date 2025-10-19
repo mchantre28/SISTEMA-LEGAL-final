@@ -1353,60 +1353,7 @@
         }
 
         // PWA - Service Worker Registration
-        function inicializarPWA() {
-            console.log('🔧 Inicializando PWA...');
-            
-            if ('serviceWorker' in navigator) {
-                // Tentar registrar o service worker com fallback
-                const swPath = './service-worker.js';
-                
-                navigator.serviceWorker.register(swPath)
-                    .then((registration) => {
-                        console.log('✅ Service Worker registrado:', registration);
-                        
-                        // Verificar atualizações
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    mostrarNotificacao('Nova versão disponível! Recarregue a página.', 'info');
-                                }
-                            });
-                        });
-                    })
-                    .catch((error) => {
-                        console.warn('⚠️ Service Worker não encontrado, continuando sem PWA:', error.message);
-                        // Continuar sem PWA se o service worker não estiver disponível
-                    });
-            } else {
-                console.log('❌ Service Worker não suportado');
-            }
-
-            // PWA Install Prompt
-            window.addEventListener('beforeinstallprompt', (e) => {
-                console.log('🔧 beforeinstallprompt disparado');
-                e.preventDefault();
-                window.deferredPrompt = e;
-                
-                // Mostrar botão de instalação
-                mostrarBotaoInstalacao();
-            });
-
-            // PWA Installed
-            window.addEventListener('appinstalled', () => {
-                console.log('✅ PWA instalado com sucesso');
-                mostrarNotificacao('Aplicação instalada com sucesso!', 'success');
-                deferredPrompt = null;
-            });
-
-            // Verificar se já está instalado
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                console.log('✅ PWA já está instalado');
-            }
-            
-            // Verificar critérios de instalação
-            verificarCriteriosInstalacao();
-        }
+        // PWA - Service Worker Registration REMOVIDO
 
         function verificarCriteriosInstalacao() {
             console.log('🔧 Verificando critérios de instalação PWA...');
@@ -14262,18 +14209,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         window.excluirHonorarioDireto = excluirHonorarioDireto;
         window.salvarHonorarioEditado = salvarHonorarioEditado;
         
-        // Registrar Service Worker para PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(function(registration) {
-                        console.log('Service Worker registrado com sucesso:', registration.scope);
-                    })
-                    .catch(function(error) {
-                        console.log('Falha ao registrar Service Worker:', error);
-                    });
-            });
-        }
+        // Service Worker Registration REMOVIDO
         
         // Detectar se é PWA
         let deferredPrompt;
