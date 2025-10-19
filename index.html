@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 TESTE RADICAL v66.0 - CACHE FORÇADO - ${Date.now()}</title>
+    <title>🚀 TESTE RADICAL v67.0 - CACHE FORÇADO - ${Date.now()}</title>
     <script>
-        console.log('🚀 TESTE RADICAL v66.0 - CACHE FORÇADO!');
+        console.log('🚀 TESTE RADICAL v67.0 - CACHE FORÇADO!');
         
         // FORÇAR LIMPEZA RADICAL DE CACHE
         if ('caches' in window) {
@@ -53,31 +53,33 @@
             }
         });
         
-        // SOLUÇÃO ULTRA RADICAL - FORÇAR BYPASS COMPLETO
+        // SOLUÇÃO COMPLETAMENTE DIFERENTE - FORÇAR BYPASS COMPLETO
         const timestamp = Date.now();
         const randomId = Math.random().toString(36).substring(7);
         const ultraId = Math.random().toString(36).substring(7);
         const finalId = Math.random().toString(36).substring(7);
         const altId = Math.random().toString(36).substring(7);
         const radicalId = Math.random().toString(36).substring(7);
-        const cacheKey = `radical_${timestamp}_${randomId}_${ultraId}_${finalId}_${altId}_${radicalId}`;
+        const differentId = Math.random().toString(36).substring(7);
+        const cacheKey = `different_${timestamp}_${randomId}_${ultraId}_${finalId}_${altId}_${radicalId}_${differentId}`;
         
-        // FORÇAR RELOAD ULTRA RADICAL
-        if (localStorage.getItem('radicalBypass') !== cacheKey) {
-            localStorage.setItem('radicalBypass', cacheKey);
-            alert(`🚀 BYPASS ULTRA RADICAL v66.0 - A PÁGINA VAI RECARREGAR!`);
-            console.log(`🚀 Forçando bypass ultra radical de cache com timestamp: ${timestamp}`);
+        // FORÇAR RELOAD COMPLETAMENTE DIFERENTE
+        if (localStorage.getItem('differentBypass') !== cacheKey) {
+            localStorage.setItem('differentBypass', cacheKey);
+            alert(`🚀 BYPASS COMPLETAMENTE DIFERENTE v67.0 - A PÁGINA VAI RECARREGAR!`);
+            console.log(`🚀 Forçando bypass completamente diferente de cache com timestamp: ${timestamp}`);
             
-            // FORÇAR RELOAD COM PARÂMETROS ULTRA RADICAIS
+            // FORÇAR RELOAD COM PARÂMETROS COMPLETAMENTE DIFERENTES
             const url = new URL(window.location);
-            url.searchParams.set('v', '66');
+            url.searchParams.set('v', '67');
             url.searchParams.set('t', timestamp.toString());
             url.searchParams.set('r', randomId);
             url.searchParams.set('u', ultraId);
             url.searchParams.set('f', finalId);
             url.searchParams.set('a', altId);
             url.searchParams.set('rad', radicalId);
-            url.searchParams.set('cache', 'radical');
+            url.searchParams.set('diff', differentId);
+            url.searchParams.set('cache', 'different');
             url.searchParams.set('sw', 'disabled');
             url.searchParams.set('force', 'true');
             url.searchParams.set('bypass', 'complete');
@@ -86,11 +88,12 @@
             url.searchParams.set('final', 'true');
             url.searchParams.set('alt', 'true');
             url.searchParams.set('radical', 'true');
+            url.searchParams.set('different', 'true');
             
-            // FORÇAR RELOAD ULTRA RADICAL
+            // FORÇAR RELOAD COMPLETAMENTE DIFERENTE
             window.location.replace(url.toString());
         } else {
-            localStorage.removeItem('radicalBypass');
+            localStorage.removeItem('differentBypass');
             console.log('✅ Cache bypassed com sucesso!');
         }
     </script>
@@ -1428,7 +1431,7 @@
 
         // Inicialização
         function init() {
-            console.log('🚀 TESTE RADICAL v66.0 - CACHE FORÇADO!');
+            console.log('🚀 TESTE RADICAL v67.0 - CACHE FORÇADO!');
             
             // LIMPAR CACHE APÓS INICIALIZAÇÃO
             try {
