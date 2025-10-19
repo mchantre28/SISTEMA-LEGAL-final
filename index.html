@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Paula Medina - Sistema Legal v48.0 SEM AUTOMAÇÕES</title>
+    <title>Ana Paula Medina - Sistema Legal v49.0 LIMPO</title>
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Sistema completo de gestão jurídica para Solicitadores">
@@ -2193,7 +2193,7 @@ END:VCALENDAR`;
             
             fecharModal();
             mostrarNotificacao('Lembrete criado com sucesso!', 'success');
-            carregarSecao('automacoes');
+            carregarSecao('dashboard');
         }
 
         function gerarFaturasAutomaticas() {
@@ -2214,7 +2214,7 @@ END:VCALENDAR`;
             });
             
             mostrarNotificacao(`${faturasGeradas} faturas geradas automaticamente!`, 'success');
-            carregarSecao('automacoes');
+            carregarSecao('dashboard');
         }
 
         // Funções para gerenciar lembretes
@@ -2297,7 +2297,7 @@ END:VCALENDAR`;
             
             fecharModal();
             mostrarNotificacao('Lembrete atualizado com sucesso!', 'success');
-            carregarSecao('automacoes');
+            carregarSecao('dashboard');
         }
 
         function desativarLembrete(lembreteId) {
@@ -2319,7 +2319,7 @@ END:VCALENDAR`;
             localStorage.setItem('lembretes', JSON.stringify(lembretes));
             
             mostrarNotificacao('Lembrete desativado com sucesso!', 'success');
-            carregarSecao('automacoes');
+            carregarSecao('dashboard');
         }
 
         // Função para configurar integrações
@@ -3153,10 +3153,6 @@ END:VCALENDAR`;
             console.log('🔧 gerarConteudoSecao chamado para:', secao);
             console.log('🔧 migracoes array antes:', migracoes);
             
-            if (secao === 'automacoes') {
-                console.log('🔧 SECÇÃO AUTOMAÇÕES DETECTADA - v45.0');
-                alert('🔧 SECÇÃO AUTOMAÇÕES DETECTADA - v45.0');
-            }
             
             // Garantir que migracoes existe
             if (!migracoes) {
