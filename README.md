@@ -1,108 +1,290 @@
-# Sistema Legal - Gestão Jurídica Completa
+# 🚀 Novo Projeto Local
 
 ## 📋 Descrição
-Sistema completo de gestão jurídica desenvolvido para advogados e escritórios de advocacia. Inclui gestão de clientes, honorários, contratos, heranças, migrações, registos, prazos e relatórios.
+Sistema completo de gestão empresarial com banco de dados MySQL, API RESTful em Node.js e interface web moderna. Inclui gestão de profissionais, escritórios, especializações, localizações e histórico com funcionalidades CRUD completas e sistema de autenticação.
+
+## 🏗️ Estrutura do Projeto
+
+```
+/novo-projeto-local/
+├── database/
+│   ├── schema.sql          # Estrutura completa do banco
+│   └── seed.sql           # Dados iniciais
+├── backend/
+│   └── app.js             # Servidor principal
+├── frontend/
+│   └── index.html         # Interface web moderna
+├── config/                # Arquivos de configuração
+├── .env                   # Variáveis de ambiente
+├── docker-compose.yml     # Configuração Docker
+├── Dockerfile            # Imagem Docker
+├── package.json          # Dependências Node.js
+└── README.md             # Documentação
+```
 
 ## ✨ Funcionalidades
 
-### 🏠 **Dashboard**
-- Visão geral do sistema
+### 🔐 **Sistema de Autenticação**
+- Login seguro com JWT
+- Diferentes perfis de utilizador
+- Sessões persistentes
+- Logout automático
+
+### 👨‍💼 **Gestão de Profissionais**
+- Cadastro completo (nome, NIF, cédula, especializações)
+- Gestão de estado (ativo, inativo, suspenso, aposentado)
+- Associação com escritórios e localizações
+- Histórico de registos
+
+### 🏢 **Gestão de Escritórios**
+- Cadastro de escritórios de advocacia
+- Contatos e websites
+- Localizações geográficas
+- Status ativo/inativo
+
+### 📚 **Especializações**
+- Categorias de especialização
+- Gestão de áreas de atuação
+- Associação com profissionais
+- Níveis de especialização
+
+### 📍 **Localizações**
+- Distrito, concelho, freguesia
+- Códigos postais e coordenadas GPS
+- Gestão geográfica completa
+
+### 📋 **Histórico e Auditoria**
+- Registos de atos profissionais
+- Sistema de auditoria completo
+- Logs de operações
+- Rastreabilidade total
+
+### 📊 **Dashboard e Estatísticas**
 - Estatísticas em tempo real
 - Gráficos de performance
-- IVA trimestral automático
-
-### 👥 **Gestão de Clientes**
-- Cadastro completo de clientes
-- Status (Ativo, Inativo, Suspenso)
-- Anexos de documentos
-- Filtros avançados
-
-### 💰 **Honorários**
-- Controle de receitas
-- Status de pagamento
-- Vencimentos
-- Cálculo automático de IVA
-
-### 📄 **Contratos**
-- Tipos de serviços jurídicos
-- Valores e percentagens
-- Parcerias
-- Anexos de documentos
-
-### 🏛️ **Áreas de Atuação**
-- **Heranças:** Inventários, partilhas, testamentos
-- **Migrações:** Nacionalidade, residência, vistos
-- **Registos:** Nascimento, casamento, óbito
-
-### ⏰ **Prazos Legais**
-- Criação automática de prazos
-- Notificações de vencimento
-- Prioridades (Alta, Média, Baixa)
-- IVA trimestral
-
-### 📊 **Relatórios**
-- Relatórios financeiros
-- Estatísticas por período
-- Exportação de dados
-
-### 🔄 **Sistema de Backup**
-- Backup automático
-- Exportação/Importação
-- Sincronização de dados
+- Relatórios detalhados
+- Métricas de utilização
 
 ## 🚀 **Tecnologias Utilizadas**
-- **HTML5** - Estrutura
-- **CSS3** - Estilização (Tailwind CSS)
-- **JavaScript** - Funcionalidades
-- **LocalStorage** - Persistência de dados
-- **Chart.js** - Gráficos
-- **Lucide Icons** - Ícones
+
+### **Backend**
+- **Node.js** - Runtime JavaScript
+- **Express.js** - Framework web
+- **MySQL2** - Driver do banco de dados
+- **JWT** - Autenticação
+- **bcryptjs** - Hash de passwords
+- **CORS** - Controle de acesso
+
+### **Frontend**
+- **HTML5** - Estrutura semântica
+- **CSS3** - Estilização moderna
+- **JavaScript** - Funcionalidades interativas
+- **Fetch API** - Comunicação com backend
+
+### **Banco de Dados**
+- **MySQL 8.0** - Sistema de gerenciamento
+- **Schema SQL** - Estrutura das tabelas
+- **Seed SQL** - Dados iniciais
+- **Triggers** - Auditoria automática
+- **Views** - Consultas otimizadas
+- **Procedures** - Lógica de negócio
+
+### **DevOps**
+- **Docker** - Containerização
+- **Docker Compose** - Orquestração
+- **phpMyAdmin** - Interface de administração
 
 ## 📱 **Recursos**
-- ✅ Interface responsiva
-- ✅ Modais interativos
-- ✅ Filtros avançados
-- ✅ Notificações em tempo real
-- ✅ Sistema de backup
-- ✅ Cálculo automático de IVA
-- ✅ Gestão de documentos
-- ✅ Prazos automáticos
+
+- ✅ Sistema de autenticação completo
+- ✅ API RESTful com autenticação JWT
+- ✅ Interface web moderna e responsiva
+- ✅ Banco de dados relacional otimizado
+- ✅ Sistema de auditoria automática
+- ✅ Validação de dados robusta
+- ✅ Tratamento de erros avançado
+- ✅ Containerização Docker
+- ✅ Documentação completa
+- ✅ Dados de exemplo realistas
 
 ## 🎯 **Como Usar**
 
-1. **Abra o arquivo `sistema-legal.html`** no navegador
-2. **Navegue pelas seções** usando o menu lateral
-3. **Adicione dados** através dos botões "Novo"
-4. **Gerencie prazos** na seção correspondente
-5. **Visualize relatórios** para análise
+### **Instalação Local**
+
+1. **Clone o repositório**
+   ```bash
+   git clone <url-do-repositorio>
+   cd novo-projeto-local
+   ```
+
+2. **Configure o banco de dados**
+   - Instale MySQL 8.0
+   - Crie o banco: `novo_projeto_local`
+   - Execute os scripts SQL:
+     ```bash
+     mysql -u root -p < database/schema.sql
+     mysql -u root -p < database/seed.sql
+     ```
+
+3. **Configure as variáveis de ambiente**
+   - Edite o arquivo `.env` com suas configurações
+
+4. **Instale as dependências**
+   ```bash
+   npm install
+   ```
+
+5. **Inicie o servidor**
+   ```bash
+   npm start
+   ```
+
+6. **Acesse a aplicação**
+   - Sistema: `http://localhost:3000`
+   - API: `http://localhost:3000/api`
+
+### **Instalação com Docker**
+
+1. **Clone o repositório**
+   ```bash
+   git clone <url-do-repositorio>
+   cd novo-projeto-local
+   ```
+
+2. **Inicie com Docker Compose**
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Acesse a aplicação**
+   - Sistema: `http://localhost:3000`
+   - phpMyAdmin: `http://localhost:8080`
+
+## 📊 **Endpoints da API**
+
+### **Autenticação**
+- `POST /api/auth/login` - Login de utilizador
+
+### **Profissionais**
+- `GET /api/profissionais` - Listar profissionais
+- `POST /api/profissionais` - Criar profissional
+- `GET /api/profissionais/:id` - Buscar profissional
+
+### **Escritórios**
+- `GET /api/escritorios` - Listar escritórios
+- `POST /api/escritorios` - Criar escritório
+
+### **Especializações**
+- `GET /api/especializacoes` - Listar especializações
+- `POST /api/especializacoes` - Criar especialização
+
+### **Localizações**
+- `GET /api/localizacoes` - Listar localizações
+- `POST /api/localizacoes` - Criar localização
+
+### **Histórico**
+- `GET /api/historico` - Listar registos
+- `POST /api/historico` - Criar registo
+
+### **Estatísticas**
+- `GET /api/estatisticas` - Obter estatísticas
+
+## 🗄️ **Estrutura do Banco**
+
+### **Tabelas Principais**
+- `Profissional` - Dados dos profissionais
+- `Escritorio` - Escritórios de advocacia
+- `Especializacao` - Especializações disponíveis
+- `Localizacao` - Localizações geográficas
+- `Historico_Registo` - Registos históricos
+- `Utilizador` - Utilizadores do sistema
+- `Auditoria_Log` - Logs de auditoria
+
+### **Relacionamentos**
+- Profissional → Escritório (N:1)
+- Profissional → Localização (N:1)
+- Profissional → Especializações (N:N)
+- Profissional → Histórico (1:N)
+- Utilizador → Profissional (1:1)
+
+### **Recursos Avançados**
+- Triggers de auditoria automática
+- Views otimizadas para consultas
+- Procedures para lógica de negócio
+- Índices para performance
+- Constraints de integridade
+
+## 🔧 **Configuração**
+
+### **Variáveis de Ambiente (.env)**
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=novo_projeto_local
+DB_PORT=3306
+PORT=3000
+JWT_SECRET=seu_jwt_secret_super_seguro_aqui_2024
+```
+
+### **Docker Compose**
+- MySQL 8.0 com dados persistentes
+- Aplicação Node.js
+- phpMyAdmin para administração
+- Rede isolada e segura
 
 ## 📈 **Funcionalidades Avançadas**
 
-### **IVA Trimestral**
-- Cálculo automático por trimestre
-- Criação de prazos de entrega
-- Relatórios detalhados
+### **Sistema de Auditoria**
+- Log automático de todas as operações
+- Rastreabilidade completa
+- Dados anteriores e novos
+- IP e user agent
 
-### **Sistema de Notificações**
-- Alertas de vencimento
-- Lembretes automáticos
-- Priorização de tarefas
+### **Autenticação e Segurança**
+- JWT com expiração
+- Hash de passwords com bcrypt
+- Middleware de autenticação
+- Controle de acesso por perfil
 
-### **Gestão de Documentos**
-- Upload de arquivos
-- Categorização por tipo
-- Anexos por cliente/processo
+### **Performance**
+- Pool de conexões MySQL
+- Índices otimizados
+- Views para consultas complexas
+- Procedures para lógica de negócio
 
-## 🔧 **Instalação**
-1. Clone o repositório
-2. Abra `sistema-legal.html` no navegador
-3. Comece a usar imediatamente!
+### **Interface Moderna**
+- Design responsivo
+- Autenticação integrada
+- Formulários intuitivos
+- Dashboard em tempo real
+
+## 🧪 **Testes**
+
+```bash
+# Executar testes
+npm test
+
+# Modo desenvolvimento
+npm run dev
+
+# Reset do banco de dados
+npm run reset-db
+```
+
+## 📝 **Credenciais de Teste**
+
+### **Utilizadores Disponíveis**
+- **admin** / **password** - Administrador
+- **joao.silva** / **password** - Profissional
+- **maria.santos** / **password** - Profissional
+- **publico1** / **password** - Utilizador público
 
 ## 📝 **Versão**
-**v38.0** - Sistema Legal Completo
+**v2.0.0** - Novo Projeto Local Completo
 
 ## 👨‍💻 **Desenvolvido por**
-Ana Paula Medina - Sistema Legal
+Sistema de Gestão Empresarial
 
 ---
-*Sistema desenvolvido para gestão jurídica profissional*
+*Projeto completo com backend, frontend, banco de dados e sistema de autenticação*

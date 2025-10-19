@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # Banco de dados MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: novo_projeto_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: novo_projeto_local
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    networks:
+      - projeto_network
+    command: --default-authentication-plugin=mysql_native_password
+
+  # Aplicação Node.js
+  app:
+    build: .
+    container_name: novo_projeto_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=app_user
+      - DB_PASSWORD=app_password
+      - DB_NAME=novo_projeto_local
+      - DB_PORT=3306
+      - PORT=3000
+      - JWT_SECRET=seu_jwt_secret_super_seguro_aqui_2024
+    depends_on:
+      - mysql
+    networks:
+      - projeto_network
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
+      - ./config:/app/config
+
+  # phpMyAdmin (opcional - para gerenciar o banco)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: novo_projeto_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root123
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - projeto_network
+
+volumes:
+  mysql_data:
+
+networks:
+  projeto_network:
+    driver: bridge
