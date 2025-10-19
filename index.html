@@ -763,14 +763,6 @@
                             <i data-lucide="bug" class="w-4 h-4"></i>
                             Debug PWA
                         </button>
-                        <button onclick="calcularJurosAutomaticos()" class="btn btn-info">
-                            <i data-lucide="calculator" class="w-4 h-4"></i>
-                            Calcular Juros
-                        </button>
-                        <button onclick="sincronizarComCalendario()" class="btn btn-success">
-                            <i data-lucide="calendar" class="w-4 h-4"></i>
-                            Calendário
-                        </button>
                         <button onclick="exportarDados()" class="btn btn-primary">
                             <i data-lucide="download" class="w-4 h-4"></i>
                             Exportar
@@ -1376,12 +1368,12 @@
             
             // Inicializar PWA e funcionalidades mobile
             inicializarPWA();
-            inicializarModoEscuro();
+            // inicializarModoEscuro(); // REMOVIDO
             inicializarGestosTouch();
             
             
             // Calcular juros automáticos na inicialização
-            calcularJurosAutomaticos();
+            // calcularJurosAutomaticos(); // REMOVIDO
         }
 
         // PWA - Service Worker Registration
@@ -1563,7 +1555,7 @@
         }
 
         // Modo Escuro
-        function inicializarModoEscuro() {
+        function inicializarModoEscuro_REMOVED() {
             const savedTheme = localStorage.getItem('theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             
@@ -1726,7 +1718,7 @@
 
 
 
-        function calcularJurosAutomaticos() {
+        function calcularJurosAutomaticos_REMOVED() {
             console.log('🔧 Função calcularJurosAutomaticos chamada');
             console.log('💰 Calculando juros automáticos...');
             
@@ -1813,7 +1805,7 @@
         }
 
         // 4. SINCRONIZAÇÃO COM CALENDÁRIO
-        function sincronizarComCalendario() {
+        function sincronizarComCalendario_REMOVED() {
             console.log('🔧 Função sincronizarComCalendario chamada');
             console.log('📅 Sincronizando com calendário...');
             
