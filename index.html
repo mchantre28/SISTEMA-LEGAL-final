@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Legal - Gestão Jurídica v70.0</title>
+    <title>Sistema Legal - Gestão Jurídica v71.0</title>
     
     <script>
-        // ABORDAGEM FINAL - FORÇAR ESQUECER TUDO DE FORMA DIFERENTE
+        // ABORDAGEM TOTALMENTE NOVA - FORÇAR ESQUECER TUDO DE FORMA TOTALMENTE NOVA
         const timestamp = Date.now();
         const randomId = Math.random().toString(36).substring(7);
-        const cacheKey = `final_${timestamp}_${randomId}`;
+        const cacheKey = `totally_new_${timestamp}_${randomId}`;
         
-        // FORÇAR ESQUECER TUDO DE FORMA DIFERENTE
-        if (localStorage.getItem('finalBypass') !== cacheKey) {
-            localStorage.setItem('finalBypass', cacheKey);
-            alert(`🚀 ESQUECER TUDO FINAL v70.0 - A PÁGINA VAI RECARREGAR!`);
-            console.log(`🚀 Forçando esquecer tudo final com timestamp: ${timestamp}`);
+        // FORÇAR ESQUECER TUDO DE FORMA TOTALMENTE NOVA
+        if (localStorage.getItem('totallyNewBypass') !== cacheKey) {
+            localStorage.setItem('totallyNewBypass', cacheKey);
+            alert(`🚀 ESQUECER TUDO TOTALMENTE NOVO v71.0 - A PÁGINA VAI RECARREGAR!`);
+            console.log(`🚀 Forçando esquecer tudo totalmente novo com timestamp: ${timestamp}`);
             
-            // FORÇAR RELOAD COM PARÂMETROS PARA ESQUECER FINAL
+            // FORÇAR RELOAD COM PARÂMETROS PARA ESQUECER TOTALMENTE NOVO
             const url = new URL(window.location);
-            url.searchParams.set('v', '70');
+            url.searchParams.set('v', '71');
             url.searchParams.set('t', timestamp.toString());
             url.searchParams.set('r', randomId);
             url.searchParams.set('forget', 'everything');
-            url.searchParams.set('final', 'true');
+            url.searchParams.set('totally', 'new');
             url.searchParams.set('sw', 'disabled');
             url.searchParams.set('force', 'true');
             url.searchParams.set('bypass', 'complete');
             
-            // FORÇAR RELOAD PARA ESQUECER FINAL
+            // FORÇAR RELOAD PARA ESQUECER TOTALMENTE NOVO
             window.location.replace(url.toString());
         } else {
-            localStorage.removeItem('finalBypass');
-            console.log('✅ Esquecido final com sucesso!');
+            localStorage.removeItem('totallyNewBypass');
+            console.log('✅ Esquecido totalmente novo com sucesso!');
         }
     </script>
     
