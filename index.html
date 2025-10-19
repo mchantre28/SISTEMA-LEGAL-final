@@ -1368,9 +1368,6 @@
             inicializarModoEscuro();
             inicializarGestosTouch();
             
-            // Inicializar sistema de automações
-            inicializarSistemaLembretes();
-            inicializarIntegracoes();
             
             // Calcular juros automáticos na inicialização
             calcularJurosAutomaticos();
@@ -1714,80 +1711,10 @@
             }
         }
 
-        // ===== SISTEMA DE AUTOMAÇÕES =====
 
-        // 1. LEMBRETES AUTOMÁTICOS POR EMAIL
-        function inicializarSistemaLembretes() {
-            console.log('🤖 Inicializando sistema de lembretes automáticos...');
-            
-            // Verificar lembretes a cada 5 minutos
-            setInterval(verificarLembretes, 5 * 60 * 1000);
-            
-            // Verificar lembretes imediatamente
-            verificarLembretes();
-        }
 
-        function verificarLembretes() {
-            const hoje = new Date();
-            const lembretes = obterLembretes();
-            
-            lembretes.forEach(lembrete => {
-                if (lembrete.ativo && !lembrete.enviado) {
-                    const dataLembrete = new Date(lembrete.data);
-                    const diferencaHoras = (dataLembrete - hoje) / (1000 * 60 * 60);
-                    
-                    // Enviar lembretes 24h, 2h e 30min antes
-                    if (diferencaHoras <= 24 && diferencaHoras > 0) {
-                        enviarLembreteEmail(lembrete, '24h');
-                    } else if (diferencaHoras <= 2 && diferencaHoras > 0) {
-                        enviarLembreteEmail(lembrete, '2h');
-                    } else if (diferencaHoras <= 0.5 && diferencaHoras > 0) {
-                        enviarLembreteEmail(lembrete, '30min');
-                    }
-                }
-            });
-        }
 
-        function enviarLembreteEmail(lembrete, tempoAntecedencia) {
-            console.log(`📧 Enviando lembrente ${tempoAntecedencia} antes:`, lembrete);
-            
-            const cliente = clientes.find(c => c.id === lembrete.clienteId);
-            if (!cliente || !cliente.email) return;
-            
-            const assunto = `Lembrete: ${lembrete.titulo} - ${tempoAntecedencia} antes`;
-            const corpo = `
-                <h2>Lembrete Automático - Sistema Legal</h2>
-                <p><strong>Cliente:</strong> ${cliente.nome}</p>
-                <p><strong>Assunto:</strong> ${lembrete.titulo}</p>
-                <p><strong>Data/Hora:</strong> ${new Date(lembrete.data).toLocaleString('pt-PT')}</p>
-                <p><strong>Descrição:</strong> ${lembrete.descricao}</p>
-                <p><strong>Tempo restante:</strong> ${tempoAntecedencia}</p>
-                <hr>
-                <p><em>Este é um lembrete automático do Sistema Legal - ANA PAULA MEDINA</em></p>
-            `;
-            
-            // Simular envio de email (em produção, integrar com serviço de email)
-            console.log('📧 Email simulado enviado:', {
-                para: cliente.email,
-                assunto: assunto,
-                corpo: corpo
-            });
-            
-            // Criar notificação no sistema
-            criarNotificacao({
-                titulo: `Lembrete enviado para ${cliente.nome}`,
-                descricao: `Email de lembrete enviado ${tempoAntecedencia} antes do prazo`,
-                tipo: 'info',
-                categoria: 'lembrete_email',
-                referenciaId: cliente.id
-            });
-            
-            // Marcar como enviado
-            lembrete.enviado = true;
-            salvarLembretes();
-        }
 
-        // 2. CÁLCULO AUTOMÁTICO DE JUROS
         function calcularJurosAutomaticos() {
             console.log('🔧 Função calcularJurosAutomaticos chamada');
             console.log('💰 Calculando juros automáticos...');
@@ -2068,7 +1995,6 @@ END:VCALENDAR`;
             // Aqui você integraria com sistemas de contabilidade
         }
 
-        // Funções auxiliares para automações
         function obterLembretes() {
             console.log('🔧 Função obterLembretes chamada');
             const lembretes = localStorage.getItem('lembretes');
@@ -2133,7 +2059,6 @@ END:VCALENDAR`;
             }
         }
 
-        // Funções auxiliares para automações
         function criarLembrete() {
             console.log('🔧 Função criarLembrete chamada');
             const modal = document.createElement('div');
