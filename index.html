@@ -735,10 +735,7 @@
                 <div class="flex items-center justify-between">
                     <h1 class="text-2xl font-bold text-gray-800" id="pageTitle">Sistema Legal</h1>
                     <div class="flex items-center space-x-4">
-                        <button onclick="debugPWA()" class="btn btn-warning" id="debugPWABtn">
-                            <i data-lucide="bug" class="w-4 h-4"></i>
-                            Debug PWA
-                        </button>
+                        <!-- Botão PWA removido -->
                         <button onclick="exportarDados()" class="btn btn-primary">
                             <i data-lucide="download" class="w-4 h-4"></i>
                             Exportar
@@ -1342,8 +1339,8 @@
             iniciarSistemaNotificacoes();
             iniciarSistemaBackup();
             
-            // Inicializar PWA e funcionalidades mobile
-            inicializarPWA();
+            // Inicializar funcionalidades mobile
+            // inicializarPWA(); // REMOVIDO - PWA desativado
             // inicializarModoEscuro(); // REMOVIDO
             inicializarGestosTouch();
             
@@ -1355,127 +1352,11 @@
         // PWA - Service Worker Registration
         // PWA - Service Worker Registration REMOVIDO
 
-        function verificarCriteriosInstalacao() {
-            console.log('🔧 Verificando critérios de instalação PWA...');
-            
-            // Verificar HTTPS
-            const isHTTPS = location.protocol === 'https:' || location.hostname === 'localhost';
-            console.log('🔧 HTTPS:', isHTTPS);
-            
-            // Verificar Service Worker
-            const hasSW = 'serviceWorker' in navigator;
-            console.log('🔧 Service Worker suportado:', hasSW);
-            
-            // Verificar Manifest
-            const hasManifest = document.querySelector('link[rel="manifest"]');
-            console.log('🔧 Manifest encontrado:', !!hasManifest);
-            
-            // Verificar ícones
-            const hasIcons = document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]');
-            console.log('🔧 Ícones encontrados:', hasIcons.length);
-            
-            // Verificar se é instalável
-            const isInstallable = isHTTPS && hasSW && hasManifest && hasIcons.length > 0;
-            console.log('🔧 PWA instalável:', isInstallable);
-            
-            if (!isInstallable) {
-                console.log('❌ PWA não atende aos critérios de instalação');
-                mostrarNotificacao('PWA não está pronto para instalação', 'warning');
-            }
-        }
+        // Função verificarCriteriosInstalacao removida - PWA desativado
 
-        function debugPWA() {
-            console.log('🔧 === DEBUG PWA ===');
-            
-            // Informações do navegador
-            console.log('🔧 User Agent:', navigator.userAgent);
-            console.log('🔧 URL:', location.href);
-            console.log('🔧 Protocolo:', location.protocol);
-            console.log('🔧 Hostname:', location.hostname);
-            
-            // Verificar critérios
-            verificarCriteriosInstalacao();
-            
-            // Verificar deferredPrompt
-            console.log('🔧 deferredPrompt disponível:', !!window.deferredPrompt);
-            
-            // Verificar se já está instalado
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-            console.log('🔧 Modo standalone:', isStandalone);
-            
-            // Verificar Service Worker
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistration().then(registration => {
-                    console.log('🔧 Service Worker registrado:', !!registration);
-                    if (registration) {
-                        console.log('🔧 Service Worker ativo:', registration.active ? 'SIM' : 'NÃO');
-                    }
-                });
-            }
-            
-            // Mostrar informações na tela
-            const info = `
-🔧 DEBUG PWA:
-• URL: ${location.href}
-• Protocolo: ${location.protocol}
-• Service Worker: ${'serviceWorker' in navigator ? 'SIM' : 'NÃO'}
-• Manifest: ${document.querySelector('link[rel="manifest"]') ? 'SIM' : 'NÃO'}
-• Ícones: ${document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]').length}
-• deferredPrompt: ${window.deferredPrompt ? 'SIM' : 'NÃO'}
-• Standalone: ${isStandalone ? 'SIM' : 'NÃO'}
-            `;
-            
-            alert(info);
-            console.log('🔧 === FIM DEBUG PWA ===');
-        }
+        // Função debugPWA removida - PWA desativado
 
-        function mostrarBotaoInstalacao() {
-            console.log('🔧 Mostrando botão de instalação...');
-            
-            // Verificar se já existe
-            const existingBtn = document.getElementById('installBtn');
-            if (existingBtn) {
-                console.log('🔧 Botão já existe, removendo...');
-                existingBtn.remove();
-            }
-            
-            const installBtn = document.createElement('button');
-            installBtn.id = 'installBtn';
-            installBtn.className = 'btn btn-info';
-            installBtn.innerHTML = '<i data-lucide="download" class="w-4 h-4"></i> Instalar App';
-            installBtn.onclick = () => {
-                console.log('🔧 Botão de instalação clicado');
-                
-                if (window.deferredPrompt) {
-                    console.log('🔧 Chamando prompt de instalação...');
-                    window.deferredPrompt.prompt();
-                    
-                    window.deferredPrompt.userChoice.then((choiceResult) => {
-                        console.log('🔧 Resultado da escolha:', choiceResult.outcome);
-                        if (choiceResult.outcome === 'accepted') {
-                            console.log('✅ Usuário aceitou instalação');
-                            mostrarNotificacao('Instalando aplicação...', 'info');
-                        } else {
-                            console.log('❌ Usuário rejeitou instalação');
-                            mostrarNotificacao('Instalação cancelada', 'warning');
-                        }
-                        window.deferredPrompt = null;
-                        installBtn.remove();
-                    });
-                } else {
-                    console.log('❌ deferredPrompt não disponível');
-                    mostrarNotificacao('Instalação não disponível no momento', 'error');
-                }
-            };
-            
-            const header = document.querySelector('header .flex');
-            if (header) {
-                header.insertBefore(installBtn, header.firstChild);
-                console.log('✅ Botão de instalação adicionado ao header');
-            } else {
-                console.log('❌ Header não encontrado');
-            }
-        }
+        // Função mostrarBotaoInstalacao removida - PWA desativado
 
         // Modo Escuro
         function inicializarModoEscuro_REMOVED() {
@@ -14607,18 +14488,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         
         // Service Worker Registration REMOVIDO
         
-        // Detectar se é PWA
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', function(e) {
-            console.log('PWA pode ser instalado');
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Mostrar botão de instalação se necessário
-            if (deferredPrompt) {
-                console.log('PWA pronto para instalação');
-            }
-        });
+        // PWA completamente removido
 
     </script>
 </body>
