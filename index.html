@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 TESTE RADICAL v63.0 - CACHE FORÇADO - ${Date.now()}</title>
+    <title>🚀 TESTE RADICAL v64.0 - CACHE FORÇADO - ${Date.now()}</title>
     <script>
-        console.log('🚀 TESTE RADICAL v63.0 - CACHE FORÇADO!');
+        console.log('🚀 TESTE RADICAL v64.0 - CACHE FORÇADO!');
         
         // FORÇAR LIMPEZA RADICAL DE CACHE
         if ('caches' in window) {
@@ -53,35 +53,38 @@
             }
         });
         
-        // SOLUÇÃO ULTRA NUCLEAR - FORÇAR BYPASS COMPLETO
+        // SOLUÇÃO FINAL - FORÇAR BYPASS COMPLETO
         const timestamp = Date.now();
         const randomId = Math.random().toString(36).substring(7);
         const ultraId = Math.random().toString(36).substring(7);
-        const cacheKey = `ultra_${timestamp}_${randomId}_${ultraId}`;
+        const finalId = Math.random().toString(36).substring(7);
+        const cacheKey = `final_${timestamp}_${randomId}_${ultraId}_${finalId}`;
         
-        // FORÇAR RELOAD ULTRA NUCLEAR
-        if (localStorage.getItem('ultraBypass') !== cacheKey) {
-            localStorage.setItem('ultraBypass', cacheKey);
-            alert(`🚀 BYPASS ULTRA NUCLEAR v63.0 - A PÁGINA VAI RECARREGAR!`);
-            console.log(`🚀 Forçando bypass ultra nuclear de cache com timestamp: ${timestamp}`);
+        // FORÇAR RELOAD FINAL
+        if (localStorage.getItem('finalBypass') !== cacheKey) {
+            localStorage.setItem('finalBypass', cacheKey);
+            alert(`🚀 BYPASS FINAL v64.0 - A PÁGINA VAI RECARREGAR!`);
+            console.log(`🚀 Forçando bypass final de cache com timestamp: ${timestamp}`);
             
-            // FORÇAR RELOAD COM PARÂMETROS ULTRA NUCLEARES
+            // FORÇAR RELOAD COM PARÂMETROS FINAIS
             const url = new URL(window.location);
-            url.searchParams.set('v', '63');
+            url.searchParams.set('v', '64');
             url.searchParams.set('t', timestamp.toString());
             url.searchParams.set('r', randomId);
             url.searchParams.set('u', ultraId);
-            url.searchParams.set('cache', 'ultra');
+            url.searchParams.set('f', finalId);
+            url.searchParams.set('cache', 'final');
             url.searchParams.set('sw', 'disabled');
             url.searchParams.set('force', 'true');
             url.searchParams.set('bypass', 'complete');
             url.searchParams.set('nuclear', 'true');
             url.searchParams.set('ultra', 'true');
+            url.searchParams.set('final', 'true');
             
-            // FORÇAR RELOAD ULTRA NUCLEAR
+            // FORÇAR RELOAD FINAL
             window.location.replace(url.toString());
         } else {
-            localStorage.removeItem('ultraBypass');
+            localStorage.removeItem('finalBypass');
             console.log('✅ Cache bypassed com sucesso!');
         }
     </script>
@@ -1419,7 +1422,7 @@
 
         // Inicialização
         function init() {
-            console.log('🚀 TESTE RADICAL v63.0 - CACHE FORÇADO!');
+            console.log('🚀 TESTE RADICAL v64.0 - CACHE FORÇADO!');
             
             // LIMPAR CACHE APÓS INICIALIZAÇÃO
             try {
