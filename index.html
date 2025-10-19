@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 TESTE RADICAL v60.0 - CACHE FORÇADO - ${Date.now()}</title>
+    <title>🚀 TESTE RADICAL v61.0 - CACHE FORÇADO - ${Date.now()}</title>
     <script>
-        console.log('🚀 TESTE RADICAL v60.0 - CACHE FORÇADO!');
+        console.log('🚀 TESTE RADICAL v61.0 - CACHE FORÇADO!');
         
         // FORÇAR LIMPEZA RADICAL DE CACHE
         if ('caches' in window) {
@@ -17,12 +17,28 @@
             });
         }
         
-        // DESATIVAR SERVICE WORKER
+        // REMOVER SERVICE WORKER COMPLETAMENTE
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 for(let registration of registrations) {
                     registration.unregister();
                     console.log('🧹 Service Worker removido:', registration);
+                }
+            });
+            
+            // FORÇAR REMOÇÃO DO SERVICE WORKER
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({action: 'skipWaiting'});
+                console.log('🧹 Service Worker controller removido');
+            }
+        }
+        
+        // FORÇAR LIMPEZA COMPLETA DO CACHE
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                for (let name of names) {
+                    caches.delete(name);
+                    console.log('🧹 Cache removido:', name);
                 }
             });
         }
@@ -37,23 +53,26 @@
             }
         });
         
-        // FORÇAR BYPASS COMPLETO DO CACHE
+        // FORÇAR RELOAD EXTREMO COM BYPASS COMPLETO
         const timestamp = Date.now();
         const cacheKey = `cache_buster_${timestamp}`;
         
-        // FORÇAR RELOAD COM BYPASS DE CACHE
+        // FORÇAR RELOAD COM BYPASS EXTREMO
         if (localStorage.getItem('cacheBypass') !== cacheKey) {
             localStorage.setItem('cacheBypass', cacheKey);
-            alert(`🔄 BYPASS CACHE v60.0 - A PÁGINA VAI RECARREGAR!`);
-            console.log(`🔄 Forçando bypass de cache com timestamp: ${timestamp}`);
+            alert(`🔄 BYPASS EXTREMO v61.0 - A PÁGINA VAI RECARREGAR!`);
+            console.log(`🔄 Forçando bypass extremo de cache com timestamp: ${timestamp}`);
             
-            // FORÇAR RELOAD COM PARÂMETROS DE CACHE
+            // FORÇAR RELOAD COM PARÂMETROS EXTREMOS
             const url = new URL(window.location);
-            url.searchParams.set('v', '60');
+            url.searchParams.set('v', '61');
             url.searchParams.set('t', timestamp.toString());
             url.searchParams.set('cache', 'bypass');
+            url.searchParams.set('sw', 'disabled');
+            url.searchParams.set('force', 'true');
             
-            window.location.href = url.toString();
+            // FORÇAR RELOAD COM BYPASS COMPLETO
+            window.location.replace(url.toString());
         } else {
             localStorage.removeItem('cacheBypass');
             console.log('✅ Cache bypassed com sucesso!');
@@ -1393,7 +1412,7 @@
 
         // Inicialização
         function init() {
-            console.log('🚀 TESTE RADICAL v60.0 - CACHE FORÇADO!');
+            console.log('🚀 TESTE RADICAL v61.0 - CACHE FORÇADO!');
             
             // LIMPAR CACHE APÓS INICIALIZAÇÃO
             try {
