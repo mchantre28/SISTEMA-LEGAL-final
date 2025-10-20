@@ -1397,12 +1397,26 @@
             console.log('✅ fecharModalRobusto executado');
         }
 
+        // Função simples para fechar modal (backup)
+        function fecharModalSimples() {
+            console.log('🔧 fecharModalSimples chamado');
+            const modal = document.querySelector('.modal');
+            if (modal) {
+                modal.remove();
+                console.log('✅ Modal removido (método simples)');
+            }
+        }
+
         // Função de teste para modal
         function testarModal() {
             console.log('🔧 Testando modal...');
             
+            // Remover modais existentes primeiro
+            fecharModalRobusto();
+            
             // Criar modal de teste simples
             const modal = document.createElement('div');
+            modal.className = 'modal';
             modal.style.cssText = `
                 position: fixed !important;
                 top: 0 !important;
@@ -1414,6 +1428,8 @@
                 justify-content: center !important;
                 align-items: center !important;
                 z-index: 99999 !important;
+                visibility: visible !important;
+                opacity: 1 !important;
             `;
             
             modal.innerHTML = `
@@ -1428,20 +1444,41 @@
                 ">
                     <h2 style="color: #1f2937; margin-bottom: 20px;">🧪 TESTE DE MODAL</h2>
                     <p style="color: #6b7280; margin-bottom: 20px;">Se vês esta mensagem, o modal está a funcionar!</p>
-                    <button onclick="fecharModalRobusto()" style="
-                        background: #3b82f6;
-                        color: white;
-                        border: none;
-                        padding: 10px 20px;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-size: 16px;
-                    ">Fechar</button>
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <button onclick="fecharModalRobusto()" style="
+                            background: #3b82f6;
+                            color: white;
+                            border: none;
+                            padding: 10px 20px;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 16px;
+                        ">Fechar Robusto</button>
+                        <button onclick="fecharModalSimples()" style="
+                            background: #10b981;
+                            color: white;
+                            border: none;
+                            padding: 10px 20px;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 16px;
+                        ">Fechar Simples</button>
+                    </div>
                 </div>
             `;
             
             document.body.appendChild(modal);
             console.log('✅ Modal de teste criado');
+            
+            // Verificar se foi adicionado
+            setTimeout(() => {
+                const modalTeste = document.querySelector('.modal');
+                if (modalTeste) {
+                    console.log('✅ Modal encontrado no DOM');
+                } else {
+                    console.log('❌ Modal não encontrado no DOM');
+                }
+            }, 100);
         }
 
         // Modo Escuro
@@ -6544,6 +6581,15 @@ Sistema Legal - ANA PAULA MEDINA
                             <button onclick="carregarClientePorBilhete()" class="btn btn-warning">
                                 <i data-lucide="ticket" class="w-4 h-4"></i>
                                 Carregar
+                            </button>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">Teste de Modal</h3>
+                            <p class="text-gray-600 mb-4">Testar se os modais estão a funcionar</p>
+                            <button onclick="testarModal()" class="btn btn-secondary">
+                                <i data-lucide="test-tube" class="w-4 h-4"></i>
+                                Testar Modal
                             </button>
                         </div>
                     </div>
