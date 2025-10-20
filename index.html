@@ -3361,7 +3361,11 @@ Sistema Legal - ANA PAULA MEDINA
             window.URL.revokeObjectURL(url);
             
             // Fechar modal
-            fecharModal();
+            const modal = document.querySelector('.modal');
+            if (modal) {
+                modal.remove();
+                console.log('✅ Modal de relatório cliente fechado');
+            }
             
             mostrarNotificacao(`Relatório personalizado para ${clienteSelecionado} gerado com sucesso!`, 'success');
         }
@@ -3774,7 +3778,11 @@ Sistema Legal - ANA PAULA MEDINA
             window.URL.revokeObjectURL(url);
             
             // Fechar modal
-            fecharModal();
+            const modal = document.querySelector('.modal');
+            if (modal) {
+                modal.remove();
+                console.log('✅ Modal de relatório financeiro fechado');
+            }
             
             mostrarNotificacao(`Relatório financeiro personalizado para ${clienteSelecionado} gerado com sucesso!`, 'success');
         }
@@ -5639,6 +5647,13 @@ Sistema Legal - ANA PAULA MEDINA
         function fecharModal() {
             console.log('🔧 fecharModal chamado');
             
+            // Remover todos os modais com classe 'modal' PRIMEIRO
+            const todosModais = document.querySelectorAll('.modal');
+            todosModais.forEach(modal => {
+                console.log('🔧 Removendo modal:', modal.className);
+                modal.remove();
+            });
+            
             // Limpar modalContainer
             const modalContainer = document.getElementById('modalContainer');
             if (modalContainer) {
@@ -6792,36 +6807,7 @@ Sistema Legal - ANA PAULA MEDINA
             lucide.createIcons();
         }
 
-        function fecharModal() {
-            console.log('🔧 fecharModal chamado');
-            
-            // Limpar modalContainer
-            const modalContainer = document.getElementById('modalContainer');
-            if (modalContainer) {
-                modalContainer.classList.remove('show');
-                modalContainer.innerHTML = '';
-                console.log('✅ modalContainer limpo');
-            }
-            
-            // Remover qualquer modal que possa estar no body
-            const modalsNoBody = document.querySelectorAll('.fixed.inset-0');
-            modalsNoBody.forEach(modal => {
-                if (modal.parentNode) {
-                    modal.parentNode.removeChild(modal);
-                    console.log('✅ Modal removido do body');
-                }
-            });
-            
-            // Remover modais específicos por ID
-            const modalIds = ['modalEdicaoContrato', 'modalEdicaoHeranca', 'modalEdicaoMigracao', 'modalEdicaoRegisto'];
-            modalIds.forEach(id => {
-                const modal = document.getElementById(id);
-                if (modal && modal.parentNode) {
-                    modal.parentNode.removeChild(modal);
-                    console.log(`✅ Modal ${id} removido`);
-                }
-            });
-        }
+        // Função fecharModal duplicada removida
 
         function editarItem(tipo, id) {
             console.log('🔧 editarItem chamado:', tipo, id);
