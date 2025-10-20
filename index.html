@@ -8831,7 +8831,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     registo.anexos.push(anexo);
                     salvarDados('registos', registos);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    abrirAnexosRegisto(registoId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             });
         }
@@ -8981,7 +8981,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     registo.anexos.push(anexo);
                     salvarDados('registos', registos);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    abrirAnexosRegisto(registoId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             });
         }
@@ -8993,7 +8993,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     registo.anexos = registo.anexos.filter(a => a.id !== anexoId);
                     salvarDados('registos', registos);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    abrirAnexosRegisto(registoId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             }
         }
@@ -9141,7 +9141,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 prazo.anexos.push(anexo);
                 salvarDados('prazos', prazos);
                 mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                abrirAnexosPrazo(prazoId);
+                fecharModalRobusto(); // Fechar modal após salvar
             }
         }
         
@@ -9152,7 +9152,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     prazo.anexos = prazo.anexos.filter(a => a.id !== anexoId);
                     salvarDados('prazos', prazos);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    abrirAnexosPrazo(prazoId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             }
         }
@@ -12150,7 +12150,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     cliente.anexos.push(anexo);
                     salvarDados('clientes', clientes);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    abrirAnexosCliente(clienteId); // Recarregar modal
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             });
         }
@@ -12559,7 +12559,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     cliente.anexos = cliente.anexos.filter(a => a.id !== anexoId);
                     salvarDados('clientes', clientes);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    abrirAnexosCliente(clienteId); // Recarregar modal
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             }
         }
@@ -12709,7 +12709,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     contrato.anexos.push(anexo);
                     salvarDados('contratos', contratos);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    abrirAnexosContrato(contratoId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             });
         }
@@ -12721,7 +12721,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     contrato.anexos = contrato.anexos.filter(a => a.id !== anexoId);
                     salvarDados('contratos', contratos);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    abrirAnexosContrato(contratoId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             }
         }
@@ -14849,7 +14849,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     contrato.anexos.push(anexo);
                     salvarDados('contratos', contratos);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    abrirAnexosContrato(contratoId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             });
         }
@@ -14902,7 +14902,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     salvarDados('herancas', herancas);
                     console.log('✅ Dados salvos no localStorage');
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    abrirAnexosHeranca(herancaId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 } else {
                     console.error('❌ Herança não encontrada com ID:', herancaId);
                     mostrarNotificacao('Herança não encontrada!', 'error');
@@ -14951,7 +14951,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     migracao.anexos.push(anexo);
                     salvarDados('migracoes', migracoes);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    abrirAnexosMigracao(migracaoId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             });
         }
@@ -14997,7 +14997,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     registo.anexos.push(anexo);
                     salvarDados('registos', registos);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    abrirAnexosRegisto(registoId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             });
         }
@@ -15010,7 +15010,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     contrato.anexos = contrato.anexos.filter(a => a.id !== anexoId);
                     salvarDados('contratos', contratos);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    abrirAnexosContrato(contratoId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             }
         }
@@ -15022,7 +15022,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     heranca.anexos = heranca.anexos.filter(a => a.id !== anexoId);
                     salvarDados('herancas', herancas);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    abrirAnexosHeranca(herancaId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             }
         }
@@ -15034,7 +15034,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     migracao.anexos = migracao.anexos.filter(a => a.id !== anexoId);
                     salvarDados('migracoes', migracoes);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    abrirAnexosMigracao(migracaoId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             }
         }
@@ -15046,7 +15046,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     registo.anexos = registo.anexos.filter(a => a.id !== anexoId);
                     salvarDados('registos', registos);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    abrirAnexosRegisto(registoId);
+                    fecharModalRobusto(); // Fechar modal após salvar
                 }
             }
         }
