@@ -1326,6 +1326,9 @@
             carregarDados();
             carregarDadosExemplo();
             
+            // Gerar bilhetes para clientes existentes que não têm bilhete
+            gerarBilhetesParaClientesExistentes();
+            
             // Verificar tipo de usuário para carregar seção apropriada
             const tipoUsuario = localStorage.getItem('tipoUsuario');
             if (tipoUsuario === 'convidado') {
@@ -4797,6 +4800,57 @@ Sistema Legal - ANA PAULA MEDINA
             }, 100);
         }
 
+        // FUNÇÃO: Gerar bilhetes para clientes existentes
+        function gerarBilhetesParaClientesExistentes() {
+            console.log('🎫 Verificando bilhetes para clientes existentes...');
+            
+            let clientesAtualizados = false;
+            
+            // Verificar cada cliente
+            clientes.forEach((cliente, index) => {
+                if (!cliente.bilhete) {
+                    // Gerar bilhete único
+                    const bilhete = 'BIL' + Date.now() + Math.random().toString(36).substring(2, 8).toUpperCase();
+                    clientes[index].bilhete = bilhete;
+                    clientesAtualizados = true;
+                    console.log(`✅ Bilhete gerado para ${cliente.nome}: ${bilhete}`);
+                }
+            });
+            
+            // Salvar se houve atualizações
+            if (clientesAtualizados) {
+                salvarDados('clientes', clientes);
+                console.log('✅ Bilhetes gerados e salvos para clientes existentes');
+                mostrarNotificacao('Bilhetes gerados automaticamente para clientes existentes!', 'success');
+            } else {
+                console.log('✅ Todos os clientes já têm bilhetes');
+            }
+        }
+
+        // FUNÇÃO: Copiar bilhete para clipboard
+        function copiarBilhete(bilhete) {
+            if (!bilhete || bilhete === '') {
+                mostrarNotificacao('Bilhete ainda não foi gerado!', 'warning');
+                return;
+            }
+            
+            // Copiar para clipboard
+            navigator.clipboard.writeText(bilhete).then(() => {
+                mostrarNotificacao(`Bilhete copiado: ${bilhete}`, 'success');
+                console.log('✅ Bilhete copiado:', bilhete);
+            }).catch(err => {
+                // Fallback para navegadores mais antigos
+                const textArea = document.createElement('textarea');
+                textArea.value = bilhete;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                mostrarNotificacao(`Bilhete copiado: ${bilhete}`, 'success');
+                console.log('✅ Bilhete copiado (fallback):', bilhete);
+            });
+        }
+
         function gerarDashboard() {
             const tipoUsuario = localStorage.getItem('tipoUsuario');
             let clientesParaMostrar = clientes;
@@ -5620,6 +5674,7 @@ Sistema Legal - ANA PAULA MEDINA
                                             <th>Email</th>
                                             <th>Telefone</th>
                                             <th>NIF</th>
+                                            <th>Bilhete</th>
                                             <th>Status</th>
                                             <th>Ações</th>
                                         </tr>
@@ -5631,8 +5686,12 @@ Sistema Legal - ANA PAULA MEDINA
                                                 <td>${cliente.email}</td>
                                                 <td>${cliente.telefone}</td>
                                                 <td>${cliente.nif || '-'}</td>
+                                                <td><span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-mono">${cliente.bilhete || 'Gerando...'}</span></td>
                                                 <td><span class="status-badge status-${cliente.status || 'ativo'}">${cliente.status || 'Ativo'}</span></td>
                                                 <td>
+                                                    <button onclick="copiarBilhete('${cliente.bilhete || ''}')" class="text-yellow-600 hover:text-yellow-800 mr-2" title="Copiar Bilhete">
+                                                        <i data-lucide="copy" class="w-4 h-4"></i>
+                                                    </button>
                                                     <button onclick="editarItem('cliente', ${cliente.id})" class="text-blue-600 hover:text-blue-800 mr-2" title="Editar">
                                                         <i data-lucide="edit" class="w-4 h-4"></i>
                                                     </button>
@@ -7710,6 +7769,7 @@ Sistema Legal - ANA PAULA MEDINA
                     <td>${cliente.email}</td>
                     <td>${cliente.telefone}</td>
                     <td>${cliente.nif || '-'}</td>
+                    <td><span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-mono">${cliente.bilhete || 'Gerando...'}</span></td>
                     <td><span class="status-badge status-${cliente.status || 'ativo'}">${cliente.status || 'Ativo'}</span></td>
                     <td>
                         <button onclick="editarClienteDireto(${cliente.id})" class="text-blue-600 hover:text-blue-800 mr-2" title="Editar">
