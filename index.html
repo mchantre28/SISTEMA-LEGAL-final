@@ -1481,6 +1481,51 @@
             }, 100);
         }
 
+        // Função ultra-simples para modal
+        function modalUltraSimples() {
+            console.log('🔧 Modal ultra-simples...');
+            
+            // Criar div simples
+            const div = document.createElement('div');
+            div.id = 'modal-teste';
+            div.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 999999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            `;
+            
+            div.innerHTML = `
+                <div style="
+                    background: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    max-width: 300px;
+                    text-align: center;
+                ">
+                    <h3>🎯 MODAL ULTRA-SIMPLES</h3>
+                    <p>Se vês isto, o modal funciona!</p>
+                    <button onclick="document.getElementById('modal-teste').remove()" style="
+                        background: #ef4444;
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    ">Fechar</button>
+                </div>
+            `;
+            
+            document.body.appendChild(div);
+            console.log('✅ Modal ultra-simples criado');
+        }
+
         // Modo Escuro
         function inicializarModoEscuro_REMOVED() {
             const savedTheme = localStorage.getItem('theme');
@@ -4528,8 +4573,10 @@ Sistema Legal - ANA PAULA MEDINA
                 fecharModalRobusto();
             }, 100);
             
-            // Mostrar informações completas do cliente
-            mostrarInformacoesCompletasCliente(cliente);
+            // Mostrar informações completas do cliente (com delay maior)
+            setTimeout(() => {
+                mostrarInformacoesCompletasCliente(cliente);
+            }, 200);
         }
 
         function mostrarInformacoesCompletasCliente(cliente) {
@@ -6587,10 +6634,16 @@ Sistema Legal - ANA PAULA MEDINA
                         <div class="card p-6">
                             <h3 class="text-lg font-semibold mb-4">Teste de Modal</h3>
                             <p class="text-gray-600 mb-4">Testar se os modais estão a funcionar</p>
-                            <button onclick="testarModal()" class="btn btn-secondary">
-                                <i data-lucide="test-tube" class="w-4 h-4"></i>
-                                Testar Modal
-                            </button>
+                            <div class="flex gap-2">
+                                <button onclick="testarModal()" class="btn btn-secondary">
+                                    <i data-lucide="test-tube" class="w-4 h-4"></i>
+                                    Testar Modal
+                                </button>
+                                <button onclick="modalUltraSimples()" class="btn btn-warning">
+                                    <i data-lucide="zap" class="w-4 h-4"></i>
+                                    Ultra Simples
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
