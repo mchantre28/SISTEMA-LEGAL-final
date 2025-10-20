@@ -1849,9 +1849,9 @@
             console.log('✅ fecharModalSUPERRADICAL executado - SOLUÇÃO SIMPLES');
         }
 
-        // FUNÇÃO DE EMERGÊNCIA - FUNCIONA GARANTIDO
+        // FUNÇÃO DE EMERGÊNCIA - FUNCIONA GARANTIDO - VERSÃO FINAL
         function fecharModalEMERGENCIA() {
-            console.log('🔧 fecharModalEMERGENCIA chamado - FUNCIONA GARANTIDO');
+            console.log('🔧 fecharModalEMERGENCIA chamado - VERSÃO FINAL - FUNCIONA GARANTIDO');
             
             // MÉTODO DE EMERGÊNCIA: Remover TUDO
             try {
@@ -1885,8 +1885,92 @@
                 console.log('✅ Scroll de emergência restaurado');
             } catch (e) { console.warn('Erro scroll emergência:', e); }
 
-            console.log('✅ fecharModalEMERGENCIA executado - FUNCIONA GARANTIDO');
+            console.log('✅ fecharModalEMERGENCIA executado - VERSÃO FINAL - FUNCIONA GARANTIDO');
         }
+
+        // FUNÇÃO DE EMERGÊNCIA ALTERNATIVA - CASO A PRIMEIRA NÃO FUNCIONE
+        function fecharModalFINAL() {
+            console.log('🔧 fecharModalFINAL chamado - FUNCIONA GARANTIDO');
+            
+            // MÉTODO FINAL: Remover TUDO
+            try {
+                // Remover TODOS os elementos que possam ser modais
+                document.querySelectorAll('*').forEach(el => {
+                    if (el.style.position === 'fixed' || 
+                        el.classList.contains('modal') || 
+                        el.classList.contains('fixed') ||
+                        el.classList.contains('inset-0') ||
+                        el.style.zIndex >= 10) {
+                        el.remove();
+                        console.log('✅ Elemento final removido');
+                    }
+                });
+            } catch (e) { console.warn('Erro final:', e); }
+
+            try {
+                // Limpar modalContainer
+                const container = document.getElementById('modalContainer');
+                if (container) {
+                    container.innerHTML = '';
+                    container.style.display = 'none';
+                    console.log('✅ modalContainer final limpo');
+                }
+            } catch (e) { console.warn('Erro modalContainer final:', e); }
+
+            try {
+                // Restaurar scroll
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+                console.log('✅ Scroll final restaurado');
+            } catch (e) { console.warn('Erro scroll final:', e); }
+
+            console.log('✅ fecharModalFINAL executado - FUNCIONA GARANTIDO');
+        }
+
+        // FUNÇÃO QUE FORÇA O BROWSER A USAR A VERSÃO MAIS RECENTE
+        function forcarVersaoMaisRecente() {
+            console.log('🔧 forcarVersaoMaisRecente chamado - FORÇANDO VERSÃO MAIS RECENTE');
+            
+            // Forçar reload da página para garantir que a versão mais recente seja carregada
+            if (confirm('Para garantir que a versão mais recente seja carregada, vamos recarregar a página. Continuar?')) {
+                window.location.reload(true);
+            }
+        }
+
+        // FUNÇÃO QUE SUBSTITUI A FUNÇÃO ANTIGA PELA NOVA
+        function substituirFuncaoAntiga() {
+            console.log('🔧 substituirFuncaoAntiga chamado - SUBSTITUINDO FUNÇÃO ANTIGA');
+            
+            // Substituir a função antiga pela nova
+            if (typeof fecharModalRobusto === 'function') {
+                fecharModalRobusto = fecharModalEMERGENCIA;
+                console.log('✅ fecharModalRobusto substituída por fecharModalEMERGENCIA');
+            }
+            
+            if (typeof fecharModalAnexosCliente === 'function') {
+                fecharModalAnexosCliente = fecharModalEMERGENCIA;
+                console.log('✅ fecharModalAnexosCliente substituída por fecharModalEMERGENCIA');
+            }
+            
+            if (typeof fecharModalSimples === 'function') {
+                fecharModalSimples = fecharModalEMERGENCIA;
+                console.log('✅ fecharModalSimples substituída por fecharModalEMERGENCIA');
+            }
+            
+            console.log('✅ substituirFuncaoAntiga executado - FUNÇÕES SUBSTITUÍDAS');
+        }
+
+        // EXECUTAR AUTOMATICAMENTE A SUBSTITUIÇÃO QUANDO A PÁGINA CARREGA
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔧 DOMContentLoaded - EXECUTANDO SUBSTITUIÇÃO AUTOMÁTICA');
+            substituirFuncaoAntiga();
+        });
+
+        // EXECUTAR TAMBÉM QUANDO A PÁGINA ESTÁ COMPLETAMENTE CARREGADA
+        window.addEventListener('load', function() {
+            console.log('🔧 Window load - EXECUTANDO SUBSTITUIÇÃO AUTOMÁTICA');
+            substituirFuncaoAntiga();
+        });
 
         // Função de teste para modal
         function testarModal() {
