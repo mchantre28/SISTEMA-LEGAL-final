@@ -3366,6 +3366,419 @@ Sistema Legal - ANA PAULA MEDINA
             mostrarNotificacao(`Relatório personalizado para ${clienteSelecionado} gerado com sucesso!`, 'success');
         }
 
+        // NOVA FUNÇÃO: Relatório financeiro personalizado por cliente
+        function gerarRelatorioFinanceiroCliente() {
+            console.log('🔧 Gerando relatório financeiro personalizado por cliente...');
+            
+            // Verificar se já existe um modal aberto
+            const modalExistente = document.querySelector('.modal');
+            if (modalExistente) {
+                console.log('⚠️ Modal já existe, removendo...');
+                modalExistente.remove();
+            }
+            
+            // Verificar se há clientes
+            if (!clientes || clientes.length === 0) {
+                mostrarNotificacao('Nenhum cliente encontrado para gerar relatório!', 'warning');
+                return;
+            }
+            
+            console.log('✅ Clientes encontrados:', clientes.length);
+            
+            // Criar modal para seleção de cliente
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = `
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background-color: rgba(0, 0, 0, 0.7) !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                z-index: 99999 !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            `;
+            modal.innerHTML = `
+                <div class="modal-content" style="
+                    background: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    max-width: 500px;
+                    width: 90%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                ">
+                    <div class="modal-header" style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        border-bottom: 1px solid #e5e7eb;
+                    ">
+                        <h3 style="margin: 0; color: #1f2937;">💰 Relatório Financeiro Personalizado</h3>
+                        <button class="close-btn" onclick="fecharModal()" style="
+                            background: none;
+                            border: none;
+                            font-size: 24px;
+                            cursor: pointer;
+                            color: #6b7280;
+                        ">&times;</button>
+                    </div>
+                    <div class="modal-body" style="margin-bottom: 20px;">
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="clienteFinanceiroSelecionado" style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151;">Selecione o Cliente:</label>
+                            <select id="clienteFinanceiroSelecionado" class="form-control" style="
+                                width: 100%;
+                                padding: 8px 12px;
+                                border: 1px solid #d1d5db;
+                                border-radius: 6px;
+                                font-size: 14px;
+                            ">
+                                <option value="">-- Escolha um cliente --</option>
+                                ${clientes.map(cliente => 
+                                    `<option value="${cliente.nome}">${cliente.nome} (${cliente.email})</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="tipoRelatorioFinanceiro" style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151;">Tipo de Relatório Financeiro:</label>
+                            <select id="tipoRelatorioFinanceiro" class="form-control" style="
+                                width: 100%;
+                                padding: 8px 12px;
+                                border: 1px solid #d1d5db;
+                                border-radius: 6px;
+                                font-size: 14px;
+                            ">
+                                <option value="completo">Relatório Financeiro Completo</option>
+                                <option value="honorarios">Apenas Honorários</option>
+                                <option value="receitas">Apenas Receitas</option>
+                                <option value="pendentes">Apenas Pendentes</option>
+                                <option value="pagos">Apenas Pagos</option>
+                                <option value="vencidos">Apenas Vencidos</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="periodoRelatorioFinanceiro" style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151;">Período:</label>
+                            <select id="periodoRelatorioFinanceiro" class="form-control" style="
+                                width: 100%;
+                                padding: 8px 12px;
+                                border: 1px solid #d1d5db;
+                                border-radius: 6px;
+                                font-size: 14px;
+                            ">
+                                <option value="todos">Todos os dados</option>
+                                <option value="mes">Último mês</option>
+                                <option value="trimestre">Último trimestre</option>
+                                <option value="ano">Último ano</option>
+                                <option value="personalizado">Período personalizado</option>
+                            </select>
+                        </div>
+                        <div id="periodoPersonalizadoFinanceiro" class="form-group" style="display: none; margin-bottom: 15px;">
+                            <label for="dataInicioFinanceiro" style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151;">Data de Início:</label>
+                            <input type="date" id="dataInicioFinanceiro" class="form-control" style="
+                                width: 100%;
+                                padding: 8px 12px;
+                                border: 1px solid #d1d5db;
+                                border-radius: 6px;
+                                font-size: 14px;
+                                margin-bottom: 10px;
+                            ">
+                            <label for="dataFimFinanceiro" style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151;">Data de Fim:</label>
+                            <input type="date" id="dataFimFinanceiro" class="form-control" style="
+                                width: 100%;
+                                padding: 8px 12px;
+                                border: 1px solid #d1d5db;
+                                border-radius: 6px;
+                                font-size: 14px;
+                            ">
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="
+                        display: flex;
+                        justify-content: flex-end;
+                        gap: 10px;
+                        padding-top: 15px;
+                        border-top: 1px solid #e5e7eb;
+                    ">
+                        <button class="btn btn-secondary" onclick="fecharModal()" style="
+                            padding: 8px 16px;
+                            background-color: #6b7280;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 14px;
+                        ">Cancelar</button>
+                        <button class="btn btn-primary" onclick="gerarRelatorioFinanceiroClienteSelecionado()" style="
+                            padding: 8px 16px;
+                            background-color: #10b981;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 14px;
+                            display: flex;
+                            align-items: center;
+                            gap: 5px;
+                        ">
+                            <i data-lucide="dollar-sign" class="w-4 h-4"></i>
+                            Gerar Relatório
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            console.log('✅ Modal financeiro criado e adicionado ao DOM');
+            
+            // Verificar se o modal foi criado corretamente
+            setTimeout(() => {
+                const modalTeste = document.querySelector('.modal');
+                if (modalTeste) {
+                    console.log('✅ Modal financeiro encontrado no DOM');
+                    // Forçar visibilidade do modal
+                    modalTeste.style.display = 'flex';
+                    modalTeste.style.visibility = 'visible';
+                    modalTeste.style.opacity = '1';
+                    console.log('✅ Modal financeiro forçado a ser visível');
+                } else {
+                    console.log('❌ Modal financeiro não encontrado no DOM');
+                }
+            }, 100);
+            
+            // Event listener para período personalizado
+            setTimeout(() => {
+                const periodoSelect = document.getElementById('periodoRelatorioFinanceiro');
+                if (periodoSelect) {
+                    periodoSelect.addEventListener('change', function() {
+                        const periodoPersonalizado = document.getElementById('periodoPersonalizadoFinanceiro');
+                        if (this.value === 'personalizado') {
+                            periodoPersonalizado.style.display = 'block';
+                        } else {
+                            periodoPersonalizado.style.display = 'none';
+                        }
+                    });
+                    console.log('✅ Event listener financeiro adicionado');
+                } else {
+                    console.log('❌ Elemento periodoRelatorioFinanceiro não encontrado');
+                }
+            }, 100);
+        }
+
+        function gerarRelatorioFinanceiroClienteSelecionado() {
+            console.log('🔧 Iniciando geração de relatório financeiro...');
+            
+            const clienteSelecionado = document.getElementById('clienteFinanceiroSelecionado').value;
+            const tipoRelatorio = document.getElementById('tipoRelatorioFinanceiro').value;
+            const periodoRelatorio = document.getElementById('periodoRelatorioFinanceiro').value;
+            
+            console.log('💰 Dados financeiros selecionados:', {
+                cliente: clienteSelecionado,
+                tipo: tipoRelatorio,
+                periodo: periodoRelatorio
+            });
+            
+            if (!clienteSelecionado) {
+                mostrarNotificacao('Por favor, selecione um cliente!', 'warning');
+                return;
+            }
+            
+            console.log('🔧 Gerando relatório financeiro para cliente:', clienteSelecionado);
+            
+            // Filtrar dados financeiros por cliente
+            const dadosFinanceiros = {
+                honorarios: honorarios ? honorarios.filter(h => h.cliente === clienteSelecionado) : [],
+                contratos: contratos ? contratos.filter(c => c.cliente === clienteSelecionado) : [],
+                herancas: herancas ? herancas.filter(h => h.cliente === clienteSelecionado) : [],
+                migracoes: migracoes ? migracoes.filter(m => m.cliente === clienteSelecionado) : [],
+                registos: registos ? registos.filter(r => r.cliente === clienteSelecionado) : []
+            };
+            
+            // Aplicar filtro de período se necessário
+            if (periodoRelatorio !== 'todos') {
+                const agora = new Date();
+                let dataLimite = new Date();
+                
+                switch (periodoRelatorio) {
+                    case 'mes':
+                        dataLimite.setMonth(agora.getMonth() - 1);
+                        break;
+                    case 'trimestre':
+                        dataLimite.setMonth(agora.getMonth() - 3);
+                        break;
+                    case 'ano':
+                        dataLimite.setFullYear(agora.getFullYear() - 1);
+                        break;
+                    case 'personalizado':
+                        const dataInicio = document.getElementById('dataInicioFinanceiro').value;
+                        const dataFim = document.getElementById('dataFimFinanceiro').value;
+                        if (!dataInicio || !dataFim) {
+                            mostrarNotificacao('Por favor, selecione as datas do período personalizado!', 'warning');
+                            return;
+                        }
+                        // Aplicar filtro personalizado
+                        Object.keys(dadosFinanceiros).forEach(tipo => {
+                            dadosFinanceiros[tipo] = dadosFinanceiros[tipo].filter(item => {
+                                const dataItem = new Date(item.data);
+                                return dataItem >= new Date(dataInicio) && dataItem <= new Date(dataFim);
+                            });
+                        });
+                        break;
+                }
+                
+                if (periodoRelatorio !== 'personalizado') {
+                    Object.keys(dadosFinanceiros).forEach(tipo => {
+                        dadosFinanceiros[tipo] = dadosFinanceiros[tipo].filter(item => {
+                            const dataItem = new Date(item.data);
+                            return dataItem >= dataLimite;
+                        });
+                    });
+                }
+            }
+            
+            // Calcular totais financeiros
+            let totalHonorarios = 0;
+            let totalContratos = 0;
+            let totalHerancas = 0;
+            let totalMigracoes = 0;
+            let totalRegistos = 0;
+            
+            dadosFinanceiros.honorarios.forEach(h => totalHonorarios += parseFloat(h.valor) || 0);
+            dadosFinanceiros.contratos.forEach(c => totalContratos += parseFloat(c.valor) || 0);
+            dadosFinanceiros.herancas.forEach(h => totalHerancas += parseFloat(h.valor) || 0);
+            dadosFinanceiros.migracoes.forEach(m => totalMigracoes += parseFloat(m.valor) || 0);
+            dadosFinanceiros.registos.forEach(r => totalRegistos += parseFloat(r.valor) || 0);
+            
+            const totalGeral = totalHonorarios + totalContratos + totalHerancas + totalMigracoes + totalRegistos;
+            
+            // Gerar relatório financeiro
+            let relatorio = `RELATÓRIO FINANCEIRO PERSONALIZADO - ${clienteSelecionado.toUpperCase()}\n`;
+            relatorio += '==================================================\n\n';
+            relatorio += `Cliente: ${clienteSelecionado}\n`;
+            relatorio += `Data: ${new Date().toLocaleDateString('pt-PT')}\n`;
+            relatorio += `Hora: ${new Date().toLocaleTimeString('pt-PT')}\n`;
+            relatorio += `Tipo: ${tipoRelatorio.toUpperCase()}\n`;
+            relatorio += `Período: ${periodoRelatorio.toUpperCase()}\n\n`;
+            
+            // Resumo financeiro
+            relatorio += 'RESUMO FINANCEIRO:\n';
+            relatorio += '==================\n';
+            relatorio += `Total Geral: €${totalGeral.toFixed(2)}\n`;
+            relatorio += `Honorários: €${totalHonorarios.toFixed(2)}\n`;
+            relatorio += `Contratos: €${totalContratos.toFixed(2)}\n`;
+            relatorio += `Heranças: €${totalHerancas.toFixed(2)}\n`;
+            relatorio += `Migrações: €${totalMigracoes.toFixed(2)}\n`;
+            relatorio += `Registos: €${totalRegistos.toFixed(2)}\n\n`;
+            
+            // Adicionar seções baseadas no tipo de relatório
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'honorarios') {
+                relatorio += 'HONORÁRIOS:\n';
+                relatorio += '-----------\n';
+                if (dadosFinanceiros.honorarios.length > 0) {
+                    let totalHonorariosCliente = 0;
+                    dadosFinanceiros.honorarios.forEach((honorario, index) => {
+                        relatorio += `${index + 1}. ${honorario.descricao || honorario.servico}\n`;
+                        relatorio += `   Valor: €${honorario.valor}\n`;
+                        relatorio += `   Status: ${honorario.status}\n`;
+                        relatorio += `   Data: ${honorario.data}\n`;
+                        if (honorario.vencimento) {
+                            relatorio += `   Vencimento: ${honorario.vencimento}\n`;
+                        }
+                        relatorio += `\n`;
+                        totalHonorariosCliente += parseFloat(honorario.valor) || 0;
+                    });
+                    relatorio += `TOTAL HONORÁRIOS: €${totalHonorariosCliente.toFixed(2)}\n\n`;
+                } else {
+                    relatorio += 'Nenhum honorário encontrado.\n\n';
+                }
+            }
+            
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'receitas') {
+                relatorio += 'RECEITAS (Contratos, Heranças, Migrações, Registos):\n';
+                relatorio += '==================================================\n';
+                
+                if (dadosFinanceiros.contratos.length > 0) {
+                    relatorio += 'CONTRATOS:\n';
+                    dadosFinanceiros.contratos.forEach((contrato, index) => {
+                        relatorio += `${index + 1}. ${contrato.tipo}\n`;
+                        relatorio += `   Valor: €${contrato.valor}\n`;
+                        relatorio += `   Status: ${contrato.status}\n`;
+                        relatorio += `   Data: ${contrato.data}\n\n`;
+                    });
+                }
+                
+                if (dadosFinanceiros.herancas.length > 0) {
+                    relatorio += 'HERANÇAS:\n';
+                    dadosFinanceiros.herancas.forEach((heranca, index) => {
+                        relatorio += `${index + 1}. ${heranca.tipo}\n`;
+                        relatorio += `   Valor: €${heranca.valor}\n`;
+                        relatorio += `   Status: ${heranca.status}\n`;
+                        relatorio += `   Data: ${heranca.data}\n\n`;
+                    });
+                }
+                
+                if (dadosFinanceiros.migracoes.length > 0) {
+                    relatorio += 'MIGRAÇÕES:\n';
+                    dadosFinanceiros.migracoes.forEach((migracao, index) => {
+                        relatorio += `${index + 1}. ${migracao.tipo}\n`;
+                        relatorio += `   Valor: €${migracao.valor}\n`;
+                        relatorio += `   Status: ${migracao.status}\n`;
+                        relatorio += `   Data: ${migracao.data}\n\n`;
+                    });
+                }
+                
+                if (dadosFinanceiros.registos.length > 0) {
+                    relatorio += 'REGISTOS:\n';
+                    dadosFinanceiros.registos.forEach((registo, index) => {
+                        relatorio += `${index + 1}. ${registo.tipo}\n`;
+                        relatorio += `   Valor: €${registo.valor}\n`;
+                        relatorio += `   Status: ${registo.status}\n`;
+                        relatorio += `   Data: ${registo.data}\n\n`;
+                    });
+                }
+            }
+            
+            // Análise por status
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'pendentes' || tipoRelatorio === 'pagos' || tipoRelatorio === 'vencidos') {
+                relatorio += 'ANÁLISE POR STATUS:\n';
+                relatorio += '==================\n';
+                
+                const honorariosPendentes = dadosFinanceiros.honorarios.filter(h => h.status === 'pendente');
+                const honorariosPagos = dadosFinanceiros.honorarios.filter(h => h.status === 'pago');
+                const honorariosVencidos = dadosFinanceiros.honorarios.filter(h => h.status === 'vencido');
+                
+                relatorio += `Honorários Pendentes: ${honorariosPendentes.length} (€${honorariosPendentes.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0).toFixed(2)})\n`;
+                relatorio += `Honorários Pagos: ${honorariosPagos.length} (€${honorariosPagos.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0).toFixed(2)})\n`;
+                relatorio += `Honorários Vencidos: ${honorariosVencidos.length} (€${honorariosVencidos.reduce((sum, h) => sum + (parseFloat(h.valor) || 0), 0).toFixed(2)})\n\n`;
+            }
+            
+            relatorio += '==================================================\n';
+            relatorio += 'Relatório financeiro personalizado gerado automaticamente\n';
+            relatorio += 'Sistema Legal - Gestão Jurídica\n';
+            
+            // Download do relatório
+            const blob = new Blob([relatorio], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio_financeiro_${clienteSelecionado.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            // Fechar modal
+            fecharModal();
+            
+            mostrarNotificacao(`Relatório financeiro personalizado para ${clienteSelecionado} gerado com sucesso!`, 'success');
+        }
+
         function gerarDashboard() {
             const tipoUsuario = localStorage.getItem('tipoUsuario');
             let clientesParaMostrar = clientes;
@@ -5008,6 +5421,15 @@ Sistema Legal - ANA PAULA MEDINA
                             <p class="text-gray-600 mb-4">Relatório de honorários e receitas</p>
                             <button onclick="gerarRelatorioFinanceiro()" class="btn btn-success">
                                 <i data-lucide="dollar-sign" class="w-4 h-4"></i>
+                                Gerar
+                            </button>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">Relatório Financeiro por Cliente</h3>
+                            <p class="text-gray-600 mb-4">Relatório financeiro personalizado por cliente específico</p>
+                            <button onclick="gerarRelatorioFinanceiroCliente()" class="btn btn-warning">
+                                <i data-lucide="user-dollar" class="w-4 h-4"></i>
                                 Gerar
                             </button>
                         </div>
