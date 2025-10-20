@@ -3877,6 +3877,466 @@ Sistema Legal - ANA PAULA MEDINA
             mostrarNotificacao(`Relatório financeiro personalizado para ${clienteSelecionado} gerado com sucesso!`, 'success');
         }
 
+        // NOVA FUNÇÃO: Relatório geral personalizado por cliente
+        function gerarRelatorioGeralCliente() {
+            console.log('🔧 Gerando relatório geral personalizado por cliente...');
+            
+            // Verificar se já existe um modal aberto
+            const modalExistente = document.querySelector('.modal');
+            if (modalExistente) {
+                console.log('⚠️ Modal já existe, removendo...');
+                modalExistente.remove();
+            }
+            
+            // Verificar se há clientes
+            if (!clientes || clientes.length === 0) {
+                mostrarNotificacao('Nenhum cliente encontrado para gerar relatório!', 'warning');
+                return;
+            }
+            
+            console.log('✅ Clientes encontrados:', clientes.length);
+            
+            // Criar modal para seleção de cliente
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = `
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background-color: rgba(0, 0, 0, 0.7) !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                z-index: 99999 !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            `;
+            modal.innerHTML = `
+                <div class="modal-content" style="
+                    background: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    max-width: 500px;
+                    width: 90%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                ">
+                    <div class="modal-header" style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        border-bottom: 1px solid #e5e7eb;
+                    ">
+                        <h3 style="margin: 0; color: #1f2937;">📊 Relatório Geral Personalizado</h3>
+                        <button class="close-btn" onclick="fecharModalRobusto()" style="
+                            background: none;
+                            border: none;
+                            font-size: 24px;
+                            cursor: pointer;
+                            color: #6b7280;
+                        ">&times;</button>
+                    </div>
+                    <div class="modal-body" style="margin-bottom: 20px;">
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="clienteGeralSelecionado" style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151;">Selecione o Cliente:</label>
+                            <select id="clienteGeralSelecionado" class="form-control" style="
+                                width: 100%;
+                                padding: 8px 12px;
+                                border: 1px solid #d1d5db;
+                                border-radius: 6px;
+                                font-size: 14px;
+                            ">
+                                <option value="">-- Escolha um cliente --</option>
+                                ${clientes.map(cliente => 
+                                    `<option value="${cliente.nome}">${cliente.nome} (${cliente.email})</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="tipoRelatorioGeral" style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151;">Tipo de Relatório Geral:</label>
+                            <select id="tipoRelatorioGeral" class="form-control" style="
+                                width: 100%;
+                                padding: 8px 12px;
+                                border: 1px solid #d1d5db;
+                                border-radius: 6px;
+                                font-size: 14px;
+                            ">
+                                <option value="completo">Relatório Geral Completo</option>
+                                <option value="dados_pessoais">Apenas Dados Pessoais</option>
+                                <option value="honorarios">Apenas Honorários</option>
+                                <option value="contratos">Apenas Contratos</option>
+                                <option value="herancas">Apenas Heranças</option>
+                                <option value="migracoes">Apenas Migrações</option>
+                                <option value="registos">Apenas Registos</option>
+                                <option value="documentos">Apenas Documentos</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="periodoRelatorioGeral" style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151;">Período:</label>
+                            <select id="periodoRelatorioGeral" class="form-control" style="
+                                width: 100%;
+                                padding: 8px 12px;
+                                border: 1px solid #d1d5db;
+                                border-radius: 6px;
+                                font-size: 14px;
+                            ">
+                                <option value="todos">Todos os dados</option>
+                                <option value="mes">Último mês</option>
+                                <option value="trimestre">Último trimestre</option>
+                                <option value="ano">Último ano</option>
+                                <option value="personalizado">Período personalizado</option>
+                            </select>
+                        </div>
+                        <div id="periodoPersonalizadoGeral" class="form-group" style="display: none; margin-bottom: 15px;">
+                            <label for="dataInicioGeral" style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151;">Data de Início:</label>
+                            <input type="date" id="dataInicioGeral" class="form-control" style="
+                                width: 100%;
+                                padding: 8px 12px;
+                                border: 1px solid #d1d5db;
+                                border-radius: 6px;
+                                font-size: 14px;
+                                margin-bottom: 10px;
+                            ">
+                            <label for="dataFimGeral" style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151;">Data de Fim:</label>
+                            <input type="date" id="dataFimGeral" class="form-control" style="
+                                width: 100%;
+                                padding: 8px 12px;
+                                border: 1px solid #d1d5db;
+                                border-radius: 6px;
+                                font-size: 14px;
+                            ">
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="
+                        display: flex;
+                        justify-content: flex-end;
+                        gap: 10px;
+                        padding-top: 15px;
+                        border-top: 1px solid #e5e7eb;
+                    ">
+                        <button class="btn btn-secondary" onclick="fecharModalRobusto()" style="
+                            padding: 8px 16px;
+                            background-color: #6b7280;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 14px;
+                        ">Cancelar</button>
+                        <button class="btn btn-primary" onclick="gerarRelatorioGeralClienteSelecionado()" style="
+                            padding: 8px 16px;
+                            background-color: #6366f1;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 14px;
+                            display: flex;
+                            align-items: center;
+                            gap: 5px;
+                        ">
+                            <i data-lucide="file-text" class="w-4 h-4"></i>
+                            Gerar Relatório
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            console.log('✅ Modal geral criado e adicionado ao DOM');
+            
+            // Verificar se o modal foi criado corretamente
+            setTimeout(() => {
+                const modalTeste = document.querySelector('.modal');
+                if (modalTeste) {
+                    console.log('✅ Modal geral encontrado no DOM');
+                    // Forçar visibilidade do modal
+                    modalTeste.style.display = 'flex';
+                    modalTeste.style.visibility = 'visible';
+                    modalTeste.style.opacity = '1';
+                    console.log('✅ Modal geral forçado a ser visível');
+                } else {
+                    console.log('❌ Modal geral não encontrado no DOM');
+                }
+            }, 100);
+            
+            // Event listener para período personalizado
+            setTimeout(() => {
+                const periodoSelect = document.getElementById('periodoRelatorioGeral');
+                if (periodoSelect) {
+                    periodoSelect.addEventListener('change', function() {
+                        const periodoPersonalizado = document.getElementById('periodoPersonalizadoGeral');
+                        if (this.value === 'personalizado') {
+                            periodoPersonalizado.style.display = 'block';
+                        } else {
+                            periodoPersonalizado.style.display = 'none';
+                        }
+                    });
+                    console.log('✅ Event listener geral adicionado');
+                } else {
+                    console.log('❌ Elemento periodoRelatorioGeral não encontrado');
+                }
+            }, 100);
+        }
+
+        function gerarRelatorioGeralClienteSelecionado() {
+            console.log('🔧 Iniciando geração de relatório geral...');
+            
+            const clienteSelecionado = document.getElementById('clienteGeralSelecionado').value;
+            const tipoRelatorio = document.getElementById('tipoRelatorioGeral').value;
+            const periodoRelatorio = document.getElementById('periodoRelatorioGeral').value;
+            
+            console.log('📊 Dados gerais selecionados:', {
+                cliente: clienteSelecionado,
+                tipo: tipoRelatorio,
+                periodo: periodoRelatorio
+            });
+            
+            if (!clienteSelecionado) {
+                mostrarNotificacao('Por favor, selecione um cliente!', 'warning');
+                return;
+            }
+            
+            console.log('🔧 Gerando relatório geral para cliente:', clienteSelecionado);
+            
+            // Filtrar dados gerais por cliente
+            const dadosGeral = {
+                honorarios: honorarios ? honorarios.filter(h => h.cliente === clienteSelecionado) : [],
+                contratos: contratos ? contratos.filter(c => c.cliente === clienteSelecionado) : [],
+                herancas: herancas ? herancas.filter(h => h.cliente === clienteSelecionado) : [],
+                migracoes: migracoes ? migracoes.filter(m => m.cliente === clienteSelecionado) : [],
+                registos: registos ? registos.filter(r => r.cliente === clienteSelecionado) : []
+            };
+            
+            // Encontrar dados do cliente
+            const cliente = clientes.find(c => c.nome === clienteSelecionado);
+            
+            // Aplicar filtro de período se necessário
+            if (periodoRelatorio !== 'todos') {
+                const agora = new Date();
+                let dataLimite = new Date();
+                
+                switch (periodoRelatorio) {
+                    case 'mes':
+                        dataLimite.setMonth(agora.getMonth() - 1);
+                        break;
+                    case 'trimestre':
+                        dataLimite.setMonth(agora.getMonth() - 3);
+                        break;
+                    case 'ano':
+                        dataLimite.setFullYear(agora.getFullYear() - 1);
+                        break;
+                    case 'personalizado':
+                        const dataInicio = document.getElementById('dataInicioGeral').value;
+                        const dataFim = document.getElementById('dataFimGeral').value;
+                        if (!dataInicio || !dataFim) {
+                            mostrarNotificacao('Por favor, selecione as datas do período personalizado!', 'warning');
+                            return;
+                        }
+                        // Aplicar filtro personalizado
+                        Object.keys(dadosGeral).forEach(tipo => {
+                            dadosGeral[tipo] = dadosGeral[tipo].filter(item => {
+                                const dataItem = new Date(item.data);
+                                return dataItem >= new Date(dataInicio) && dataItem <= new Date(dataFim);
+                            });
+                        });
+                        break;
+                }
+                
+                if (periodoRelatorio !== 'personalizado') {
+                    Object.keys(dadosGeral).forEach(tipo => {
+                        dadosGeral[tipo] = dadosGeral[tipo].filter(item => {
+                            const dataItem = new Date(item.data);
+                            return dataItem >= dataLimite;
+                        });
+                    });
+                }
+            }
+            
+            // Gerar relatório geral
+            let relatorio = `RELATÓRIO GERAL PERSONALIZADO - ${clienteSelecionado.toUpperCase()}\n`;
+            relatorio += '==================================================\n\n';
+            relatorio += `Cliente: ${clienteSelecionado}\n`;
+            relatorio += `Data: ${new Date().toLocaleDateString('pt-PT')}\n`;
+            relatorio += `Hora: ${new Date().toLocaleTimeString('pt-PT')}\n`;
+            relatorio += `Tipo: ${tipoRelatorio.toUpperCase()}\n`;
+            relatorio += `Período: ${periodoRelatorio.toUpperCase()}\n\n`;
+            
+            // Dados pessoais do cliente
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'dados_pessoais') {
+                relatorio += 'DADOS PESSOAIS DO CLIENTE:\n';
+                relatorio += '==========================\n';
+                if (cliente) {
+                    relatorio += `Nome: ${cliente.nome}\n`;
+                    relatorio += `Email: ${cliente.email}\n`;
+                    relatorio += `Telefone: ${cliente.telefone}\n`;
+                    relatorio += `NIF: ${cliente.nif}\n`;
+                    relatorio += `Data de Registo: ${cliente.data}\n`;
+                    if (cliente.endereco) {
+                        relatorio += `Endereço: ${cliente.endereco}\n`;
+                    }
+                    if (cliente.observacoes) {
+                        relatorio += `Observações: ${cliente.observacoes}\n`;
+                    }
+                }
+                relatorio += '\n';
+            }
+            
+            // Honorários
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'honorarios') {
+                relatorio += 'HONORÁRIOS:\n';
+                relatorio += '-----------\n';
+                if (dadosGeral.honorarios.length > 0) {
+                    let totalHonorarios = 0;
+                    dadosGeral.honorarios.forEach((honorario, index) => {
+                        relatorio += `${index + 1}. ${honorario.descricao || honorario.servico}\n`;
+                        relatorio += `   Valor: €${honorario.valor}\n`;
+                        relatorio += `   Status: ${honorario.status}\n`;
+                        relatorio += `   Data: ${honorario.data}\n`;
+                        if (honorario.vencimento) {
+                            relatorio += `   Vencimento: ${honorario.vencimento}\n`;
+                        }
+                        relatorio += `\n`;
+                        totalHonorarios += parseFloat(honorario.valor) || 0;
+                    });
+                    relatorio += `TOTAL HONORÁRIOS: €${totalHonorarios.toFixed(2)}\n\n`;
+                } else {
+                    relatorio += 'Nenhum honorário encontrado.\n\n';
+                }
+            }
+            
+            // Contratos
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'contratos') {
+                relatorio += 'CONTRATOS:\n';
+                relatorio += '----------\n';
+                if (dadosGeral.contratos.length > 0) {
+                    dadosGeral.contratos.forEach((contrato, index) => {
+                        relatorio += `${index + 1}. ${contrato.tipo}\n`;
+                        relatorio += `   Valor: €${contrato.valor}\n`;
+                        relatorio += `   Status: ${contrato.status}\n`;
+                        relatorio += `   Data: ${contrato.data}\n\n`;
+                    });
+                } else {
+                    relatorio += 'Nenhum contrato encontrado.\n\n';
+                }
+            }
+            
+            // Heranças
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'herancas') {
+                relatorio += 'HERANÇAS:\n';
+                relatorio += '---------\n';
+                if (dadosGeral.herancas.length > 0) {
+                    dadosGeral.herancas.forEach((heranca, index) => {
+                        relatorio += `${index + 1}. ${heranca.tipo}\n`;
+                        relatorio += `   Valor: €${heranca.valor}\n`;
+                        relatorio += `   Status: ${heranca.status}\n`;
+                        relatorio += `   Data: ${heranca.data}\n\n`;
+                    });
+                } else {
+                    relatorio += 'Nenhuma herança encontrada.\n\n';
+                }
+            }
+            
+            // Migrações
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'migracoes') {
+                relatorio += 'MIGRAÇÕES:\n';
+                relatorio += '----------\n';
+                if (dadosGeral.migracoes.length > 0) {
+                    dadosGeral.migracoes.forEach((migracao, index) => {
+                        relatorio += `${index + 1}. ${migracao.tipo}\n`;
+                        relatorio += `   Valor: €${migracao.valor}\n`;
+                        relatorio += `   Status: ${migracao.status}\n`;
+                        relatorio += `   Data: ${migracao.data}\n\n`;
+                    });
+                } else {
+                    relatorio += 'Nenhuma migração encontrada.\n\n';
+                }
+            }
+            
+            // Registos
+            if (tipoRelatorio === 'completo' || tipoRelatorio === 'registos') {
+                relatorio += 'REGISTOS:\n';
+                relatorio += '---------\n';
+                if (dadosGeral.registos.length > 0) {
+                    dadosGeral.registos.forEach((registo, index) => {
+                        relatorio += `${index + 1}. ${registo.tipo}\n`;
+                        relatorio += `   Valor: €${registo.valor}\n`;
+                        relatorio += `   Status: ${registo.status}\n`;
+                        relatorio += `   Data: ${registo.data}\n\n`;
+                    });
+                } else {
+                    relatorio += 'Nenhum registo encontrado.\n\n';
+                }
+            }
+            
+            // Resumo estatístico
+            if (tipoRelatorio === 'completo') {
+                relatorio += 'RESUMO ESTATÍSTICO:\n';
+                relatorio += '===================\n';
+                relatorio += `Total de Honorários: ${dadosGeral.honorarios.length}\n`;
+                relatorio += `Total de Contratos: ${dadosGeral.contratos.length}\n`;
+                relatorio += `Total de Heranças: ${dadosGeral.herancas.length}\n`;
+                relatorio += `Total de Migrações: ${dadosGeral.migracoes.length}\n`;
+                relatorio += `Total de Registos: ${dadosGeral.registos.length}\n\n`;
+            }
+            
+            relatorio += '==================================================\n';
+            relatorio += 'Relatório geral personalizado gerado automaticamente\n';
+            relatorio += 'Sistema Legal - Gestão Jurídica\n';
+            
+            // Download do relatório
+            const blob = new Blob([relatorio], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio_geral_${clienteSelecionado.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            // Fechar modal - SOLUÇÃO ROBUSTA
+            setTimeout(() => {
+                // Tentar múltiplas formas de fechar o modal
+                const modal = document.querySelector('.modal');
+                if (modal) {
+                    modal.remove();
+                    console.log('✅ Modal de relatório geral fechado (método 1)');
+                }
+                
+                // Tentar fechar todos os modais
+                const todosModais = document.querySelectorAll('.modal');
+                todosModais.forEach(modal => {
+                    modal.remove();
+                    console.log('✅ Modal removido (método 2)');
+                });
+                
+                // Tentar fechar por classe
+                const modaisPorClasse = document.querySelectorAll('[class*="modal"]');
+                modaisPorClasse.forEach(modal => {
+                    modal.remove();
+                    console.log('✅ Modal removido por classe (método 3)');
+                });
+                
+                // Forçar fechamento
+                document.querySelectorAll('div').forEach(div => {
+                    if (div.style.position === 'fixed' && div.style.zIndex === '99999') {
+                        div.remove();
+                        console.log('✅ Modal removido por estilo (método 4)');
+                    }
+                });
+                
+                console.log('✅ Todos os métodos de fechamento executados');
+            }, 100);
+            
+            mostrarNotificacao(`Relatório geral personalizado para ${clienteSelecionado} gerado com sucesso!`, 'success');
+        }
+
         function gerarDashboard() {
             const tipoUsuario = localStorage.getItem('tipoUsuario');
             let clientesParaMostrar = clientes;
@@ -5546,6 +6006,15 @@ Sistema Legal - ANA PAULA MEDINA
                             <p class="text-gray-600 mb-4">Relatório personalizado por cliente específico</p>
                             <button onclick="gerarRelatorioCliente()" class="btn btn-secondary">
                                 <i data-lucide="user-check" class="w-4 h-4"></i>
+                                Gerar
+                            </button>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">Relatório Geral por Cliente</h3>
+                            <p class="text-gray-600 mb-4">Relatório geral personalizado por cliente específico</p>
+                            <button onclick="gerarRelatorioGeralCliente()" class="btn btn-info">
+                                <i data-lucide="file-text" class="w-4 h-4"></i>
                                 Gerar
                             </button>
                         </div>
