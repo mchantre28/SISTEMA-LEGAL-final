@@ -7742,10 +7742,13 @@ Sistema Legal - ANA PAULA MEDINA
         }
 
         function limparFiltrosClientes() {
-            document.getElementById('buscaClientes').value = '';
-            document.getElementById('buscaNifClientes').value = '';
-            document.getElementById('filtroStatusCliente').value = '';
-            document.getElementById('filtroDataCliente').value = '';
+            const elementos = [
+                'buscaClientes', 'buscaNifClientes', 'filtroStatusCliente', 'filtroDataCliente'
+            ];
+            elementos.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) elemento.value = '';
+            });
             aplicarFiltrosClientes();
         }
 
@@ -7824,11 +7827,14 @@ Sistema Legal - ANA PAULA MEDINA
         }
 
         function limparFiltrosHonorarios() {
-            document.getElementById('buscaHonorarios').value = '';
-            document.getElementById('filtroStatusHonorario').value = '';
-            document.getElementById('filtroValorMinHonorario').value = '';
-            document.getElementById('filtroValorMaxHonorario').value = '';
-            document.getElementById('filtroVencimentoHonorario').value = '';
+            const elementos = [
+                'buscaHonorarios', 'filtroStatusHonorario', 'filtroValorMinHonorario', 
+                'filtroValorMaxHonorario', 'filtroVencimentoHonorario'
+            ];
+            elementos.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) elemento.value = '';
+            });
             aplicarFiltrosHonorarios();
         }
 
@@ -7890,12 +7896,14 @@ Sistema Legal - ANA PAULA MEDINA
         }
 
         function limparFiltrosContratos() {
-            document.getElementById('buscaContratos').value = '';
-            document.getElementById('filtroStatusContrato').value = '';
-            document.getElementById('filtroClienteContrato').value = '';
-            document.getElementById('filtroValorMinContrato').value = '';
-            document.getElementById('filtroValorMaxContrato').value = '';
-            document.getElementById('filtroNifContrato').value = '';
+            const elementos = [
+                'buscaContratos', 'filtroStatusContrato', 'filtroClienteContrato', 
+                'filtroValorMinContrato', 'filtroValorMaxContrato', 'filtroNifContrato'
+            ];
+            elementos.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) elemento.value = '';
+            });
             aplicarFiltrosContratos();
         }
 
@@ -9684,11 +9692,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
         
         function limparFiltrosNotificacoes() {
-            document.getElementById('filtroPrioridade').value = '';
-            document.getElementById('filtroTipo').value = '';
-            document.getElementById('filtroStatus').value = '';
-            document.getElementById('filtroPeriodo').value = '';
-            
+            const elementos = [
+                'filtroPrioridade', 'filtroTipo', 'filtroStatus', 'filtroPeriodo'
+            ];
+            elementos.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) elemento.value = '';
+            });
             carregarSecao('notificacoes');
         }
 
@@ -10814,12 +10824,14 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
 
         function limparFiltrosHerancas() {
-            document.getElementById('buscaHerancas').value = '';
-            document.getElementById('filtroStatusHeranca').value = '';
-            document.getElementById('filtroTipoHeranca').value = '';
-            document.getElementById('filtroValorMinHeranca').value = '';
-            document.getElementById('filtroValorMaxHeranca').value = '';
-            document.getElementById('filtroNifHeranca').value = '';
+            const elementos = [
+                'buscaHerancas', 'filtroStatusHeranca', 'filtroTipoHeranca', 
+                'filtroValorMinHeranca', 'filtroValorMaxHeranca', 'filtroNifHeranca'
+            ];
+            elementos.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) elemento.value = '';
+            });
             aplicarFiltrosHerancas();
         }
 
@@ -10864,12 +10876,14 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
 
         function limparFiltrosMigracoes() {
-            document.getElementById('buscaMigracoes').value = '';
-            document.getElementById('filtroStatusMigracao').value = '';
-            document.getElementById('filtroTipoMigracao').value = '';
-            document.getElementById('filtroValorMinMigracao').value = '';
-            document.getElementById('filtroValorMaxMigracao').value = '';
-            document.getElementById('filtroNifMigracao').value = '';
+            const elementos = [
+                'buscaMigracoes', 'filtroStatusMigracao', 'filtroTipoMigracao', 
+                'filtroValorMinMigracao', 'filtroValorMaxMigracao', 'filtroNifMigracao'
+            ];
+            elementos.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) elemento.value = '';
+            });
             aplicarFiltrosMigracoes();
         }
 
@@ -10914,12 +10928,14 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
 
         function limparFiltrosRegistos() {
-            document.getElementById('buscaRegistos').value = '';
-            document.getElementById('filtroStatusRegisto').value = '';
-            document.getElementById('filtroTipoRegisto').value = '';
-            document.getElementById('filtroValorMinRegisto').value = '';
-            document.getElementById('filtroValorMaxRegisto').value = '';
-            document.getElementById('filtroNifRegisto').value = '';
+            const elementos = [
+                'buscaRegistos', 'filtroStatusRegisto', 'filtroTipoRegisto', 
+                'filtroValorMinRegisto', 'filtroValorMaxRegisto', 'filtroNifRegisto'
+            ];
+            elementos.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) elemento.value = '';
+            });
             aplicarFiltrosRegistos();
         }
 
@@ -10984,11 +11000,14 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
 
         function limparFiltrosPrazos() {
-            document.getElementById('buscaPrazos').value = '';
-            document.getElementById('filtroStatusPrazo').value = '';
-            document.getElementById('filtroTipoPrazo').value = '';
-            document.getElementById('filtroVencimentoPrazo').value = '';
-            document.getElementById('filtroPrioridadePrazo').value = '';
+            const elementos = [
+                'buscaPrazos', 'filtroStatusPrazo', 'filtroTipoPrazo', 
+                'filtroVencimentoPrazo', 'filtroPrioridadePrazo'
+            ];
+            elementos.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) elemento.value = '';
+            });
             aplicarFiltrosPrazos();
         }
 
@@ -12797,7 +12816,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     divPersonalizado.classList.add('hidden');
                     if (inputPersonalizado) {
                         inputPersonalizado.required = false;
-                        inputPersonalizado.value = '';
+                        if (inputPersonalizado.value !== undefined) {
+                            inputPersonalizado.value = '';
+                        }
                     }
                 }
             } else {
