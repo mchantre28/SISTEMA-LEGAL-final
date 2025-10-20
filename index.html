@@ -12239,8 +12239,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     cliente.anexos.push(anexo);
                     salvarDados('clientes', clientes);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    // Manter o modal aberto e atualizar a lista de documentos
-                    try { abrirAnexosCliente(clienteId); } catch (e) { console.warn('abrirAnexosCliente não disponível', e); }
+                    // Fechar modal após salvar
+                    fecharModalAnexosCliente();
                 }
             });
         }
