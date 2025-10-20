@@ -1361,109 +1361,429 @@
 
         // Função mostrarBotaoInstalacao removida - PWA desativado
 
-        // Função robusta para fechar modais
-        function fecharModalRobusto() {
-            console.log('🔧 fecharModalRobusto chamado');
+        // Função SUPER RADICAL para fechar TODOS os modais - IMPOSSÍVEL DE FALHAR
+        function fecharModalNUCLEAR() {
+            console.log('🔧 fecharModalRobusto chamado - VERSÃO SUPER RADICAL');
             
-            // FECHAR TODOS OS MODAIS - MÉTODO AGRESSIVO
+            // MÉTODO NUCLEAR: Remover TUDO que possa ser modal
             try {
-                // 1. Remover todos os overlays e modais por classe
-                document.querySelectorAll('.modal, .fixed.inset-0, [role="dialog"], .modal-content').forEach(el => {
-                    el.remove();
-                    console.log('✅ Modal removido por classe');
+                // 1. Remover TODOS os elementos possíveis de modal
+                const nuclearSelectors = [
+                    '.modal', '.fixed', '.inset-0', '[role="dialog"]', '.modal-content',
+                    '.bg-black', '.bg-opacity-50', '.z-50', '.z-40', '.z-30', '.z-20',
+                    'div[style*="position: fixed"]', 'div[style*="z-index"]',
+                    'div[class*="fixed"]', 'div[class*="inset"]', 'div[class*="bg-black"]'
+                ];
+                
+                nuclearSelectors.forEach(selector => {
+                    document.querySelectorAll(selector).forEach(el => {
+                        if (el && el.parentNode) {
+                            el.parentNode.removeChild(el);
+                            console.log('✅ Elemento nuclear removido:', selector);
+                        }
+                    });
                 });
-                
-                // 2. Limpar modalContainer
-                const modalContainer = document.getElementById('modalContainer');
-                if (modalContainer) {
-                    modalContainer.classList.remove('show');
-                    modalContainer.innerHTML = '';
-                    modalContainer.style.display = 'none';
-                    console.log('✅ modalContainer limpo');
-                }
-                
-                // 3. Remover elementos com z-index alto
-                document.querySelectorAll('div').forEach(div => {
-                    const style = getComputedStyle(div);
-                    if ((style.position === 'fixed' || style.position === 'absolute') && 
-                        (parseInt(style.zIndex) >= 40 || div.style.zIndex >= 40)) {
-                        div.remove();
-                        console.log('✅ Elemento com z-index alto removido');
-                    }
-                });
-                
-                // 4. Remover overlays específicos
-                document.querySelectorAll('div[class*="inset-0"], div[class*="bg-black"], div[class*="opacity-50"]').forEach(el => {
-                    el.remove();
-                    console.log('✅ Overlay específico removido');
-                });
-                
-                // 5. Restaurar scroll
-                document.body.style.overflow = '';
-                document.documentElement.style.overflow = '';
-                
-                // 6. Blur elemento ativo
-                if (document.activeElement && typeof document.activeElement.blur === 'function') {
-                    document.activeElement.blur();
-                }
-                
-            } catch (error) {
-                console.warn('Erro ao fechar modal:', error);
-            }
-            
-            console.log('✅ fecharModalRobusto executado');
-        }
-
-        // Fecho específico para o modal de anexos do cliente
-        function fecharModalAnexosCliente() {
-            console.log('🔧 fecharModalAnexosCliente chamado');
-            
-            try {
-                // 1. Remover modal específico
-                const modal = document.getElementById('modalAnexosCliente');
-                if (modal) {
-                    modal.remove();
-                    console.log('✅ Modal modalAnexosCliente removido');
-                }
-            } catch (e) { console.warn('Erro ao remover modalAnexosCliente:', e); }
+            } catch (e) { console.warn('Erro nuclear:', e); }
 
             try {
-                // 2. Limpar modalContainer
+                // 2. Limpar modalContainer COMPLETAMENTE
                 const container = document.getElementById('modalContainer');
                 if (container) {
                     container.classList.remove('show');
                     container.innerHTML = '';
                     container.style.display = 'none';
-                    console.log('✅ modalContainer limpo');
+                    container.style.visibility = 'hidden';
+                    container.style.opacity = '0';
+                    container.style.position = 'static';
+                    container.style.zIndex = '-1';
+                    console.log('✅ modalContainer nuclear limpo');
+                }
+            } catch (e) { console.warn('Erro modalContainer:', e); }
+
+            try {
+                // 3. Remover TODOS os elementos com z-index alto
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (style.position === 'fixed' && parseInt(style.zIndex) >= 20) {
+                        el.remove();
+                        console.log('✅ Z-index nuclear removido');
+                    }
+                });
+            } catch (e) { console.warn('Erro z-index:', e); }
+
+            try {
+                // 4. Forçar remoção de TODOS os divs suspeitos
+                document.querySelectorAll('div').forEach(div => {
+                    if (div.style.position === 'fixed' || 
+                        div.classList.contains('fixed') || 
+                        div.classList.contains('inset-0') ||
+                        div.style.zIndex >= 20 ||
+                        div.style.background === 'rgba(0, 0, 0, 0.5)' ||
+                        div.style.backgroundColor === 'rgba(0, 0, 0, 0.5)') {
+                        div.remove();
+                        console.log('✅ Div suspeito removido');
+                    }
+                });
+            } catch (e) { console.warn('Erro divs suspeitos:', e); }
+
+            try {
+                // 5. Restaurar TUDO do body e html
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.left = '';
+                document.documentElement.style.overflow = '';
+                document.documentElement.style.position = '';
+                console.log('✅ Body/html nuclear restaurado');
+            } catch (e) { console.warn('Erro body/html:', e); }
+
+            try {
+                // 6. Blur e limpar TUDO
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+                console.log('✅ Foco nuclear removido');
+            } catch (e) { console.warn('Erro foco:', e); }
+
+            // 7. LIMPEZA NUCLEAR FINAL APÓS 50ms
+            setTimeout(() => {
+                try {
+                    document.querySelectorAll('.modal, .fixed, [role="dialog"], .bg-black, .inset-0').forEach(el => {
+                        if (el && el.parentNode) {
+                            el.parentNode.removeChild(el);
+                        }
+                    });
+                    console.log('✅ Limpeza nuclear final executada');
+                } catch (e) { console.warn('Erro limpeza final:', e); }
+            }, 50);
+
+            // 8. LIMPEZA NUCLEAR EXTREMA APÓS 200ms
+            setTimeout(() => {
+                try {
+                    document.querySelectorAll('div').forEach(div => {
+                        if (div.style.position === 'fixed' || div.classList.contains('fixed')) {
+                            div.remove();
+                        }
+                    });
+                    console.log('✅ Limpeza nuclear extrema executada');
+                } catch (e) { console.warn('Erro limpeza extrema:', e); }
+            }, 200);
+
+            console.log('✅ fecharModalRobusto executado - VERSÃO SUPER RADICAL');
+        }
+
+        // Fecho específico para o modal de anexos do cliente - VERSÃO RADICAL
+        function fecharModalNUCLEAR() {
+            console.log('🔧 fecharModalAnexosCliente chamado - VERSÃO RADICAL');
+            
+            // MÉTODO RADICAL: Remover TODOS os elementos que possam ser modais
+            try {
+                // 1. Remover TODOS os elementos com classes de modal
+                const selectors = [
+                    '.modal', '.fixed.inset-0', '[role="dialog"]', '.modal-content',
+                    '.bg-black.bg-opacity-50', '.z-50', '.z-40', '.z-30',
+                    'div[style*="position: fixed"]', 'div[style*="z-index"]'
+                ];
+                
+                selectors.forEach(selector => {
+                    document.querySelectorAll(selector).forEach(el => {
+                        if (el && el.parentNode) {
+                            el.parentNode.removeChild(el);
+                            console.log('✅ Elemento removido:', selector);
+                        }
+                    });
+                });
+            } catch (e) { console.warn('Erro ao remover elementos:', e); }
+
+            try {
+                // 2. Limpar modalContainer COMPLETAMENTE
+                const container = document.getElementById('modalContainer');
+                if (container) {
+                    container.classList.remove('show');
+                    container.innerHTML = '';
+                    container.style.display = 'none';
+                    container.style.visibility = 'hidden';
+                    container.style.opacity = '0';
+                    console.log('✅ modalContainer limpo radicalmente');
                 }
             } catch (e) { console.warn('Erro ao limpar modalContainer:', e); }
 
             try {
-                // 3. Remover todos os overlays e modais
-                document.querySelectorAll('.fixed.inset-0, [role="dialog"], .modal, .modal-content').forEach(el => {
-                    el.remove();
-                    console.log('✅ Overlay/Modal removido');
+                // 3. Remover TODOS os elementos com z-index alto
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (style.position === 'fixed' && parseInt(style.zIndex) >= 30) {
+                        el.remove();
+                        console.log('✅ Elemento com z-index alto removido');
+                    }
+                });
+            } catch (e) { console.warn('Erro ao remover z-index alto:', e); }
+
+            try {
+                // 4. Forçar remoção de TODOS os overlays
+                document.querySelectorAll('div').forEach(div => {
+                    if (div.style.position === 'fixed' || 
+                        div.classList.contains('fixed') || 
+                        div.classList.contains('inset-0') ||
+                        div.style.zIndex >= 30) {
+                        div.remove();
+                        console.log('✅ Overlay removido radicalmente');
+                    }
                 });
             } catch (e) { console.warn('Erro ao remover overlays:', e); }
 
             try {
-                // 4. Restaurar scroll
+                // 5. Restaurar scroll e estado do body
                 document.body.style.overflow = '';
+                document.body.style.position = '';
                 document.documentElement.style.overflow = '';
-                console.log('✅ Scroll restaurado');
+                document.documentElement.style.position = '';
+                console.log('✅ Scroll e posição restaurados');
             } catch (e) { console.warn('Erro ao restaurar scroll:', e); }
 
-            console.log('✅ fecharModalAnexosCliente executado');
+            try {
+                // 6. Blur e limpar foco
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+                console.log('✅ Foco removido');
+            } catch (e) { console.warn('Erro ao remover foco:', e); }
+
+            // 7. FORÇAR LIMPEZA COMPLETA APÓS 100ms
+            setTimeout(() => {
+                try {
+                    document.querySelectorAll('.modal, .fixed, [role="dialog"]').forEach(el => {
+                        if (el && el.parentNode) {
+                            el.parentNode.removeChild(el);
+                        }
+                    });
+                    console.log('✅ Limpeza final executada');
+                } catch (e) { console.warn('Erro na limpeza final:', e); }
+            }, 100);
+
+            console.log('✅ fecharModalAnexosCliente executado - VERSÃO RADICAL');
         }
 
         // Função simples para fechar modal (backup)
-        function fecharModalSimples() {
-            console.log('🔧 fecharModalSimples chamado');
-            const modal = document.querySelector('.modal');
-            if (modal) {
-                modal.remove();
-                console.log('✅ Modal removido (método simples)');
-            }
+        function fecharModalNUCLEAR() {
+            console.log('🔧 fecharModalSimples chamado - VERSÃO NUCLEAR');
+            
+            // MÉTODO NUCLEAR: Remover TUDO que possa ser modal
+            try {
+                // 1. Remover TODOS os elementos possíveis
+                const nuclearSelectors = [
+                    '.modal', '.fixed', '.inset-0', '[role="dialog"]', '.modal-content',
+                    '.bg-black', '.bg-opacity-50', '.z-50', '.z-40', '.z-30', '.z-20',
+                    'div[style*="position: fixed"]', 'div[style*="z-index"]',
+                    'div[class*="fixed"]', 'div[class*="inset"]', 'div[class*="bg-black"]'
+                ];
+                
+                nuclearSelectors.forEach(selector => {
+                    document.querySelectorAll(selector).forEach(el => {
+                        if (el && el.parentNode) {
+                            el.parentNode.removeChild(el);
+                            console.log('✅ Elemento nuclear removido:', selector);
+                        }
+                    });
+                });
+            } catch (e) { console.warn('Erro nuclear:', e); }
+
+            try {
+                // 2. Limpar modalContainer COMPLETAMENTE
+                const container = document.getElementById('modalContainer');
+                if (container) {
+                    container.classList.remove('show');
+                    container.innerHTML = '';
+                    container.style.display = 'none';
+                    container.style.visibility = 'hidden';
+                    container.style.opacity = '0';
+                    container.style.position = 'static';
+                    container.style.zIndex = '-1';
+                    console.log('✅ modalContainer nuclear limpo');
+                }
+            } catch (e) { console.warn('Erro modalContainer:', e); }
+
+            try {
+                // 3. Remover TODOS os elementos com z-index alto
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (style.position === 'fixed' && parseInt(style.zIndex) >= 20) {
+                        el.remove();
+                        console.log('✅ Z-index nuclear removido');
+                    }
+                });
+            } catch (e) { console.warn('Erro z-index:', e); }
+
+            try {
+                // 4. Forçar remoção de TODOS os divs suspeitos
+                document.querySelectorAll('div').forEach(div => {
+                    if (div.style.position === 'fixed' || 
+                        div.classList.contains('fixed') || 
+                        div.classList.contains('inset-0') ||
+                        div.style.zIndex >= 20 ||
+                        div.style.background === 'rgba(0, 0, 0, 0.5)' ||
+                        div.style.backgroundColor === 'rgba(0, 0, 0, 0.5)') {
+                        div.remove();
+                        console.log('✅ Div suspeito removido');
+                    }
+                });
+            } catch (e) { console.warn('Erro divs suspeitos:', e); }
+
+            try {
+                // 5. Restaurar TUDO do body e html
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.left = '';
+                document.documentElement.style.overflow = '';
+                document.documentElement.style.position = '';
+                console.log('✅ Body/html nuclear restaurado');
+            } catch (e) { console.warn('Erro body/html:', e); }
+
+            try {
+                // 6. Blur e limpar TUDO
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+                console.log('✅ Foco nuclear removido');
+            } catch (e) { console.warn('Erro foco:', e); }
+
+            // 7. LIMPEZA NUCLEAR FINAL APÓS 50ms
+            setTimeout(() => {
+                try {
+                    document.querySelectorAll('.modal, .fixed, [role="dialog"], .bg-black, .inset-0').forEach(el => {
+                        if (el && el.parentNode) {
+                            el.parentNode.removeChild(el);
+                        }
+                    });
+                    console.log('✅ Limpeza nuclear final executada');
+                } catch (e) { console.warn('Erro limpeza final:', e); }
+            }, 50);
+
+            // 8. LIMPEZA NUCLEAR EXTREMA APÓS 200ms
+            setTimeout(() => {
+                try {
+                    document.querySelectorAll('div').forEach(div => {
+                        if (div.style.position === 'fixed' || div.classList.contains('fixed')) {
+                            div.remove();
+                        }
+                    });
+                    console.log('✅ Limpeza nuclear extrema executada');
+                } catch (e) { console.warn('Erro limpeza extrema:', e); }
+            }, 200);
+
+            console.log('✅ fecharModalSimples executado - VERSÃO NUCLEAR');
+        }
+
+        // FUNÇÃO NUCLEAR GLOBAL - SUBSTITUI TODAS AS OUTRAS
+        function fecharModalNUCLEAR() {
+            console.log('🔧 fecharModalNUCLEAR chamado - MÉTODO IMPOSSÍVEL DE FALHAR');
+            
+            // MÉTODO NUCLEAR ABSOLUTO: Remover TUDO que possa ser modal
+            try {
+                // 1. Remover TODOS os elementos possíveis
+                const nuclearSelectors = [
+                    '.modal', '.fixed', '.inset-0', '[role="dialog"]', '.modal-content',
+                    '.bg-black', '.bg-opacity-50', '.z-50', '.z-40', '.z-30', '.z-20',
+                    'div[style*="position: fixed"]', 'div[style*="z-index"]',
+                    'div[class*="fixed"]', 'div[class*="inset"]', 'div[class*="bg-black"]'
+                ];
+                
+                nuclearSelectors.forEach(selector => {
+                    document.querySelectorAll(selector).forEach(el => {
+                        if (el && el.parentNode) {
+                            el.parentNode.removeChild(el);
+                            console.log('✅ Elemento nuclear removido:', selector);
+                        }
+                    });
+                });
+            } catch (e) { console.warn('Erro nuclear:', e); }
+
+            try {
+                // 2. Limpar modalContainer COMPLETAMENTE
+                const container = document.getElementById('modalContainer');
+                if (container) {
+                    container.classList.remove('show');
+                    container.innerHTML = '';
+                    container.style.display = 'none';
+                    container.style.visibility = 'hidden';
+                    container.style.opacity = '0';
+                    container.style.position = 'static';
+                    container.style.zIndex = '-1';
+                    console.log('✅ modalContainer nuclear limpo');
+                }
+            } catch (e) { console.warn('Erro modalContainer:', e); }
+
+            try {
+                // 3. Remover TODOS os elementos com z-index alto
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (style.position === 'fixed' && parseInt(style.zIndex) >= 20) {
+                        el.remove();
+                        console.log('✅ Z-index nuclear removido');
+                    }
+                });
+            } catch (e) { console.warn('Erro z-index:', e); }
+
+            try {
+                // 4. Forçar remoção de TODOS os divs suspeitos
+                document.querySelectorAll('div').forEach(div => {
+                    if (div.style.position === 'fixed' || 
+                        div.classList.contains('fixed') || 
+                        div.classList.contains('inset-0') ||
+                        div.style.zIndex >= 20 ||
+                        div.style.background === 'rgba(0, 0, 0, 0.5)' ||
+                        div.style.backgroundColor === 'rgba(0, 0, 0, 0.5)') {
+                        div.remove();
+                        console.log('✅ Div suspeito removido');
+                    }
+                });
+            } catch (e) { console.warn('Erro divs suspeitos:', e); }
+
+            try {
+                // 5. Restaurar TUDO do body e html
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.left = '';
+                document.documentElement.style.overflow = '';
+                document.documentElement.style.position = '';
+                console.log('✅ Body/html nuclear restaurado');
+            } catch (e) { console.warn('Erro body/html:', e); }
+
+            try {
+                // 6. Blur e limpar TUDO
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+                console.log('✅ Foco nuclear removido');
+            } catch (e) { console.warn('Erro foco:', e); }
+
+            // 7. LIMPEZA NUCLEAR FINAL APÓS 50ms
+            setTimeout(() => {
+                try {
+                    document.querySelectorAll('.modal, .fixed, [role="dialog"], .bg-black, .inset-0').forEach(el => {
+                        if (el && el.parentNode) {
+                            el.parentNode.removeChild(el);
+                        }
+                    });
+                    console.log('✅ Limpeza nuclear final executada');
+                } catch (e) { console.warn('Erro limpeza final:', e); }
+            }, 50);
+
+            // 8. LIMPEZA NUCLEAR EXTREMA APÓS 200ms
+            setTimeout(() => {
+                try {
+                    document.querySelectorAll('div').forEach(div => {
+                        if (div.style.position === 'fixed' || div.classList.contains('fixed')) {
+                            div.remove();
+                        }
+                    });
+                    console.log('✅ Limpeza nuclear extrema executada');
+                } catch (e) { console.warn('Erro limpeza extrema:', e); }
+            }, 200);
+
+            console.log('✅ fecharModalNUCLEAR executado - MÉTODO IMPOSSÍVEL DE FALHAR');
         }
 
         // Função de teste para modal
@@ -1471,7 +1791,7 @@
             console.log('🔧 Testando modal...');
             
             // Remover modais existentes primeiro
-            fecharModalRobusto();
+            fecharModalNUCLEAR();
             
             // Criar modal de teste simples
             const modal = document.createElement('div');
@@ -1504,7 +1824,7 @@
                     <h2 style="color: #1f2937; margin-bottom: 20px;">🧪 TESTE DE MODAL</h2>
                     <p style="color: #6b7280; margin-bottom: 20px;">Se vês esta mensagem, o modal está a funcionar!</p>
                     <div style="display: flex; gap: 10px; justify-content: center;">
-                        <button onclick="fecharModalRobusto()" style="
+                        <button onclick="fecharModalNUCLEAR()" style="
                             background: #3b82f6;
                             color: white;
                             border: none;
@@ -1513,7 +1833,7 @@
                             cursor: pointer;
                             font-size: 16px;
                         ">Fechar Robusto</button>
-                        <button onclick="fecharModalSimples()" style="
+                        <button onclick="fecharModalNUCLEAR()" style="
                             background: #10b981;
                             color: white;
                             border: none;
@@ -2104,7 +2424,7 @@ END:VCALENDAR`;
                 <div class="modal-content">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold">Editar Lembrete</h3>
-                        <button onclick="fecharModalRobusto()" class="btn btn-sm btn-secondary">
+                        <button onclick="fecharModalNUCLEAR()" class="btn btn-sm btn-secondary">
                             <i data-lucide="x" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -2134,7 +2454,7 @@ END:VCALENDAR`;
                             </div>
                             <div class="flex space-x-3">
                                 <button type="submit" class="btn btn-primary">Atualizar Lembrete</button>
-                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">Cancelar</button>
+                                <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">Cancelar</button>
                             </div>
                         </div>
                     </form>
@@ -2202,7 +2522,7 @@ END:VCALENDAR`;
                 <div class="modal-content" style="max-width: 600px;">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold">Configurar Integrações</h3>
-                        <button onclick="fecharModalRobusto()" class="btn btn-sm btn-secondary">
+                        <button onclick="fecharModalNUCLEAR()" class="btn btn-sm btn-secondary">
                             <i data-lucide="x" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -2293,7 +2613,7 @@ END:VCALENDAR`;
                         </div>
 
                         <div class="flex space-x-3">
-                            <button onclick="fecharModalRobusto()" class="btn btn-secondary">Fechar</button>
+                            <button onclick="fecharModalNUCLEAR()" class="btn btn-secondary">Fechar</button>
                         </div>
                     </div>
                 </div>
@@ -3217,7 +3537,7 @@ Sistema Legal - ANA PAULA MEDINA
                         border-bottom: 1px solid #e5e7eb;
                     ">
                         <h3 style="margin: 0; color: #1f2937;">📊 Relatório Personalizado por Cliente</h3>
-                        <button class="close-btn" onclick="fecharModalRobusto()" style="
+                        <button class="close-btn" onclick="fecharModalNUCLEAR()" style="
                             background: none;
                             border: none;
                             font-size: 24px;
@@ -3301,7 +3621,7 @@ Sistema Legal - ANA PAULA MEDINA
                         padding-top: 15px;
                         border-top: 1px solid #e5e7eb;
                     ">
-                        <button class="btn btn-secondary" onclick="fecharModalRobusto()" style="
+                        <button class="btn btn-secondary" onclick="fecharModalNUCLEAR()" style="
                             padding: 8px 16px;
                             background-color: #6b7280;
                             color: white;
@@ -3633,7 +3953,7 @@ Sistema Legal - ANA PAULA MEDINA
                         border-bottom: 1px solid #e5e7eb;
                     ">
                         <h3 style="margin: 0; color: #1f2937;">💰 Relatório Financeiro Personalizado</h3>
-                        <button class="close-btn" onclick="fecharModalRobusto()" style="
+                        <button class="close-btn" onclick="fecharModalNUCLEAR()" style="
                             background: none;
                             border: none;
                             font-size: 24px;
@@ -3717,7 +4037,7 @@ Sistema Legal - ANA PAULA MEDINA
                         padding-top: 15px;
                         border-top: 1px solid #e5e7eb;
                     ">
-                        <button class="btn btn-secondary" onclick="fecharModalRobusto()" style="
+                        <button class="btn btn-secondary" onclick="fecharModalNUCLEAR()" style="
                             padding: 8px 16px;
                             background-color: #6b7280;
                             color: white;
@@ -4077,7 +4397,7 @@ Sistema Legal - ANA PAULA MEDINA
                         border-bottom: 1px solid #e5e7eb;
                     ">
                         <h3 style="margin: 0; color: #1f2937;">📊 Relatório Geral Personalizado</h3>
-                        <button class="close-btn" onclick="fecharModalRobusto()" style="
+                        <button class="close-btn" onclick="fecharModalNUCLEAR()" style="
                             background: none;
                             border: none;
                             font-size: 24px;
@@ -4163,7 +4483,7 @@ Sistema Legal - ANA PAULA MEDINA
                         padding-top: 15px;
                         border-top: 1px solid #e5e7eb;
                     ">
-                        <button class="btn btn-secondary" onclick="fecharModalRobusto()" style="
+                        <button class="btn btn-secondary" onclick="fecharModalNUCLEAR()" style="
                             padding: 8px 16px;
                             background-color: #6b7280;
                             color: white;
@@ -4529,7 +4849,7 @@ Sistema Legal - ANA PAULA MEDINA
                         border-bottom: 1px solid #e5e7eb;
                     ">
                         <h3 style="margin: 0; color: #1f2937;">🎫 Carregar Cliente por Bilhete</h3>
-                        <button class="close-btn" onclick="fecharModalRobusto()" style="
+                        <button class="close-btn" onclick="fecharModalNUCLEAR()" style="
                             background: none;
                             border: none;
                             font-size: 24px;
@@ -4558,7 +4878,7 @@ Sistema Legal - ANA PAULA MEDINA
                         padding-top: 15px;
                         border-top: 1px solid #e5e7eb;
                     ">
-                        <button class="btn btn-secondary" onclick="fecharModalRobusto()" style="
+                        <button class="btn btn-secondary" onclick="fecharModalNUCLEAR()" style="
                             padding: 8px 16px;
                             background-color: #6b7280;
                             color: white;
@@ -4629,7 +4949,7 @@ Sistema Legal - ANA PAULA MEDINA
             
             // Fechar modal de busca
             setTimeout(() => {
-                fecharModalRobusto();
+                fecharModalNUCLEAR();
             }, 100);
             
             // Mostrar informações completas do cliente (com delay maior)
@@ -4694,7 +5014,7 @@ Sistema Legal - ANA PAULA MEDINA
                         border-bottom: 1px solid #e5e7eb;
                     ">
                         <h3 style="margin: 0; color: #1f2937;">👤 ${cliente.nome} - Informações Completas</h3>
-                        <button class="close-btn" onclick="fecharModalRobusto()" style="
+                        <button class="close-btn" onclick="fecharModalNUCLEAR()" style="
                             background: none;
                             border: none;
                             font-size: 24px;
@@ -4875,7 +5195,7 @@ Sistema Legal - ANA PAULA MEDINA
                         padding-top: 15px;
                         border-top: 1px solid #e5e7eb;
                     ">
-                        <button class="btn btn-secondary" onclick="fecharModalRobusto()" style="
+                        <button class="btn btn-secondary" onclick="fecharModalNUCLEAR()" style="
                             padding: 8px 16px;
                             background-color: #6b7280;
                             color: white;
@@ -4926,7 +5246,7 @@ Sistema Legal - ANA PAULA MEDINA
             console.log('🔧 Gerando relatório para cliente específico:', nomeCliente);
             
             // Fechar modal atual
-            fecharModalRobusto();
+            fecharModalNUCLEAR();
             
             // Simular seleção do cliente no relatório
             setTimeout(() => {
@@ -6796,7 +7116,7 @@ Sistema Legal - ANA PAULA MEDINA
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold text-gray-900">Editar Contrato</h3>
-                            <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                            <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                 <i data-lucide="x" class="w-6 h-6"></i>
                             </button>
                         </div>
@@ -6878,7 +7198,7 @@ Sistema Legal - ANA PAULA MEDINA
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -6962,11 +7282,11 @@ Sistema Legal - ANA PAULA MEDINA
 
         function criarModalEdicaoCliente(cliente) {
             return `
-                <div class="modal show" onclick="fecharModalRobusto()">
+                <div class="modal show" onclick="fecharModalNUCLEAR()">
                     <div class="modal-content p-6" style="max-width: 500px;" onclick="event.stopPropagation()">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold">Editar Cliente</h3>
-                            <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
+                            <button onclick="fecharModalNUCLEAR()" class="text-gray-500 hover:text-gray-700">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -7022,7 +7342,7 @@ Sistema Legal - ANA PAULA MEDINA
                                     </button>
                                 </div>
                                 <div class="flex space-x-3">
-                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -7039,11 +7359,11 @@ Sistema Legal - ANA PAULA MEDINA
 
         function criarModalCliente() {
             return `
-                <div class="modal show" onclick="fecharModalRobusto()">
+                <div class="modal show" onclick="fecharModalNUCLEAR()">
                     <div class="modal-content p-6" style="max-width: 500px;" onclick="event.stopPropagation()">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold">Novo Cliente</h3>
-                            <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
+                            <button onclick="fecharModalNUCLEAR()" class="text-gray-500 hover:text-gray-700">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -7092,7 +7412,7 @@ Sistema Legal - ANA PAULA MEDINA
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -7111,7 +7431,7 @@ Sistema Legal - ANA PAULA MEDINA
                     <div class="modal-content p-6" style="max-width: 500px;">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold">Novo Honorário</h3>
-                            <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
+                            <button onclick="fecharModalNUCLEAR()" class="text-gray-500 hover:text-gray-700">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -7154,7 +7474,7 @@ Sistema Legal - ANA PAULA MEDINA
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -7169,11 +7489,11 @@ Sistema Legal - ANA PAULA MEDINA
 
         function criarModalContrato() {
             return `
-                <div class="modal show" onclick="fecharModalRobusto()">
+                <div class="modal show" onclick="fecharModalNUCLEAR()">
                     <div class="modal-content p-6" style="max-width: 600px;" onclick="event.stopPropagation()">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold">Novo Contrato</h3>
-                            <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
+                            <button onclick="fecharModalNUCLEAR()" class="text-gray-500 hover:text-gray-700">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -7270,7 +7590,7 @@ Sistema Legal - ANA PAULA MEDINA
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -7285,11 +7605,11 @@ Sistema Legal - ANA PAULA MEDINA
 
         function criarModalEdicaoContrato(contrato) {
             return `
-                <div class="modal show" onclick="fecharModalRobusto()">
+                <div class="modal show" onclick="fecharModalNUCLEAR()">
                     <div class="modal-content p-6" style="max-width: 600px;" onclick="event.stopPropagation()">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold">Editar Contrato</h3>
-                            <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
+                            <button onclick="fecharModalNUCLEAR()" class="text-gray-500 hover:text-gray-700">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -7379,7 +7699,7 @@ Sistema Legal - ANA PAULA MEDINA
                                     </button>
                                 </div>
                                 <div class="flex space-x-3">
-                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -8758,12 +9078,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // Mostrar modal para criar usuário
         function mostrarCriarUsuario() {
             const modal = `
-                <div id="modalAnexosCliente" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalAnexosCliente()">
+                <div id="modalAnexosCliente" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Criar Novo Usuário</h3>
-                                <button onclick="fecharModalAnexosCliente()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -8796,7 +9116,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModalRobusto()" 
+                                    <button type="button" onclick="fecharModalNUCLEAR()" 
                                             class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
                                         Cancelar
                                     </button>
@@ -8898,7 +9218,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     registo.anexos.push(anexo);
                     salvarDados('registos', registos);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             });
         }
@@ -8914,12 +9234,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div id="modalAnexosCliente" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalAnexosCliente()">
+                <div id="modalAnexosCliente" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Documentos do Registo</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -8956,7 +9276,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                         <textarea id="descricaoDocumento" rows="2" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Descrição do documento..."></textarea>
                                     </div>
                                     <div class="flex justify-end space-x-3 mt-4">
-                                        <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">Cancelar</button>
+                                        <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">Cancelar</button>
                                         <button type="submit" class="btn btn-primary">Adicionar Documento</button>
                                     </div>
                                 </form>
@@ -9048,7 +9368,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     registo.anexos.push(anexo);
                     salvarDados('registos', registos);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             });
         }
@@ -9060,7 +9380,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     registo.anexos = registo.anexos.filter(a => a.id !== anexoId);
                     salvarDados('registos', registos);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             }
         }
@@ -9076,12 +9396,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Documentos do Prazo</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -9118,7 +9438,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                         <textarea id="descricaoDocumento" rows="2" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Descrição do documento..."></textarea>
                                     </div>
                                     <div class="flex justify-end space-x-3 mt-4">
-                                        <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">Cancelar</button>
+                                        <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">Cancelar</button>
                                         <button type="submit" class="btn btn-primary">Adicionar Documento</button>
                                     </div>
                                 </form>
@@ -9208,7 +9528,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 prazo.anexos.push(anexo);
                 salvarDados('prazos', prazos);
                 mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                fecharModalRobusto(); // Fechar modal após salvar
+                fecharModalNUCLEAR(); // Fechar modal após salvar
             }
         }
         
@@ -9219,7 +9539,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     prazo.anexos = prazo.anexos.filter(a => a.id !== anexoId);
                     salvarDados('prazos', prazos);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             }
         }
@@ -9598,7 +9918,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     </div>
                     
                     <div class="flex justify-end space-x-3 mt-6">
-                        <button onclick="fecharModalRobusto()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                        <button onclick="fecharModalNUCLEAR()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
                             Cancelar
                         </button>
                         <button onclick="enviarMensagemConfirmar()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
@@ -9755,7 +10075,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     </div>
                     
                     <div class="flex justify-end space-x-3 mt-6">
-                        <button onclick="fecharModalRobusto()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                        <button onclick="fecharModalNUCLEAR()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
                             Cancelar
                         </button>
                         <button onclick="enviarResposta(${notificacaoId})" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
@@ -9840,7 +10160,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 <div class="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[80vh] overflow-y-auto">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-xl font-semibold">Conversas com Convidados</h3>
-                        <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
+                        <button onclick="fecharModalNUCLEAR()" class="text-gray-500 hover:text-gray-700">
                             <i data-lucide="x" class="w-6 h-6"></i>
                         </button>
                     </div>
@@ -9917,7 +10237,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     </div>
                     
                     <div class="flex justify-end space-x-3 mt-6">
-                        <button onclick="fecharModalRobusto()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                        <button onclick="fecharModalNUCLEAR()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
                             Cancelar
                         </button>
                         <button onclick="enviarRespostaAdmin(${notificacaoId})" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
@@ -10291,7 +10611,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold text-gray-900">Novo Convidado</h3>
-                            <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                            <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -10310,7 +10630,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                             </div>
                             
                             <div class="flex space-x-4">
-                                <button type="button" onclick="fecharModalRobusto()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
+                                <button type="button" onclick="fecharModalNUCLEAR()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
@@ -10373,7 +10693,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold text-gray-900">Editar Permissões - ${convidado.nome}</h3>
-                            <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                            <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -10387,7 +10707,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                             </div>
                             
                             <div class="flex space-x-4">
-                                <button type="button" onclick="fecharModalRobusto()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
+                                <button type="button" onclick="fecharModalNUCLEAR()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
@@ -11205,12 +11525,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function abrirModalHeranca() {
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Nova Herança</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -11304,7 +11624,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -11322,11 +11642,11 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function criarModalMigracao() {
             return `
-                <div class="modal show" onclick="fecharModalRobusto()">
+                <div class="modal show" onclick="fecharModalNUCLEAR()">
                     <div class="modal-content p-6" style="max-width: 600px;" onclick="event.stopPropagation()">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold">Nova Migração</h3>
-                            <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
+                            <button onclick="fecharModalNUCLEAR()" class="text-gray-500 hover:text-gray-700">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -11390,7 +11710,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -11529,12 +11849,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function abrirModalMigracao() {
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Nova Migração</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -11628,7 +11948,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -11646,12 +11966,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function abrirModalRegisto() {
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Novo Registo</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -11741,7 +12061,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -12096,12 +12416,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalAnexosCliente()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Documentos de ${cliente.nome}</h3>
-                                <button onclick="fecharModalAnexosCliente()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -12140,7 +12460,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                         <textarea id="descricaoDocumento" rows="2" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Descrição do documento..."></textarea>
                                     </div>
                                     <div class="flex justify-end space-x-3 mt-4">
-                                        <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">Cancelar</button>
+                                        <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">Cancelar</button>
                                         <button type="submit" class="btn btn-primary">Adicionar Documento</button>
                                     </div>
                                 </form>
@@ -12240,7 +12560,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     salvarDados('clientes', clientes);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
                     // Fechar modal após salvar
-                    fecharModalAnexosCliente();
+                    fecharModalNUCLEAR();
                 }
             });
         }
@@ -12379,12 +12699,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             
             // Criar modal de visualização
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="text-xl font-bold text-gray-900">${anexo.nome}</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -12431,7 +12751,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                     <i data-lucide="download" class="w-4 h-4 mr-2"></i>
                                     Baixar
                                 </button>
-                                <button onclick="fecharModalRobusto()" class="btn btn-primary">
+                                <button onclick="fecharModalNUCLEAR()" class="btn btn-primary">
                                     <i data-lucide="x" class="w-4 h-4 mr-2"></i>
                                     Fechar
                                 </button>
@@ -12649,7 +12969,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     cliente.anexos = cliente.anexos.filter(a => a.id !== anexoId);
                     salvarDados('clientes', clientes);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             }
         }
@@ -12663,12 +12983,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             if (!contrato.anexos) contrato.anexos = [];
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Documentos do Contrato</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -12706,7 +13026,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                         <textarea id="descricaoDocumento" rows="2" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Descrição do documento..."></textarea>
                                     </div>
                                     <div class="flex justify-end space-x-3 mt-4">
-                                        <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">Cancelar</button>
+                                        <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">Cancelar</button>
                                         <button type="submit" class="btn btn-primary">Adicionar Documento</button>
                                     </div>
                                 </form>
@@ -12799,7 +13119,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     contrato.anexos.push(anexo);
                     salvarDados('contratos', contratos);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             });
         }
@@ -12811,7 +13131,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     contrato.anexos = contrato.anexos.filter(a => a.id !== anexoId);
                     salvarDados('contratos', contratos);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             }
         }
@@ -12909,12 +13229,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Editar Cliente</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -12957,7 +13277,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -12992,12 +13312,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             modalContainer.innerHTML = '';
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Editar Contrato</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -13069,7 +13389,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -13115,12 +13435,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         
         function abrirModalEdicaoHonorario(honorario) {
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Editar Honorário</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -13160,7 +13480,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -13197,7 +13517,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold text-gray-900">Editar Herança</h3>
-                            <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                            <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                 <i data-lucide="x" class="w-6 h-6"></i>
                             </button>
                         </div>
@@ -13266,7 +13586,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -13311,7 +13631,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold text-gray-900">Editar Migração</h3>
-                            <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                            <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                 <i data-lucide="x" class="w-6 h-6"></i>
                             </button>
                         </div>
@@ -13380,7 +13700,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -13425,7 +13745,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold text-gray-900">Editar Registo</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -13494,7 +13814,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -13521,12 +13841,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function abrirModalEdicaoPrazo(prazo) {
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Editar Prazo</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -13577,7 +13897,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -14799,12 +15119,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalNUCLEAR()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Documentos de ${nome}</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalNUCLEAR()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -14843,7 +15163,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                         <textarea id="descricaoDocumento" rows="2" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Descrição do documento..."></textarea>
                                     </div>
                                     <div class="flex justify-end space-x-3 mt-4">
-                                        <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">Cancelar</button>
+                                        <button type="button" onclick="fecharModalNUCLEAR()" class="btn btn-secondary">Cancelar</button>
                                         <button type="submit" class="btn btn-primary">Adicionar Documento</button>
                                     </div>
                                 </form>
@@ -14941,7 +15261,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     contrato.anexos.push(anexo);
                     salvarDados('contratos', contratos);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             });
         }
@@ -14994,7 +15314,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     salvarDados('herancas', herancas);
                     console.log('✅ Dados salvos no localStorage');
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 } else {
                     console.error('❌ Herança não encontrada com ID:', herancaId);
                     mostrarNotificacao('Herança não encontrada!', 'error');
@@ -15043,7 +15363,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     migracao.anexos.push(anexo);
                     salvarDados('migracoes', migracoes);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             });
         }
@@ -15089,7 +15409,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     registo.anexos.push(anexo);
                     salvarDados('registos', registos);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             });
         }
@@ -15102,7 +15422,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     contrato.anexos = contrato.anexos.filter(a => a.id !== anexoId);
                     salvarDados('contratos', contratos);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             }
         }
@@ -15114,7 +15434,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     heranca.anexos = heranca.anexos.filter(a => a.id !== anexoId);
                     salvarDados('herancas', herancas);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             }
         }
@@ -15126,7 +15446,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     migracao.anexos = migracao.anexos.filter(a => a.id !== anexoId);
                     salvarDados('migracoes', migracoes);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             }
         }
@@ -15138,7 +15458,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     registo.anexos = registo.anexos.filter(a => a.id !== anexoId);
                     salvarDados('registos', registos);
                     mostrarNotificacao('Documento removido com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    fecharModalNUCLEAR(); // Fechar modal após salvar
                 }
             }
         }
