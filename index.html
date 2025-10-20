@@ -1358,6 +1358,42 @@
 
         // Função mostrarBotaoInstalacao removida - PWA desativado
 
+        // Função robusta para fechar modais
+        function fecharModalRobusto() {
+            console.log('🔧 fecharModalRobusto chamado');
+            
+            // Método 1: Remover por classe
+            const todosModais = document.querySelectorAll('.modal');
+            todosModais.forEach(modal => {
+                modal.remove();
+                console.log('✅ Modal removido por classe');
+            });
+            
+            // Método 2: Remover por atributos de estilo
+            document.querySelectorAll('div').forEach(div => {
+                if (div.style.position === 'fixed' && div.style.zIndex === '99999') {
+                    div.remove();
+                    console.log('✅ Modal removido por estilo');
+                }
+            });
+            
+            // Método 3: Remover elementos com z-index alto
+            document.querySelectorAll('div[style*="z-index: 99999"]').forEach(div => {
+                div.remove();
+                console.log('✅ Modal removido por z-index');
+            });
+            
+            // Método 4: Forçar remoção de todos os elementos fixos
+            document.querySelectorAll('div[style*="position: fixed"]').forEach(div => {
+                if (div.style.zIndex && parseInt(div.style.zIndex) > 1000) {
+                    div.remove();
+                    console.log('✅ Modal removido por posição fixa');
+                }
+            });
+            
+            console.log('✅ fecharModalRobusto executado');
+        }
+
         // Função de teste para modal
         function testarModal() {
             console.log('🔧 Testando modal...');
@@ -1389,7 +1425,7 @@
                 ">
                     <h2 style="color: #1f2937; margin-bottom: 20px;">🧪 TESTE DE MODAL</h2>
                     <p style="color: #6b7280; margin-bottom: 20px;">Se vês esta mensagem, o modal está a funcionar!</p>
-                    <button onclick="fecharModal()" style="
+                    <button onclick="fecharModalRobusto()" style="
                         background: #3b82f6;
                         color: white;
                         border: none;
@@ -1924,7 +1960,7 @@ END:VCALENDAR`;
                 <div class="modal-content">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold">Editar Lembrete</h3>
-                        <button onclick="fecharModal()" class="btn btn-sm btn-secondary">
+                        <button onclick="fecharModalRobusto()" class="btn btn-sm btn-secondary">
                             <i data-lucide="x" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -1954,7 +1990,7 @@ END:VCALENDAR`;
                             </div>
                             <div class="flex space-x-3">
                                 <button type="submit" class="btn btn-primary">Atualizar Lembrete</button>
-                                <button type="button" onclick="fecharModal()" class="btn btn-secondary">Cancelar</button>
+                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">Cancelar</button>
                             </div>
                         </div>
                     </form>
@@ -2022,7 +2058,7 @@ END:VCALENDAR`;
                 <div class="modal-content" style="max-width: 600px;">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold">Configurar Integrações</h3>
-                        <button onclick="fecharModal()" class="btn btn-sm btn-secondary">
+                        <button onclick="fecharModalRobusto()" class="btn btn-sm btn-secondary">
                             <i data-lucide="x" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -2113,7 +2149,7 @@ END:VCALENDAR`;
                         </div>
 
                         <div class="flex space-x-3">
-                            <button onclick="fecharModal()" class="btn btn-secondary">Fechar</button>
+                            <button onclick="fecharModalRobusto()" class="btn btn-secondary">Fechar</button>
                         </div>
                     </div>
                 </div>
@@ -3037,7 +3073,7 @@ Sistema Legal - ANA PAULA MEDINA
                         border-bottom: 1px solid #e5e7eb;
                     ">
                         <h3 style="margin: 0; color: #1f2937;">📊 Relatório Personalizado por Cliente</h3>
-                        <button class="close-btn" onclick="fecharModal()" style="
+                        <button class="close-btn" onclick="fecharModalRobusto()" style="
                             background: none;
                             border: none;
                             font-size: 24px;
@@ -3121,7 +3157,7 @@ Sistema Legal - ANA PAULA MEDINA
                         padding-top: 15px;
                         border-top: 1px solid #e5e7eb;
                     ">
-                        <button class="btn btn-secondary" onclick="fecharModal()" style="
+                        <button class="btn btn-secondary" onclick="fecharModalRobusto()" style="
                             padding: 8px 16px;
                             background-color: #6b7280;
                             color: white;
@@ -3360,12 +3396,39 @@ Sistema Legal - ANA PAULA MEDINA
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
             
-            // Fechar modal
-            const modal = document.querySelector('.modal');
-            if (modal) {
-                modal.remove();
-                console.log('✅ Modal de relatório cliente fechado');
-            }
+            // Fechar modal - SOLUÇÃO ROBUSTA
+            setTimeout(() => {
+                // Tentar múltiplas formas de fechar o modal
+                const modal = document.querySelector('.modal');
+                if (modal) {
+                    modal.remove();
+                    console.log('✅ Modal de relatório cliente fechado (método 1)');
+                }
+                
+                // Tentar fechar todos os modais
+                const todosModais = document.querySelectorAll('.modal');
+                todosModais.forEach(modal => {
+                    modal.remove();
+                    console.log('✅ Modal removido (método 2)');
+                });
+                
+                // Tentar fechar por classe
+                const modaisPorClasse = document.querySelectorAll('[class*="modal"]');
+                modaisPorClasse.forEach(modal => {
+                    modal.remove();
+                    console.log('✅ Modal removido por classe (método 3)');
+                });
+                
+                // Forçar fechamento
+                document.querySelectorAll('div').forEach(div => {
+                    if (div.style.position === 'fixed' && div.style.zIndex === '99999') {
+                        div.remove();
+                        console.log('✅ Modal removido por estilo (método 4)');
+                    }
+                });
+                
+                console.log('✅ Todos os métodos de fechamento executados');
+            }, 100);
             
             mostrarNotificacao(`Relatório personalizado para ${clienteSelecionado} gerado com sucesso!`, 'success');
         }
@@ -3426,7 +3489,7 @@ Sistema Legal - ANA PAULA MEDINA
                         border-bottom: 1px solid #e5e7eb;
                     ">
                         <h3 style="margin: 0; color: #1f2937;">💰 Relatório Financeiro Personalizado</h3>
-                        <button class="close-btn" onclick="fecharModal()" style="
+                        <button class="close-btn" onclick="fecharModalRobusto()" style="
                             background: none;
                             border: none;
                             font-size: 24px;
@@ -3510,7 +3573,7 @@ Sistema Legal - ANA PAULA MEDINA
                         padding-top: 15px;
                         border-top: 1px solid #e5e7eb;
                     ">
-                        <button class="btn btn-secondary" onclick="fecharModal()" style="
+                        <button class="btn btn-secondary" onclick="fecharModalRobusto()" style="
                             padding: 8px 16px;
                             background-color: #6b7280;
                             color: white;
@@ -3777,12 +3840,39 @@ Sistema Legal - ANA PAULA MEDINA
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
             
-            // Fechar modal
-            const modal = document.querySelector('.modal');
-            if (modal) {
-                modal.remove();
-                console.log('✅ Modal de relatório financeiro fechado');
-            }
+            // Fechar modal - SOLUÇÃO ROBUSTA
+            setTimeout(() => {
+                // Tentar múltiplas formas de fechar o modal
+                const modal = document.querySelector('.modal');
+                if (modal) {
+                    modal.remove();
+                    console.log('✅ Modal de relatório financeiro fechado (método 1)');
+                }
+                
+                // Tentar fechar todos os modais
+                const todosModais = document.querySelectorAll('.modal');
+                todosModais.forEach(modal => {
+                    modal.remove();
+                    console.log('✅ Modal removido (método 2)');
+                });
+                
+                // Tentar fechar por classe
+                const modaisPorClasse = document.querySelectorAll('[class*="modal"]');
+                modaisPorClasse.forEach(modal => {
+                    modal.remove();
+                    console.log('✅ Modal removido por classe (método 3)');
+                });
+                
+                // Forçar fechamento
+                document.querySelectorAll('div').forEach(div => {
+                    if (div.style.position === 'fixed' && div.style.zIndex === '99999') {
+                        div.remove();
+                        console.log('✅ Modal removido por estilo (método 4)');
+                    }
+                });
+                
+                console.log('✅ Todos os métodos de fechamento executados');
+            }, 100);
             
             mostrarNotificacao(`Relatório financeiro personalizado para ${clienteSelecionado} gerado com sucesso!`, 'success');
         }
@@ -5544,7 +5634,7 @@ Sistema Legal - ANA PAULA MEDINA
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold text-gray-900">Editar Contrato</h3>
-                            <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                            <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                 <i data-lucide="x" class="w-6 h-6"></i>
                             </button>
                         </div>
@@ -5626,7 +5716,7 @@ Sistema Legal - ANA PAULA MEDINA
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -5710,11 +5800,11 @@ Sistema Legal - ANA PAULA MEDINA
 
         function criarModalEdicaoCliente(cliente) {
             return `
-                <div class="modal show" onclick="fecharModal()">
+                <div class="modal show" onclick="fecharModalRobusto()">
                     <div class="modal-content p-6" style="max-width: 500px;" onclick="event.stopPropagation()">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold">Editar Cliente</h3>
-                            <button onclick="fecharModal()" class="text-gray-500 hover:text-gray-700">
+                            <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -5764,7 +5854,7 @@ Sistema Legal - ANA PAULA MEDINA
                                     </button>
                                 </div>
                                 <div class="flex space-x-3">
-                                    <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -5781,11 +5871,11 @@ Sistema Legal - ANA PAULA MEDINA
 
         function criarModalCliente() {
             return `
-                <div class="modal show" onclick="fecharModal()">
+                <div class="modal show" onclick="fecharModalRobusto()">
                     <div class="modal-content p-6" style="max-width: 500px;" onclick="event.stopPropagation()">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold">Novo Cliente</h3>
-                            <button onclick="fecharModal()" class="text-gray-500 hover:text-gray-700">
+                            <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -5828,7 +5918,7 @@ Sistema Legal - ANA PAULA MEDINA
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -5847,7 +5937,7 @@ Sistema Legal - ANA PAULA MEDINA
                     <div class="modal-content p-6" style="max-width: 500px;">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold">Novo Honorário</h3>
-                            <button onclick="fecharModal()" class="text-gray-500 hover:text-gray-700">
+                            <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -5890,7 +5980,7 @@ Sistema Legal - ANA PAULA MEDINA
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -5905,11 +5995,11 @@ Sistema Legal - ANA PAULA MEDINA
 
         function criarModalContrato() {
             return `
-                <div class="modal show" onclick="fecharModal()">
+                <div class="modal show" onclick="fecharModalRobusto()">
                     <div class="modal-content p-6" style="max-width: 600px;" onclick="event.stopPropagation()">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold">Novo Contrato</h3>
-                            <button onclick="fecharModal()" class="text-gray-500 hover:text-gray-700">
+                            <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -6006,7 +6096,7 @@ Sistema Legal - ANA PAULA MEDINA
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -6021,11 +6111,11 @@ Sistema Legal - ANA PAULA MEDINA
 
         function criarModalEdicaoContrato(contrato) {
             return `
-                <div class="modal show" onclick="fecharModal()">
+                <div class="modal show" onclick="fecharModalRobusto()">
                     <div class="modal-content p-6" style="max-width: 600px;" onclick="event.stopPropagation()">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold">Editar Contrato</h3>
-                            <button onclick="fecharModal()" class="text-gray-500 hover:text-gray-700">
+                            <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -6115,7 +6205,7 @@ Sistema Legal - ANA PAULA MEDINA
                                     </button>
                                 </div>
                                 <div class="flex space-x-3">
-                                    <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -7464,12 +7554,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // Mostrar modal para criar usuário
         function mostrarCriarUsuario() {
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Criar Novo Usuário</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -7502,7 +7592,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModal()" 
+                                    <button type="button" onclick="fecharModalRobusto()" 
                                             class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
                                         Cancelar
                                     </button>
@@ -7620,12 +7710,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Documentos do Registo</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -7662,7 +7752,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                         <textarea id="descricaoDocumento" rows="2" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Descrição do documento..."></textarea>
                                     </div>
                                     <div class="flex justify-end space-x-3 mt-4">
-                                        <button type="button" onclick="fecharModal()" class="btn btn-secondary">Cancelar</button>
+                                        <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">Cancelar</button>
                                         <button type="submit" class="btn btn-primary">Adicionar Documento</button>
                                     </div>
                                 </form>
@@ -7782,12 +7872,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Documentos do Prazo</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -7824,7 +7914,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                         <textarea id="descricaoDocumento" rows="2" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Descrição do documento..."></textarea>
                                     </div>
                                     <div class="flex justify-end space-x-3 mt-4">
-                                        <button type="button" onclick="fecharModal()" class="btn btn-secondary">Cancelar</button>
+                                        <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">Cancelar</button>
                                         <button type="submit" class="btn btn-primary">Adicionar Documento</button>
                                     </div>
                                 </form>
@@ -8304,7 +8394,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     </div>
                     
                     <div class="flex justify-end space-x-3 mt-6">
-                        <button onclick="fecharModal()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                        <button onclick="fecharModalRobusto()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
                             Cancelar
                         </button>
                         <button onclick="enviarMensagemConfirmar()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
@@ -8459,7 +8549,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     </div>
                     
                     <div class="flex justify-end space-x-3 mt-6">
-                        <button onclick="fecharModal()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                        <button onclick="fecharModalRobusto()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
                             Cancelar
                         </button>
                         <button onclick="enviarResposta(${notificacaoId})" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
@@ -8544,7 +8634,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 <div class="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[80vh] overflow-y-auto">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-xl font-semibold">Conversas com Convidados</h3>
-                        <button onclick="fecharModal()" class="text-gray-500 hover:text-gray-700">
+                        <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
                             <i data-lucide="x" class="w-6 h-6"></i>
                         </button>
                     </div>
@@ -8621,7 +8711,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     </div>
                     
                     <div class="flex justify-end space-x-3 mt-6">
-                        <button onclick="fecharModal()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                        <button onclick="fecharModalRobusto()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
                             Cancelar
                         </button>
                         <button onclick="enviarRespostaAdmin(${notificacaoId})" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
@@ -8995,7 +9085,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold text-gray-900">Novo Convidado</h3>
-                            <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                            <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -9014,7 +9104,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                             </div>
                             
                             <div class="flex space-x-4">
-                                <button type="button" onclick="fecharModal()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
+                                <button type="button" onclick="fecharModalRobusto()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
@@ -9077,7 +9167,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold text-gray-900">Editar Permissões - ${convidado.nome}</h3>
-                            <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                            <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -9091,7 +9181,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                             </div>
                             
                             <div class="flex space-x-4">
-                                <button type="button" onclick="fecharModal()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
+                                <button type="button" onclick="fecharModalRobusto()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
@@ -9900,12 +9990,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function abrirModalHeranca() {
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Nova Herança</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -9999,7 +10089,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -10017,11 +10107,11 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function criarModalMigracao() {
             return `
-                <div class="modal show" onclick="fecharModal()">
+                <div class="modal show" onclick="fecharModalRobusto()">
                     <div class="modal-content p-6" style="max-width: 600px;" onclick="event.stopPropagation()">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-lg font-semibold">Nova Migração</h3>
-                            <button onclick="fecharModal()" class="text-gray-500 hover:text-gray-700">
+                            <button onclick="fecharModalRobusto()" class="text-gray-500 hover:text-gray-700">
                                 <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -10085,7 +10175,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -10224,12 +10314,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function abrirModalMigracao() {
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Nova Migração</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -10323,7 +10413,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -10341,12 +10431,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function abrirModalRegisto() {
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Novo Registo</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -10436,7 +10526,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -10785,12 +10875,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Documentos de ${cliente.nome}</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -10829,7 +10919,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                         <textarea id="descricaoDocumento" rows="2" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Descrição do documento..."></textarea>
                                     </div>
                                     <div class="flex justify-end space-x-3 mt-4">
-                                        <button type="button" onclick="fecharModal()" class="btn btn-secondary">Cancelar</button>
+                                        <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">Cancelar</button>
                                         <button type="submit" class="btn btn-primary">Adicionar Documento</button>
                                     </div>
                                 </form>
@@ -11062,12 +11152,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             
             // Criar modal de visualização
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="text-xl font-bold text-gray-900">${anexo.nome}</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -11114,7 +11204,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                     <i data-lucide="download" class="w-4 h-4 mr-2"></i>
                                     Baixar
                                 </button>
-                                <button onclick="fecharModal()" class="btn btn-primary">
+                                <button onclick="fecharModalRobusto()" class="btn btn-primary">
                                     <i data-lucide="x" class="w-4 h-4 mr-2"></i>
                                     Fechar
                                 </button>
@@ -11346,12 +11436,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             if (!contrato.anexos) contrato.anexos = [];
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Documentos do Contrato</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -11389,7 +11479,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                         <textarea id="descricaoDocumento" rows="2" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Descrição do documento..."></textarea>
                                     </div>
                                     <div class="flex justify-end space-x-3 mt-4">
-                                        <button type="button" onclick="fecharModal()" class="btn btn-secondary">Cancelar</button>
+                                        <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">Cancelar</button>
                                         <button type="submit" class="btn btn-primary">Adicionar Documento</button>
                                     </div>
                                 </form>
@@ -11578,7 +11668,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                             <div class="p-6">
                                 <div class="flex justify-between items-center mb-6">
                                     <h3 class="text-xl font-bold text-gray-900">Editar Prazo</h3>
-                                    <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                    <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                         <i data-lucide="x" class="w-6 h-6"></i>
                                     </button>
                                 </div>
@@ -11629,7 +11719,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                     </div>
                                     
                                     <div class="flex justify-end space-x-3 mt-6">
-                                        <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                        <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                             Cancelar
                                         </button>
                                         <button type="submit" class="btn btn-primary">
@@ -11711,12 +11801,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Editar Cliente</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -11759,7 +11849,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -11794,12 +11884,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             modalContainer.innerHTML = '';
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Editar Contrato</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -11871,7 +11961,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -11917,12 +12007,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         
         function abrirModalEdicaoHonorario(honorario) {
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Editar Honorário</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -11962,7 +12052,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -11999,7 +12089,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold text-gray-900">Editar Herança</h3>
-                            <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                            <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                 <i data-lucide="x" class="w-6 h-6"></i>
                             </button>
                         </div>
@@ -12068,7 +12158,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -12113,7 +12203,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold text-gray-900">Editar Migração</h3>
-                            <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                            <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                 <i data-lucide="x" class="w-6 h-6"></i>
                             </button>
                         </div>
@@ -12182,7 +12272,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                             </div>
                             
                             <div class="flex justify-end space-x-3 mt-6">
-                                <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -12227,7 +12317,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold text-gray-900">Editar Registo</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -12296,7 +12386,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -12323,12 +12413,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
 
         function abrirModalEdicaoPrazo(prazo) {
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Editar Prazo</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -12379,7 +12469,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </div>
                                 
                                 <div class="flex justify-end space-x-3 mt-6">
-                                    <button type="button" onclick="fecharModal()" class="btn btn-secondary">
+                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
                                     <button type="submit" class="btn btn-primary">
@@ -13601,12 +13691,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModal()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Documentos de ${nome}</h3>
-                                <button onclick="fecharModal()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -13645,7 +13735,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                         <textarea id="descricaoDocumento" rows="2" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Descrição do documento..."></textarea>
                                     </div>
                                     <div class="flex justify-end space-x-3 mt-4">
-                                        <button type="button" onclick="fecharModal()" class="btn btn-secondary">Cancelar</button>
+                                        <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">Cancelar</button>
                                         <button type="submit" class="btn btn-primary">Adicionar Documento</button>
                                     </div>
                                 </form>
