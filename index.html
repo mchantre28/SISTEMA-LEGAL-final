@@ -1365,36 +1365,70 @@
         function fecharModalRobusto() {
             console.log('🔧 fecharModalRobusto chamado');
             
-            // Método 1: Remover por classe
-            const todosModais = document.querySelectorAll('.modal');
-            todosModais.forEach(modal => {
-                modal.remove();
-                console.log('✅ Modal removido por classe');
-            });
-            
-            // Método 2: Remover por atributos de estilo
-            document.querySelectorAll('div').forEach(div => {
-                if (div.style.position === 'fixed' && div.style.zIndex === '99999') {
-                    div.remove();
-                    console.log('✅ Modal removido por estilo');
+            // FECHAR TODOS OS MODAIS - MÉTODO AGRESSIVO
+            try {
+                // 1. Remover todos os overlays e modais por classe
+                document.querySelectorAll('.modal, .fixed.inset-0, [role="dialog"], .modal-content').forEach(el => {
+                    el.remove();
+                    console.log('✅ Modal removido por classe');
+                });
+                
+                // 2. Limpar modalContainer
+                const modalContainer = document.getElementById('modalContainer');
+                if (modalContainer) {
+                    modalContainer.classList.remove('show');
+                    modalContainer.innerHTML = '';
+                    modalContainer.style.display = 'none';
+                    console.log('✅ modalContainer limpo');
                 }
-            });
-            
-            // Método 3: Remover elementos com z-index alto
-            document.querySelectorAll('div[style*="z-index: 99999"]').forEach(div => {
-                div.remove();
-                console.log('✅ Modal removido por z-index');
-            });
-            
-            // Método 4: Forçar remoção de todos os elementos fixos
-            document.querySelectorAll('div[style*="position: fixed"]').forEach(div => {
-                if (div.style.zIndex && parseInt(div.style.zIndex) > 1000) {
-                    div.remove();
-                    console.log('✅ Modal removido por posição fixa');
+                
+                // 3. Remover elementos com z-index alto
+                document.querySelectorAll('div').forEach(div => {
+                    const style = getComputedStyle(div);
+                    if ((style.position === 'fixed' || style.position === 'absolute') && 
+                        (parseInt(style.zIndex) >= 40 || div.style.zIndex >= 40)) {
+                        div.remove();
+                        console.log('✅ Elemento com z-index alto removido');
+                    }
+                });
+                
+                // 4. Remover overlays específicos
+                document.querySelectorAll('div[class*="inset-0"], div[class*="bg-black"], div[class*="opacity-50"]').forEach(el => {
+                    el.remove();
+                    console.log('✅ Overlay específico removido');
+                });
+                
+                // 5. Restaurar scroll
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+                
+                // 6. Blur elemento ativo
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
                 }
-            });
+                
+            } catch (error) {
+                console.warn('Erro ao fechar modal:', error);
+            }
             
             console.log('✅ fecharModalRobusto executado');
+        }
+
+        // Fecho específico para o modal de anexos do cliente
+        function fecharModalAnexosCliente() {
+            try {
+                const modal = document.getElementById('modalAnexosCliente');
+                if (modal) modal.remove();
+            } catch {}
+            try {
+                const container = document.getElementById('modalContainer');
+                if (container) {
+                    container.classList.remove('show');
+                    container.innerHTML = '';
+                }
+            } catch {}
+            try { document.querySelectorAll('.fixed.inset-0,[role="dialog"],.modal,.modal-content').forEach(el=>el.remove()); } catch {}
+            console.log('✅ fecharModalAnexosCliente executado');
         }
 
         // Função simples para fechar modal (backup)
@@ -8691,12 +8725,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // Mostrar modal para criar usuário
         function mostrarCriarUsuario() {
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div id="modalAnexosCliente" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalAnexosCliente()">
                     <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Criar Novo Usuário</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalAnexosCliente()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -8847,7 +8881,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div id="modalAnexosCliente" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
@@ -12003,6 +12037,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // === SISTEMA DE ANEXOS DE DOCUMENTOS ===
         
         function abrirAnexosCliente(clienteId) {
+            // Bloqueio opcional para evitar reabertura imediata após salvar
+            if (window.__bloquearReaberturaModalAnexos === true) {
+                console.log('⚠️ Reabertura do modal de anexos bloqueada temporariamente.');
+                window.__bloquearReaberturaModalAnexos = false;
+                return;
+            }
             const cliente = clientes.find(c => c.id === clienteId);
             if (!cliente) return;
             
@@ -12110,6 +12150,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         
         function adicionarAnexo(event, clienteId) {
             event.preventDefault();
+            if (event && typeof event.stopPropagation === 'function') {
+                event.stopPropagation();
+            }
             
             const nome = document.getElementById('nomeDocumento').value;
             const tipoSelecionado = document.getElementById('tipoDocumento').value;
@@ -12130,6 +12173,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 return;
             }
             
+            // Não fechar imediatamente: só no sucesso ou pelo X
+
             // Converter arquivo para Base64
             converterArquivoParaBase64(arquivo, function(base64Content) {
                 const anexo = {
@@ -12150,7 +12195,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     cliente.anexos.push(anexo);
                     salvarDados('clientes', clientes);
                     mostrarNotificacao('Documento adicionado com sucesso!', 'success');
-                    fecharModalRobusto(); // Fechar modal após salvar
+                    // Manter o modal aberto e atualizar a lista de documentos
+                    try { abrirAnexosCliente(clienteId); } catch (e) { console.warn('abrirAnexosCliente não disponível', e); }
                 }
             });
         }
