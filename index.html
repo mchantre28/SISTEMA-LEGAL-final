@@ -4337,6 +4337,466 @@ Sistema Legal - ANA PAULA MEDINA
             mostrarNotificacao(`Relatório geral personalizado para ${clienteSelecionado} gerado com sucesso!`, 'success');
         }
 
+        // NOVA FUNÇÃO: Carregar cliente por bilhete
+        function carregarClientePorBilhete() {
+            console.log('🔧 Carregando cliente por bilhete...');
+            
+            // Verificar se já existe um modal aberto
+            const modalExistente = document.querySelector('.modal');
+            if (modalExistente) {
+                console.log('⚠️ Modal já existe, removendo...');
+                modalExistente.remove();
+            }
+            
+            // Criar modal para inserir bilhete
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = `
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background-color: rgba(0, 0, 0, 0.7) !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                z-index: 99999 !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            `;
+            modal.innerHTML = `
+                <div class="modal-content" style="
+                    background: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    max-width: 500px;
+                    width: 90%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                ">
+                    <div class="modal-header" style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        border-bottom: 1px solid #e5e7eb;
+                    ">
+                        <h3 style="margin: 0; color: #1f2937;">🎫 Carregar Cliente por Bilhete</h3>
+                        <button class="close-btn" onclick="fecharModalRobusto()" style="
+                            background: none;
+                            border: none;
+                            font-size: 24px;
+                            cursor: pointer;
+                            color: #6b7280;
+                        ">&times;</button>
+                    </div>
+                    <div class="modal-body" style="margin-bottom: 20px;">
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="bilheteCliente" style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151;">Código do Bilhete:</label>
+                            <input type="text" id="bilheteCliente" class="form-control" style="
+                                width: 100%;
+                                padding: 8px 12px;
+                                border: 1px solid #d1d5db;
+                                border-radius: 6px;
+                                font-size: 14px;
+                                text-transform: uppercase;
+                            " placeholder="Ex: BIL1234567890ABC">
+                            <p class="text-xs text-gray-500 mt-1">Insira o código do bilhete para carregar as informações do cliente</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="
+                        display: flex;
+                        justify-content: flex-end;
+                        gap: 10px;
+                        padding-top: 15px;
+                        border-top: 1px solid #e5e7eb;
+                    ">
+                        <button class="btn btn-secondary" onclick="fecharModalRobusto()" style="
+                            padding: 8px 16px;
+                            background-color: #6b7280;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 14px;
+                        ">Cancelar</button>
+                        <button class="btn btn-primary" onclick="buscarClientePorBilhete()" style="
+                            padding: 8px 16px;
+                            background-color: #3b82f6;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 14px;
+                            display: flex;
+                            align-items: center;
+                            gap: 5px;
+                        ">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                            Carregar Cliente
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            console.log('✅ Modal de bilhete criado e adicionado ao DOM');
+            
+            // Verificar se o modal foi criado corretamente
+            setTimeout(() => {
+                const modalTeste = document.querySelector('.modal');
+                if (modalTeste) {
+                    console.log('✅ Modal de bilhete encontrado no DOM');
+                    // Forçar visibilidade do modal
+                    modalTeste.style.display = 'flex';
+                    modalTeste.style.visibility = 'visible';
+                    modalTeste.style.opacity = '1';
+                    console.log('✅ Modal de bilhete forçado a ser visível');
+                } else {
+                    console.log('❌ Modal de bilhete não encontrado no DOM');
+                }
+            }, 100);
+        }
+
+        function buscarClientePorBilhete() {
+            console.log('🔧 Buscando cliente por bilhete...');
+            
+            const bilhete = document.getElementById('bilheteCliente').value.trim().toUpperCase();
+            
+            if (!bilhete) {
+                mostrarNotificacao('Por favor, insira o código do bilhete!', 'warning');
+                return;
+            }
+            
+            console.log('🎫 Bilhete inserido:', bilhete);
+            
+            // Buscar cliente pelo bilhete
+            const cliente = clientes.find(c => c.bilhete === bilhete);
+            
+            if (!cliente) {
+                mostrarNotificacao('Cliente não encontrado com este bilhete!', 'error');
+                return;
+            }
+            
+            console.log('✅ Cliente encontrado:', cliente.nome);
+            
+            // Fechar modal de busca
+            setTimeout(() => {
+                fecharModalRobusto();
+            }, 100);
+            
+            // Mostrar informações completas do cliente
+            mostrarInformacoesCompletasCliente(cliente);
+        }
+
+        function mostrarInformacoesCompletasCliente(cliente) {
+            console.log('🔧 Mostrando informações completas do cliente:', cliente.nome);
+            
+            // Verificar se já existe um modal aberto
+            const modalExistente = document.querySelector('.modal');
+            if (modalExistente) {
+                console.log('⚠️ Modal já existe, removendo...');
+                modalExistente.remove();
+            }
+            
+            // Buscar todos os dados relacionados ao cliente
+            const dadosCliente = {
+                honorarios: honorarios ? honorarios.filter(h => h.cliente === cliente.nome) : [],
+                contratos: contratos ? contratos.filter(c => c.cliente === cliente.nome) : [],
+                herancas: herancas ? herancas.filter(h => h.cliente === cliente.nome) : [],
+                migracoes: migracoes ? migracoes.filter(m => m.cliente === cliente.nome) : [],
+                registos: registos ? registos.filter(r => r.cliente === cliente.nome) : []
+            };
+            
+            // Criar modal com informações completas
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = `
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background-color: rgba(0, 0, 0, 0.7) !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                z-index: 99999 !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            `;
+            modal.innerHTML = `
+                <div class="modal-content" style="
+                    background: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    max-width: 90%;
+                    width: 90%;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                ">
+                    <div class="modal-header" style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        border-bottom: 1px solid #e5e7eb;
+                    ">
+                        <h3 style="margin: 0; color: #1f2937;">👤 ${cliente.nome} - Informações Completas</h3>
+                        <button class="close-btn" onclick="fecharModalRobusto()" style="
+                            background: none;
+                            border: none;
+                            font-size: 24px;
+                            cursor: pointer;
+                            color: #6b7280;
+                        ">&times;</button>
+                    </div>
+                    <div class="modal-body" style="margin-bottom: 20px;">
+                        <!-- Dados Pessoais -->
+                        <div style="margin-bottom: 30px;">
+                            <h4 style="color: #1f2937; font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #3b82f6; padding-bottom: 5px;">📋 Dados Pessoais</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                                    <strong>Nome:</strong> ${cliente.nome}
+                                </div>
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+                                    <strong>Email:</strong> ${cliente.email}
+                                </div>
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                                    <strong>Telefone:</strong> ${cliente.telefone}
+                                </div>
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+                                    <strong>NIF:</strong> ${cliente.nif}
+                                </div>
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid #8b5cf6;">
+                                    <strong>Bilhete:</strong> ${cliente.bilhete}
+                                </div>
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid #06b6d4;">
+                                    <strong>Status:</strong> ${cliente.status}
+                                </div>
+                            </div>
+                            ${cliente.endereco ? `
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid #6366f1; margin-top: 15px;">
+                                    <strong>Endereço:</strong> ${cliente.endereco}
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <!-- Resumo Estatístico -->
+                        <div style="margin-bottom: 30px;">
+                            <h4 style="color: #1f2937; font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #10b981; padding-bottom: 5px;">📊 Resumo Estatístico</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                                <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: bold;">${dadosCliente.honorarios.length}</div>
+                                    <div style="font-size: 14px;">Honorários</div>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: bold;">${dadosCliente.contratos.length}</div>
+                                    <div style="font-size: 14px;">Contratos</div>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: bold;">${dadosCliente.herancas.length}</div>
+                                    <div style="font-size: 14px;">Heranças</div>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: bold;">${dadosCliente.migracoes.length}</div>
+                                    <div style="font-size: 14px;">Migrações</div>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #ef4444, #dc2626); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: bold;">${dadosCliente.registos.length}</div>
+                                    <div style="font-size: 14px;">Registos</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Honorários -->
+                        ${dadosCliente.honorarios.length > 0 ? `
+                            <div style="margin-bottom: 30px;">
+                                <h4 style="color: #1f2937; font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #3b82f6; padding-bottom: 5px;">💰 Honorários (${dadosCliente.honorarios.length})</h4>
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    ${dadosCliente.honorarios.map((honorario, index) => `
+                                        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #3b82f6;">
+                                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                                <div>
+                                                    <strong>${honorario.descricao || honorario.servico}</strong><br>
+                                                    <span style="color: #6b7280; font-size: 14px;">Valor: €${honorario.valor} | Status: ${honorario.status}</span><br>
+                                                    <span style="color: #6b7280; font-size: 12px;">Data: ${honorario.data}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <!-- Contratos -->
+                        ${dadosCliente.contratos.length > 0 ? `
+                            <div style="margin-bottom: 30px;">
+                                <h4 style="color: #1f2937; font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #10b981; padding-bottom: 5px;">📄 Contratos (${dadosCliente.contratos.length})</h4>
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    ${dadosCliente.contratos.map((contrato, index) => `
+                                        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #10b981;">
+                                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                                <div>
+                                                    <strong>${contrato.tipo}</strong><br>
+                                                    <span style="color: #6b7280; font-size: 14px;">Valor: €${contrato.valor} | Status: ${contrato.status}</span><br>
+                                                    <span style="color: #6b7280; font-size: 12px;">Data: ${contrato.data}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <!-- Heranças -->
+                        ${dadosCliente.herancas.length > 0 ? `
+                            <div style="margin-bottom: 30px;">
+                                <h4 style="color: #1f2937; font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #f59e0b; padding-bottom: 5px;">🏛️ Heranças (${dadosCliente.herancas.length})</h4>
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    ${dadosCliente.herancas.map((heranca, index) => `
+                                        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #f59e0b;">
+                                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                                <div>
+                                                    <strong>${heranca.tipo}</strong><br>
+                                                    <span style="color: #6b7280; font-size: 14px;">Valor: €${heranca.valor} | Status: ${heranca.status}</span><br>
+                                                    <span style="color: #6b7280; font-size: 12px;">Data: ${heranca.data}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <!-- Migrações -->
+                        ${dadosCliente.migracoes.length > 0 ? `
+                            <div style="margin-bottom: 30px;">
+                                <h4 style="color: #1f2937; font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #8b5cf6; padding-bottom: 5px;">🌍 Migrações (${dadosCliente.migracoes.length})</h4>
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    ${dadosCliente.migracoes.map((migracao, index) => `
+                                        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #8b5cf6;">
+                                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                                <div>
+                                                    <strong>${migracao.tipo}</strong><br>
+                                                    <span style="color: #6b7280; font-size: 14px;">Valor: €${migracao.valor} | Status: ${migracao.status}</span><br>
+                                                    <span style="color: #6b7280; font-size: 12px;">Data: ${migracao.data}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <!-- Registos -->
+                        ${dadosCliente.registos.length > 0 ? `
+                            <div style="margin-bottom: 30px;">
+                                <h4 style="color: #1f2937; font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #ef4444; padding-bottom: 5px;">📝 Registos (${dadosCliente.registos.length})</h4>
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    ${dadosCliente.registos.map((registo, index) => `
+                                        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #ef4444;">
+                                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                                <div>
+                                                    <strong>${registo.tipo}</strong><br>
+                                                    <span style="color: #6b7280; font-size: 14px;">Valor: €${registo.valor} | Status: ${registo.status}</span><br>
+                                                    <span style="color: #6b7280; font-size: 12px;">Data: ${registo.data}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        ${dadosCliente.honorarios.length === 0 && dadosCliente.contratos.length === 0 && dadosCliente.herancas.length === 0 && dadosCliente.migracoes.length === 0 && dadosCliente.registos.length === 0 ? `
+                            <div style="text-align: center; padding: 40px; color: #6b7280;">
+                                <i data-lucide="file-x" style="width: 48px; height: 48px; margin: 0 auto 20px; display: block;"></i>
+                                <h4 style="margin: 0 0 10px 0;">Nenhum documento encontrado</h4>
+                                <p style="margin: 0;">Este cliente ainda não possui documentos associados.</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="modal-footer" style="
+                        display: flex;
+                        justify-content: flex-end;
+                        gap: 10px;
+                        padding-top: 15px;
+                        border-top: 1px solid #e5e7eb;
+                    ">
+                        <button class="btn btn-secondary" onclick="fecharModalRobusto()" style="
+                            padding: 8px 16px;
+                            background-color: #6b7280;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 14px;
+                        ">Fechar</button>
+                        <button class="btn btn-primary" onclick="gerarRelatorioClienteEspecifico('${cliente.nome}')" style="
+                            padding: 8px 16px;
+                            background-color: #3b82f6;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 14px;
+                            display: flex;
+                            align-items: center;
+                            gap: 5px;
+                        ">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            Gerar Relatório
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            console.log('✅ Modal de informações completas criado');
+            
+            // Verificar se o modal foi criado corretamente
+            setTimeout(() => {
+                const modalTeste = document.querySelector('.modal');
+                if (modalTeste) {
+                    console.log('✅ Modal de informações encontrado no DOM');
+                    // Forçar visibilidade do modal
+                    modalTeste.style.display = 'flex';
+                    modalTeste.style.visibility = 'visible';
+                    modalTeste.style.opacity = '1';
+                    console.log('✅ Modal de informações forçado a ser visível');
+                } else {
+                    console.log('❌ Modal de informações não encontrado no DOM');
+                }
+            }, 100);
+        }
+
+        function gerarRelatorioClienteEspecifico(nomeCliente) {
+            console.log('🔧 Gerando relatório para cliente específico:', nomeCliente);
+            
+            // Fechar modal atual
+            fecharModalRobusto();
+            
+            // Simular seleção do cliente no relatório
+            setTimeout(() => {
+                gerarRelatorioCliente();
+                
+                // Preencher automaticamente o cliente selecionado
+                setTimeout(() => {
+                    const selectCliente = document.getElementById('clienteSelecionado');
+                    if (selectCliente) {
+                        selectCliente.value = nomeCliente;
+                        console.log('✅ Cliente pré-selecionado:', nomeCliente);
+                    }
+                }, 200);
+            }, 100);
+        }
+
         function gerarDashboard() {
             const tipoUsuario = localStorage.getItem('tipoUsuario');
             let clientesParaMostrar = clientes;
@@ -6018,6 +6478,15 @@ Sistema Legal - ANA PAULA MEDINA
                                 Gerar
                             </button>
                         </div>
+                        
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">Carregar Cliente por Bilhete</h3>
+                            <p class="text-gray-600 mb-4">Carregar informações completas usando código do bilhete</p>
+                            <button onclick="carregarClientePorBilhete()" class="btn btn-warning">
+                                <i data-lucide="ticket" class="w-4 h-4"></i>
+                                Carregar
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -6301,6 +6770,12 @@ Sistema Legal - ANA PAULA MEDINA
                                 </div>
                                 
                                 <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Bilhete/Código Único</label>
+                                    <input type="text" id="editarClienteBilhete" value="${cliente.bilhete || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Será gerado automaticamente" readonly>
+                                    <p class="text-xs text-gray-500 mt-1">Código único para carregar informações do cliente</p>
+                                </div>
+                                
+                                <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Endereço</label>
                                     <textarea id="editarClienteEndereco" rows="3" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">${cliente.endereco || ''}</textarea>
                                 </div>
@@ -6369,6 +6844,12 @@ Sistema Legal - ANA PAULA MEDINA
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">NIF *</label>
                                     <input type="text" id="clienteNIF" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="123456789">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Bilhete/Código Único</label>
+                                    <input type="text" id="clienteBilhete" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Será gerado automaticamente" readonly>
+                                    <p class="text-xs text-gray-500 mt-1">Código único para carregar informações do cliente</p>
                                 </div>
                                 
                                 <div>
@@ -6731,12 +7212,19 @@ Sistema Legal - ANA PAULA MEDINA
                 return;
             }
             
+            // Gerar bilhete único se não existir
+            let bilhete = document.getElementById('clienteBilhete') ? document.getElementById('clienteBilhete').value : '';
+            if (!bilhete) {
+                bilhete = 'BIL' + Date.now() + Math.random().toString(36).substring(2, 8).toUpperCase();
+            }
+            
             const cliente = {
                 id: Date.now(),
                 nome: nome,
                 email: email,
                 telefone: telefone,
                 nif: nif,
+                bilhete: bilhete,
                 endereco: document.getElementById('clienteEndereco').value,
                 status: document.getElementById('clienteStatus').value,
                 dataCriacao: new Date().toISOString(),
@@ -6885,12 +7373,19 @@ Sistema Legal - ANA PAULA MEDINA
                     return;
                 }
                 
+                // Manter bilhete existente ou gerar novo se não existir
+                let bilhete = clientes[clienteIndex].bilhete;
+                if (!bilhete) {
+                    bilhete = 'BIL' + Date.now() + Math.random().toString(36).substring(2, 8).toUpperCase();
+                }
+                
                 clientes[clienteIndex] = {
                     ...clientes[clienteIndex],
                     nome: nome,
                     email: email,
                     telefone: telefone,
                     nif: nif,
+                    bilhete: bilhete,
                     endereco: document.getElementById('editarClienteEndereco').value,
                     status: document.getElementById('editarClienteStatus').value,
                     dataAtualizacao: new Date().toISOString()
