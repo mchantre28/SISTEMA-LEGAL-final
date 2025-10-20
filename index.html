@@ -1416,18 +1416,43 @@
 
         // Fecho específico para o modal de anexos do cliente
         function fecharModalAnexosCliente() {
+            console.log('🔧 fecharModalAnexosCliente chamado');
+            
             try {
+                // 1. Remover modal específico
                 const modal = document.getElementById('modalAnexosCliente');
-                if (modal) modal.remove();
-            } catch {}
+                if (modal) {
+                    modal.remove();
+                    console.log('✅ Modal modalAnexosCliente removido');
+                }
+            } catch (e) { console.warn('Erro ao remover modalAnexosCliente:', e); }
+
             try {
+                // 2. Limpar modalContainer
                 const container = document.getElementById('modalContainer');
                 if (container) {
                     container.classList.remove('show');
                     container.innerHTML = '';
+                    container.style.display = 'none';
+                    console.log('✅ modalContainer limpo');
                 }
-            } catch {}
-            try { document.querySelectorAll('.fixed.inset-0,[role="dialog"],.modal,.modal-content').forEach(el=>el.remove()); } catch {}
+            } catch (e) { console.warn('Erro ao limpar modalContainer:', e); }
+
+            try {
+                // 3. Remover todos os overlays e modais
+                document.querySelectorAll('.fixed.inset-0, [role="dialog"], .modal, .modal-content').forEach(el => {
+                    el.remove();
+                    console.log('✅ Overlay/Modal removido');
+                });
+            } catch (e) { console.warn('Erro ao remover overlays:', e); }
+
+            try {
+                // 4. Restaurar scroll
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+                console.log('✅ Scroll restaurado');
+            } catch (e) { console.warn('Erro ao restaurar scroll:', e); }
+
             console.log('✅ fecharModalAnexosCliente executado');
         }
 
@@ -8889,7 +8914,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div id="modalAnexosCliente" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div id="modalAnexosCliente" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalAnexosCliente()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
@@ -12071,12 +12096,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
             
             const modal = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalAnexosCliente()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-gray-900">Documentos de ${cliente.nome}</h3>
-                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                <button onclick="fecharModalAnexosCliente()" class="text-gray-400 hover:text-gray-600">
                                     <i data-lucide="x" class="w-6 h-6"></i>
                                 </button>
                             </div>
