@@ -74,7 +74,7 @@ const authenticateToken = (req, res, next) => {
 
 // Rota principal
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index-completo.html'));
+    res.sendFile(path.join(__dirname, '../frontend/sistema-funcional.html'));
 });
 
 // Rota principal da API

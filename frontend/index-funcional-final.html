@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Solicitadora - FUNCIONAL</title>
+    <title>Sistema de Solicitadora - FUNCIONAL FINAL</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -244,6 +244,42 @@
             margin: 5px 0 0 0;
             opacity: 0.9;
         }
+        .test-button {
+            background: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 20px;
+            display: block;
+            width: 100%;
+        }
+        .test-button:hover {
+            background: #218838;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -254,11 +290,11 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username" value="admin" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" value="password" required>
                 </div>
                 <button type="submit" class="btn">Entrar</button>
             </form>
@@ -269,7 +305,7 @@
         <div id="mainApp" class="hidden">
             <div class="header">
                 <h1>⚖️ Sistema de Gestão para Solicitadora</h1>
-                <p>Sistema Funcional e Completo</p>
+                <p>Sistema FUNCIONAL FINAL</p>
             </div>
 
             <div class="nav">
@@ -293,9 +329,10 @@
                     <div class="card">
                         <h3>📈 Estatísticas</h3>
                         <div id="stats">
-                            <p>Carregando estatísticas...</p>
+                            <div class="loading">Carregando estatísticas...</div>
                         </div>
                     </div>
+                    <button class="test-button" onclick="testAPI()">🧪 TESTAR API</button>
                 </div>
 
                 <!-- Clientes -->
@@ -307,7 +344,7 @@
                             <button class="btn btn-success btn-small" onclick="openModal('cliente')">➕ Novo Cliente</button>
                         </div>
                         <div id="clientesList">
-                            <p>Carregando clientes...</p>
+                            <div class="loading">Carregando clientes...</div>
                         </div>
                     </div>
                 </div>
@@ -321,7 +358,7 @@
                             <button class="btn btn-success btn-small" onclick="openModal('processo')">➕ Novo Processo</button>
                         </div>
                         <div id="processosList">
-                            <p>Carregando processos...</p>
+                            <div class="loading">Carregando processos...</div>
                         </div>
                     </div>
                 </div>
@@ -335,7 +372,7 @@
                             <button class="btn btn-success btn-small" onclick="openModal('documento')">➕ Novo Documento</button>
                         </div>
                         <div id="documentosList">
-                            <p>Carregando documentos...</p>
+                            <div class="loading">Carregando documentos...</div>
                         </div>
                     </div>
                 </div>
@@ -349,7 +386,7 @@
                             <button class="btn btn-success btn-small" onclick="openModal('financeiro')">➕ Novo Registro</button>
                         </div>
                         <div id="resumoFinanceiro">
-                            <p>Carregando dados financeiros...</p>
+                            <div class="loading">Carregando dados financeiros...</div>
                         </div>
                     </div>
                 </div>
@@ -363,7 +400,7 @@
                             <button class="btn btn-success btn-small" onclick="openModal('agenda')">➕ Novo Compromisso</button>
                         </div>
                         <div id="agendaList">
-                            <p>Carregando agenda...</p>
+                            <div class="loading">Carregando agenda...</div>
                         </div>
                     </div>
                 </div>
@@ -399,6 +436,20 @@
         function debugLog(message) {
             console.log('🔍 DEBUG:', message);
             document.getElementById('debugInfo').innerHTML = message;
+        }
+
+        // Test API function
+        async function testAPI() {
+            try {
+                debugLog('🧪 Testando API...');
+                const response = await fetch(`${API_BASE}`);
+                const data = await response.json();
+                debugLog(`✅ API funcionando! Resposta: ${JSON.stringify(data)}`);
+                alert('✅ API funcionando! Verifique o debug info.');
+            } catch (error) {
+                debugLog(`❌ Erro na API: ${error.message}`);
+                alert(`❌ Erro na API: ${error.message}`);
+            }
         }
 
         // Verificar se já está logado
@@ -925,10 +976,11 @@
         }
 
         // Debug: Verificar se as funções estão carregadas
-        debugLog('Sistema funcional carregado! Todas as funcionalidades estão disponíveis.');
-        console.log('Sistema funcional carregado!');
+        debugLog('Sistema FUNCIONAL FINAL carregado! Todas as funcionalidades estão disponíveis.');
+        console.log('Sistema FUNCIONAL FINAL carregado!');
         console.log('Função showSection:', typeof showSection);
         console.log('Função openModal:', typeof openModal);
+        console.log('Função testAPI:', typeof testAPI);
     </script>
 </body>
 </html>

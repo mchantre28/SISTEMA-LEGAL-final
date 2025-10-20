@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Solicitadora - FUNCIONAL</title>
+    <title>Sistema de Solicitadora - SIMPLES</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -85,6 +85,9 @@
         }
         .btn-success {
             background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
         }
         .hidden {
             display: none;
@@ -223,27 +226,6 @@
             font-family: monospace;
             font-size: 0.9rem;
         }
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .stat-card h3 {
-            font-size: 2rem;
-            margin: 0;
-        }
-        .stat-card p {
-            margin: 5px 0 0 0;
-            opacity: 0.9;
-        }
     </style>
 </head>
 <body>
@@ -269,7 +251,7 @@
         <div id="mainApp" class="hidden">
             <div class="header">
                 <h1>⚖️ Sistema de Gestão para Solicitadora</h1>
-                <p>Sistema Funcional e Completo</p>
+                <p>Sistema Simples e Funcional</p>
             </div>
 
             <div class="nav">
@@ -537,22 +519,18 @@
                 debugLog(`Dados carregados: ${clientes.length} clientes, ${processos.length} processos, ${financeiro.length} registros financeiros`);
                 
                 const stats = `
-                    <div class="stats">
-                        <div class="stat-card">
-                            <h3>${clientes.length}</h3>
-                            <p>Clientes</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; text-align: center;">
+                            <h3 style="margin: 0; color: #1976d2;">${clientes.length}</h3>
+                            <p style="margin: 5px 0 0 0; color: #666;">Clientes</p>
                         </div>
-                        <div class="stat-card">
-                            <h3>${processos.length}</h3>
-                            <p>Processos</p>
+                        <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; text-align: center;">
+                            <h3 style="margin: 0; color: #7b1fa2;">${processos.length}</h3>
+                            <p style="margin: 5px 0 0 0; color: #666;">Processos</p>
                         </div>
-                        <div class="stat-card">
-                            <h3>€${financeiro.reduce((sum, f) => sum + (f.valor || 0), 0).toFixed(2)}</h3>
-                            <p>Total Financeiro</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>${processos.filter(p => p.estado === 'Em curso').length}</h3>
-                            <p>Processos Ativos</p>
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; text-align: center;">
+                            <h3 style="margin: 0; color: #388e3c;">€${financeiro.reduce((sum, f) => sum + (f.valor || 0), 0).toFixed(2)}</h3>
+                            <p style="margin: 5px 0 0 0; color: #666;">Total Financeiro</p>
                         </div>
                     </div>
                 `;
@@ -925,8 +903,8 @@
         }
 
         // Debug: Verificar se as funções estão carregadas
-        debugLog('Sistema funcional carregado! Todas as funcionalidades estão disponíveis.');
-        console.log('Sistema funcional carregado!');
+        debugLog('Sistema simples carregado! Todas as funcionalidades estão disponíveis.');
+        console.log('Sistema simples carregado!');
         console.log('Função showSection:', typeof showSection);
         console.log('Função openModal:', typeof openModal);
     </script>

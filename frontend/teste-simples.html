@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESTE SIMPLES - Sistema de Solicitadora</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 300;
+        }
+        .test-button {
+            background: #28a745;
+            color: white;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 20px;
+            display: block;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .test-button:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        .debug-info {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 16px;
+            border-left: 4px solid #28a745;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 TESTE SIMPLES</h1>
+            <p>Sistema de Solicitadora - Teste de Funcionamento</p>
+        </div>
+
+        <div class="debug-info">
+            <strong>🔍 Debug Info:</strong><br>
+            <span id="debugInfo">Aguardando teste...</span>
+        </div>
+
+        <button class="test-button" onclick="testAPI()">
+            🧪 TESTAR API - Clique aqui para testar!
+        </button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+
+        // Debug function
+        function debugLog(message) {
+            console.log('🔍 DEBUG:', message);
+            document.getElementById('debugInfo').innerHTML = message;
+        }
+
+        // Test API function
+        async function testAPI() {
+            try {
+                debugLog('🧪 Testando API...');
+                
+                const response = await fetch(`${API_BASE}`);
+                const data = await response.json();
+                
+                debugLog(`✅ API funcionando! Resposta: ${JSON.stringify(data)}`);
+                
+                document.getElementById('result').innerHTML = `
+                    <div class="success">
+                        <h3>✅ API FUNCIONANDO!</h3>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Resposta:</strong> ${JSON.stringify(data, null, 2)}</p>
+                    </div>
+                `;
+                
+            } catch (error) {
+                debugLog(`❌ Erro na API: ${error.message}`);
+                
+                document.getElementById('result').innerHTML = `
+                    <div class="error">
+                        <h3>❌ ERRO NA API</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                        <p><strong>Verifique se o servidor está a funcionar na porta 3000</strong></p>
+                    </div>
+                `;
+            }
+        }
+
+        // Debug: Verificar se as funções estão carregadas
+        debugLog('Sistema de teste carregado! Clique no botão para testar a API.');
+        console.log('Sistema de teste carregado!');
+        console.log('Função testAPI:', typeof testAPI);
+    </script>
+</body>
+</html>
