@@ -5754,7 +5754,7 @@ Sistema Legal - ANA PAULA MEDINA
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Nome</th>
+                                            <th>Nome <span class="text-xs text-blue-500">(clique para ver)</span></th>
                                             <th>Email</th>
                                             <th>Telefone</th>
                                             <th>NIF</th>
@@ -5766,7 +5766,14 @@ Sistema Legal - ANA PAULA MEDINA
                                     <tbody id="listaClientes">
                                         ${clientesParaMostrar.map(cliente => `
                                             <tr>
-                                                <td>${cliente.nome}</td>
+                                                <td>
+                                                    <button onclick="mostrarInformacoesCompletasCliente(${JSON.stringify(cliente).replace(/"/g, '&quot;')})" 
+                                                            class="text-blue-600 hover:text-blue-800 font-medium cursor-pointer hover:underline flex items-center gap-1" 
+                                                            title="Clicar para ver informações completas">
+                                                        <i data-lucide="user" class="w-4 h-4"></i>
+                                                        ${cliente.nome}
+                                                    </button>
+                                                </td>
                                                 <td>${cliente.email}</td>
                                                 <td>${cliente.telefone}</td>
                                                 <td>${cliente.nif || '-'}</td>
@@ -7864,7 +7871,14 @@ Sistema Legal - ANA PAULA MEDINA
             
             tbody.innerHTML = clientesFiltrados.map(cliente => `
                 <tr>
-                    <td>${cliente.nome}</td>
+                    <td>
+                        <button onclick="mostrarInformacoesCompletasCliente(${JSON.stringify(cliente).replace(/"/g, '&quot;')})" 
+                                class="text-blue-600 hover:text-blue-800 font-medium cursor-pointer hover:underline flex items-center gap-1" 
+                                title="Clicar para ver informações completas">
+                            <i data-lucide="user" class="w-4 h-4"></i>
+                            ${cliente.nome}
+                        </button>
+                    </td>
                     <td>${cliente.email}</td>
                     <td>${cliente.telefone}</td>
                     <td>${cliente.nif || '-'}</td>
