@@ -1990,6 +1990,26 @@
             }
         })();
 
+        // FORÇAR VERSÃO MAIS RECENTE - MÉTODO DEFINITIVO
+        function forcarVersaoMaisRecente() {
+            console.log('🔧 forcarVersaoMaisRecente chamado - MÉTODO DEFINITIVO');
+            
+            // Forçar reload da página para garantir que a versão mais recente seja carregada
+            if (confirm('Para garantir que a versão mais recente seja carregada, vamos recarregar a página. Continuar?')) {
+                window.location.reload(true);
+            }
+        }
+
+        // EXECUTAR AUTOMATICAMENTE A FORÇA DE VERSÃO MAIS RECENTE
+        setTimeout(function() {
+            console.log('🔧 EXECUTANDO AUTOMATICAMENTE - FORÇA VERSÃO MAIS RECENTE');
+            try {
+                forcarVersaoMaisRecente();
+            } catch (e) {
+                console.warn('Erro ao executar forcarVersaoMaisRecente:', e);
+            }
+        }, 1000);
+
         // FUNÇÃO DIRETA QUE FUNCIONA IMEDIATAMENTE
         function fecharModalDIRETO() {
             console.log('🔧 fecharModalDIRETO chamado - FUNCIONA IMEDIATAMENTE');
@@ -2027,6 +2047,48 @@
             } catch (e) { console.warn('Erro scroll direto:', e); }
 
             console.log('✅ fecharModalDIRETO executado - FUNCIONA IMEDIATAMENTE');
+        }
+
+        // CRIAR FUNÇÃO SE ELA NÃO EXISTIR
+        if (typeof fecharModalDIRETO === 'undefined') {
+            window.fecharModalDIRETO = function() {
+                console.log('🔧 fecharModalDIRETO criada dinamicamente - FUNCIONA IMEDIATAMENTE');
+                
+                // MÉTODO DIRETO: Remover TUDO
+                try {
+                    // Remover TODOS os elementos que possam ser modais
+                    document.querySelectorAll('*').forEach(el => {
+                        if (el.style.position === 'fixed' || 
+                            el.classList.contains('modal') || 
+                            el.classList.contains('fixed') ||
+                            el.classList.contains('inset-0') ||
+                            el.style.zIndex >= 10) {
+                            el.remove();
+                            console.log('✅ Elemento direto removido');
+                        }
+                    });
+                } catch (e) { console.warn('Erro direto:', e); }
+
+                try {
+                    // Limpar modalContainer
+                    const container = document.getElementById('modalContainer');
+                    if (container) {
+                        container.innerHTML = '';
+                        container.style.display = 'none';
+                        console.log('✅ modalContainer direto limpo');
+                    }
+                } catch (e) { console.warn('Erro modalContainer direto:', e); }
+
+                try {
+                    // Restaurar scroll
+                    document.body.style.overflow = '';
+                    document.documentElement.style.overflow = '';
+                    console.log('✅ Scroll direto restaurado');
+                } catch (e) { console.warn('Erro scroll direto:', e); }
+
+                console.log('✅ fecharModalDIRETO executado - FUNCIONA IMEDIATAMENTE');
+            };
+            console.log('✅ fecharModalDIRETO criada dinamicamente');
         }
 
         // Função de teste para modal
