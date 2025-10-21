@@ -1397,6 +1397,34 @@
             console.log('✅ fecharModalDIRETO executado - SOLUÇÃO DEFINITIVA QUE FUNCIONA');
         }
 
+        // SUBSTITUIR TODAS AS OUTRAS FUNÇÕES DE FECHAR MODAL
+        function fecharModal() { fecharModalDIRETO(); }
+        function fecharModalRobusto() { fecharModalDIRETO(); }
+        function fecharModalAnexosCliente() { fecharModalDIRETO(); }
+        function fecharModalSimples() { fecharModalDIRETO(); }
+        function fecharModalNUCLEAR() { fecharModalDIRETO(); }
+        function fecharModalSUPERRADICAL() { fecharModalDIRETO(); }
+        function fecharModalEMERGENCIA() { fecharModalDIRETO(); }
+        function fecharModalFINAL() { fecharModalDIRETO(); }
+
+        // FORÇAR RELOAD PARA GARANTIR VERSÃO MAIS RECENTE
+        function forcarReload() {
+            console.log('🔄 FORÇANDO RELOAD PARA GARANTIR VERSÃO MAIS RECENTE');
+            if (confirm('🔄 O sistema detectou uma versão mais recente!\n\nDeseja recarregar a página para usar a versão mais atual?')) {
+                window.location.reload(true);
+            }
+        }
+
+        // EXECUTAR AUTOMATICAMENTE APÓS 2 SEGUNDOS
+        setTimeout(function() {
+            console.log('🔧 EXECUTANDO AUTOMATICAMENTE - FORÇA RELOAD');
+            try {
+                forcarReload();
+            } catch (e) {
+                console.warn('Erro na força de reload:', e);
+            }
+        }, 2000);
+
             try {
                 // 3. Remover TODOS os elementos com z-index alto
                 document.querySelectorAll('*').forEach(el => {
