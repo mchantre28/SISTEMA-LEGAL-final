@@ -1361,152 +1361,41 @@
 
         // Função mostrarBotaoInstalacao removida - PWA desativado
 
-        // Função SUPER RADICAL para fechar TODOS os modais - IMPOSSÍVEL DE FALHAR
+        // Função DEFINITIVA que FUNCIONA - Baseada no teste do usuário
         function fecharModalDIRETO() {
-            console.log('🔧 fecharModalRobusto chamado - VERSÃO SUPER RADICAL');
+            console.log('🔧 fecharModalDIRETO chamado - SOLUÇÃO DEFINITIVA QUE FUNCIONA');
             
-            // MÉTODO NUCLEAR: Remover TUDO que possa ser modal
+            // SOLUÇÃO QUE FUNCIONA - Baseada no teste do usuário
             try {
-                // 1. Remover TODOS os elementos possíveis de modal
-                const nuclearSelectors = [
-                    '.modal', '.fixed', '.inset-0', '[role="dialog"]', '.modal-content',
-                    '.bg-black', '.bg-opacity-50', '.z-50', '.z-40', '.z-30', '.z-20',
-                    'div[style*="position: fixed"]', 'div[style*="z-index"]',
-                    'div[class*="fixed"]', 'div[class*="inset"]', 'div[class*="bg-black"]'
-                ];
+                // 1. Remover TODOS os elementos .fixed e .inset-0 (SOLUÇÃO QUE FUNCIONA!)
+                document.querySelectorAll('.fixed, .inset-0').forEach(el => {
+                    console.log('Removendo elemento:', el);
+                    el.remove();
+                });
+                console.log('✅ Elementos .fixed e .inset-0 removidos!');
                 
-                nuclearSelectors.forEach(selector => {
-                    document.querySelectorAll(selector).forEach(el => {
-                        if (el && el.parentNode) {
-                            el.parentNode.removeChild(el);
-                            console.log('✅ Elemento nuclear removido:', selector);
-                        }
-                    });
-                });
-            } catch (e) { console.warn('Erro nuclear:', e); }
-
-            try {
-                // 2. Limpar modalContainer COMPLETAMENTE
-                const container = document.getElementById('modalContainer');
-                if (container) {
-                    container.classList.remove('show');
-                    container.innerHTML = '';
-                    container.style.display = 'none';
-                    container.style.visibility = 'hidden';
-                    container.style.opacity = '0';
-                    container.style.position = 'static';
-                    container.style.zIndex = '-1';
-                    console.log('✅ modalContainer nuclear limpo');
+                // 2. Limpar modalContainer
+                const modalContainer = document.getElementById('modalContainer');
+                if (modalContainer) {
+                    modalContainer.classList.remove('show');
+                    modalContainer.innerHTML = '';
+                    modalContainer.style.display = 'none';
+                    console.log('✅ modalContainer limpo');
                 }
-            } catch (e) { console.warn('Erro modalContainer:', e); }
-
-            try {
-                // 3. Remover TODOS os elementos com z-index alto
-                document.querySelectorAll('*').forEach(el => {
-                    const style = getComputedStyle(el);
-                    if (style.position === 'fixed' && parseInt(style.zIndex) >= 20) {
-                        el.remove();
-                        console.log('✅ Z-index nuclear removido');
-                    }
-                });
-            } catch (e) { console.warn('Erro z-index:', e); }
-
-            try {
-                // 4. Forçar remoção de TODOS os divs suspeitos
-                document.querySelectorAll('div').forEach(div => {
-                    if (div.style.position === 'fixed' || 
-                        div.classList.contains('fixed') || 
-                        div.classList.contains('inset-0') ||
-                        div.style.zIndex >= 20 ||
-                        div.style.background === 'rgba(0, 0, 0, 0.5)' ||
-                        div.style.backgroundColor === 'rgba(0, 0, 0, 0.5)') {
-                        div.remove();
-                        console.log('✅ Div suspeito removido');
-                    }
-                });
-            } catch (e) { console.warn('Erro divs suspeitos:', e); }
-
-            try {
-                // 5. Restaurar TUDO do body e html
+                
+                // 3. Restaurar scroll
                 document.body.style.overflow = '';
-                document.body.style.position = '';
-                document.body.style.top = '';
-                document.body.style.left = '';
                 document.documentElement.style.overflow = '';
-                document.documentElement.style.position = '';
-                console.log('✅ Body/html nuclear restaurado');
-            } catch (e) { console.warn('Erro body/html:', e); }
-
-            try {
-                // 6. Blur e limpar TUDO
+                
+                // 4. Blur elemento ativo
                 if (document.activeElement && typeof document.activeElement.blur === 'function') {
                     document.activeElement.blur();
                 }
-                console.log('✅ Foco nuclear removido');
-            } catch (e) { console.warn('Erro foco:', e); }
-
-            // 7. LIMPEZA NUCLEAR FINAL APÓS 50ms
-            setTimeout(() => {
-                try {
-                    document.querySelectorAll('.modal, .fixed, [role="dialog"], .bg-black, .inset-0').forEach(el => {
-                        if (el && el.parentNode) {
-                            el.parentNode.removeChild(el);
-                        }
-                    });
-                    console.log('✅ Limpeza nuclear final executada');
-                } catch (e) { console.warn('Erro limpeza final:', e); }
-            }, 50);
-
-            // 8. LIMPEZA NUCLEAR EXTREMA APÓS 200ms
-            setTimeout(() => {
-                try {
-                    document.querySelectorAll('div').forEach(div => {
-                        if (div.style.position === 'fixed' || div.classList.contains('fixed')) {
-                            div.remove();
-                        }
-                    });
-                    console.log('✅ Limpeza nuclear extrema executada');
-                } catch (e) { console.warn('Erro limpeza extrema:', e); }
-            }, 200);
-
-            console.log('✅ fecharModalRobusto executado - VERSÃO SUPER RADICAL');
-        }
-
-        // Fecho específico para o modal de anexos do cliente - VERSÃO RADICAL
-        function fecharModalDIRETO() {
-            console.log('🔧 fecharModalAnexosCliente chamado - VERSÃO RADICAL');
-            
-            // MÉTODO RADICAL: Remover TODOS os elementos que possam ser modais
-            try {
-                // 1. Remover TODOS os elementos com classes de modal
-                const selectors = [
-                    '.modal', '.fixed.inset-0', '[role="dialog"]', '.modal-content',
-                    '.bg-black.bg-opacity-50', '.z-50', '.z-40', '.z-30',
-                    'div[style*="position: fixed"]', 'div[style*="z-index"]'
-                ];
                 
-                selectors.forEach(selector => {
-                    document.querySelectorAll(selector).forEach(el => {
-                        if (el && el.parentNode) {
-                            el.parentNode.removeChild(el);
-                            console.log('✅ Elemento removido:', selector);
-                        }
-                    });
-                });
-            } catch (e) { console.warn('Erro ao remover elementos:', e); }
-
-            try {
-                // 2. Limpar modalContainer COMPLETAMENTE
-                const container = document.getElementById('modalContainer');
-                if (container) {
-                    container.classList.remove('show');
-                    container.innerHTML = '';
-                    container.style.display = 'none';
-                    container.style.visibility = 'hidden';
-                    container.style.opacity = '0';
-                    console.log('✅ modalContainer limpo radicalmente');
-                }
-            } catch (e) { console.warn('Erro ao limpar modalContainer:', e); }
+            } catch (e) { console.warn('Erro:', e); }
+            
+            console.log('✅ fecharModalDIRETO executado - SOLUÇÃO DEFINITIVA QUE FUNCIONA');
+        }
 
             try {
                 // 3. Remover TODOS os elementos com z-index alto
@@ -1564,9 +1453,9 @@
             console.log('✅ fecharModalAnexosCliente executado - VERSÃO RADICAL');
         }
 
-        // Função simples para fechar modal (backup)
-        function fecharModalDIRETO() {
-            console.log('🔧 fecharModalSimples chamado - VERSÃO NUCLEAR');
+        // Função de teste para modal
+        function testarModal() {
+            console.log('🔧 Testando modal...');
             
             // MÉTODO NUCLEAR: Remover TUDO que possa ser modal
             try {
