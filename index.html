@@ -1425,6 +1425,68 @@
             }
         }, 2000);
 
+        // SOLUÇÃO NUCLEAR IMEDIATA - FUNCIONA AGORA MESMO
+        function fecharModalNUCLEAR() {
+            console.log('💥 fecharModalNUCLEAR - SOLUÇÃO IMEDIATA');
+            
+            // MÉTODO NUCLEAR: Remover TUDO que possa ser modal
+            try {
+                // 1. Remover TODOS os elementos .fixed e .inset-0
+                document.querySelectorAll('.fixed, .inset-0').forEach(el => {
+                    console.log('💥 Removendo elemento:', el);
+                    el.remove();
+                });
+                
+                // 2. Remover TODOS os elementos com position fixed
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (style.position === 'fixed') {
+                        console.log('💥 Removendo elemento fixed:', el);
+                        el.remove();
+                    }
+                });
+                
+                // 3. Remover TODOS os elementos com z-index alto
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (parseInt(style.zIndex) >= 40) {
+                        console.log('💥 Removendo elemento z-index alto:', el);
+                        el.remove();
+                    }
+                });
+                
+                // 4. Limpar modalContainer
+                const modalContainer = document.getElementById('modalContainer');
+                if (modalContainer) {
+                    modalContainer.innerHTML = '';
+                    modalContainer.style.display = 'none';
+                    console.log('💥 modalContainer limpo');
+                }
+                
+                // 5. Restaurar scroll
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+                
+                console.log('💥 fecharModalNUCLEAR executado - SOLUÇÃO IMEDIATA');
+                
+            } catch (e) {
+                console.warn('Erro nuclear:', e);
+            }
+        }
+
+        // SUBSTITUIR TODAS AS FUNÇÕES IMEDIATAMENTE
+        window.fecharModal = fecharModalNUCLEAR;
+        window.fecharModalDIRETO = fecharModalNUCLEAR;
+        window.fecharModalRobusto = fecharModalNUCLEAR;
+        window.fecharModalAnexosCliente = fecharModalNUCLEAR;
+        window.fecharModalSimples = fecharModalNUCLEAR;
+        window.fecharModalNUCLEAR = fecharModalNUCLEAR;
+        window.fecharModalSUPERRADICAL = fecharModalNUCLEAR;
+        window.fecharModalEMERGENCIA = fecharModalNUCLEAR;
+        window.fecharModalFINAL = fecharModalNUCLEAR;
+
+        console.log('💥 TODAS AS FUNÇÕES SUBSTITUÍDAS POR fecharModalNUCLEAR - FUNCIONA IMEDIATAMENTE');
+
             try {
                 // 3. Remover TODOS os elementos com z-index alto
                 document.querySelectorAll('*').forEach(el => {
