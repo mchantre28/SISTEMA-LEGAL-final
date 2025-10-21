@@ -1425,23 +1425,33 @@
             }
         }, 2000);
 
-        // SOLUÇÃO NUCLEAR IMEDIATA - FUNCIONA AGORA MESMO
+        // SOLUÇÃO ULTRA NUCLEAR - REMOVE TUDO ATÉ ENCONTRAR O MODAL
         function fecharModalNUCLEAR() {
-            console.log('💥 fecharModalNUCLEAR - SOLUÇÃO IMEDIATA');
+            console.log('💥💥💥 fecharModalNUCLEAR - SOLUÇÃO ULTRA NUCLEAR');
             
-            // MÉTODO NUCLEAR: Remover TUDO que possa ser modal
+            // MÉTODO ULTRA NUCLEAR: Remover TUDO que possa ser modal
             try {
-                // 1. Remover TODOS os elementos .fixed e .inset-0
-                document.querySelectorAll('.fixed, .inset-0').forEach(el => {
-                    console.log('💥 Removendo elemento:', el);
-                    el.remove();
+                // 1. Remover TODOS os elementos com classes de modal
+                const selectors = [
+                    '.modal', '.fixed', '.inset-0', '[role="dialog"]', '.modal-content',
+                    '.bg-black', '.bg-opacity-50', '.z-50', '.z-40', '.z-30', '.z-20',
+                    'div[style*="position: fixed"]', 'div[style*="z-index"]',
+                    'div[class*="fixed"]', 'div[class*="inset"]', 'div[class*="bg-black"]',
+                    'div[class*="modal"]', 'div[class*="overlay"]', 'div[class*="backdrop"]'
+                ];
+                
+                selectors.forEach(selector => {
+                    document.querySelectorAll(selector).forEach(el => {
+                        console.log('💥💥💥 Removendo elemento:', selector, el);
+                        el.remove();
+                    });
                 });
                 
                 // 2. Remover TODOS os elementos com position fixed
                 document.querySelectorAll('*').forEach(el => {
                     const style = getComputedStyle(el);
                     if (style.position === 'fixed') {
-                        console.log('💥 Removendo elemento fixed:', el);
+                        console.log('💥💥💥 Removendo elemento fixed:', el);
                         el.remove();
                     }
                 });
@@ -1449,28 +1459,50 @@
                 // 3. Remover TODOS os elementos com z-index alto
                 document.querySelectorAll('*').forEach(el => {
                     const style = getComputedStyle(el);
-                    if (parseInt(style.zIndex) >= 40) {
-                        console.log('💥 Removendo elemento z-index alto:', el);
+                    if (parseInt(style.zIndex) >= 20) {
+                        console.log('💥💥💥 Removendo elemento z-index alto:', el);
                         el.remove();
                     }
                 });
                 
-                // 4. Limpar modalContainer
+                // 4. Remover TODOS os divs que possam ser modais
+                document.querySelectorAll('div').forEach(div => {
+                    if (div.style.position === 'fixed' || 
+                        div.classList.contains('modal') || 
+                        div.classList.contains('fixed') ||
+                        div.classList.contains('inset-0') ||
+                        div.style.zIndex >= 20 ||
+                        div.style.background === 'rgba(0, 0, 0, 0.5)' ||
+                        div.style.backgroundColor === 'rgba(0, 0, 0, 0.5)' ||
+                        div.style.display === 'flex' ||
+                        div.style.justifyContent === 'center' ||
+                        div.style.alignItems === 'center') {
+                        console.log('💥💥💥 Removendo div suspeito:', div);
+                        div.remove();
+                    }
+                });
+                
+                // 5. Limpar modalContainer
                 const modalContainer = document.getElementById('modalContainer');
                 if (modalContainer) {
                     modalContainer.innerHTML = '';
                     modalContainer.style.display = 'none';
-                    console.log('💥 modalContainer limpo');
+                    console.log('💥💥💥 modalContainer limpo');
                 }
                 
-                // 5. Restaurar scroll
+                // 6. Restaurar scroll
                 document.body.style.overflow = '';
                 document.documentElement.style.overflow = '';
                 
-                console.log('💥 fecharModalNUCLEAR executado - SOLUÇÃO IMEDIATA');
+                // 7. Blur elemento ativo
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+                
+                console.log('💥💥💥 fecharModalNUCLEAR executado - SOLUÇÃO ULTRA NUCLEAR');
                 
             } catch (e) {
-                console.warn('Erro nuclear:', e);
+                console.warn('Erro ultra nuclear:', e);
             }
         }
 
