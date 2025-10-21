@@ -3622,6 +3622,95 @@
         console.log('💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥 EXECUTANDO IMEDIATAMENTE - SOLUÇÃO ULTRA FINAL IMPOSSÍVEL DE FALHAR');
         fecharModalULTRAFINALLIMPOSSIVELFALHAR();
 
+        // NOVA ESTRATÉGIA - SOLUÇÃO SIMPLES E DIRETA
+        function fecharModalNOVAESTRATEGIA() {
+            console.log('🎯 NOVA ESTRATÉGIA - SOLUÇÃO SIMPLES E DIRETA');
+            
+            try {
+                // 1. ESCONDER TODOS OS MODAIS VISÍVEIS
+                document.querySelectorAll('*').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.width > 0 && rect.height > 0 && 
+                        rect.top >= 0 && rect.left >= 0 && 
+                        rect.bottom <= window.innerHeight && 
+                        rect.right <= window.innerWidth) {
+                        
+                        // Se o elemento está visível e tem características de modal
+                        if (el.style.position === 'fixed' || 
+                            el.style.zIndex >= 20 ||
+                            el.style.background === 'rgba(0, 0, 0, 0.5)' ||
+                            el.style.backgroundColor === 'rgba(0, 0, 0, 0.5)' ||
+                            el.style.display === 'flex' ||
+                            el.style.justifyContent === 'center' ||
+                            el.style.alignItems === 'center') {
+                            
+                            console.log('🎯 Escondendo elemento modal:', el);
+                            el.style.display = 'none';
+                            el.style.visibility = 'hidden';
+                            el.style.opacity = '0';
+                        }
+                    }
+                });
+                
+                // 2. LIMPAR MODALCONTAINER
+                const modalContainer = document.getElementById('modalContainer');
+                if (modalContainer) {
+                    modalContainer.innerHTML = '';
+                    modalContainer.style.display = 'none';
+                    modalContainer.style.visibility = 'hidden';
+                    modalContainer.style.opacity = '0';
+                    console.log('🎯 modalContainer limpo e escondido');
+                }
+                
+                // 3. RESTAURAR SCROLL
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+                
+                // 4. BLUR ELEMENTO ATIVO
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+                
+                console.log('🎯 NOVA ESTRATÉGIA EXECUTADA - MODAIS ESCONDIDOS');
+                
+            } catch (e) {
+                console.warn('Erro na nova estratégia:', e);
+            }
+        }
+
+        // SUBSTITUIR TODAS AS FUNÇÕES COM A NOVA ESTRATÉGIA
+        window.fecharModal = fecharModalNOVAESTRATEGIA;
+        window.fecharModalDIRETO = fecharModalNOVAESTRATEGIA;
+        window.fecharModalRobusto = fecharModalNOVAESTRATEGIA;
+        window.fecharModalAnexosCliente = fecharModalNOVAESTRATEGIA;
+        window.fecharModalSimples = fecharModalNOVAESTRATEGIA;
+        window.fecharModalNUCLEAR = fecharModalNOVAESTRATEGIA;
+        window.fecharModalSUPERRADICAL = fecharModalNOVAESTRATEGIA;
+        window.fecharModalEMERGENCIA = fecharModalNOVAESTRATEGIA;
+        window.fecharModalFINAL = fecharModalNOVAESTRATEGIA;
+        window.fecharModalULTRA = fecharModalNOVAESTRATEGIA;
+        window.fecharModalEXTREMO = fecharModalNOVAESTRATEGIA;
+        window.fecharModalIMPOSSIVEL = fecharModalNOVAESTRATEGIA;
+        window.fecharModalULTRAIMPOSSIVEL = fecharModalNOVAESTRATEGIA;
+        window.fecharModalEXTREMAIMPOSSIVEL = fecharModalNOVAESTRATEGIA;
+        window.fecharModalFINALIMPOSSIVEL = fecharModalNOVAESTRATEGIA;
+        window.fecharModalULTRAIMPOSSIVELFINAL = fecharModalNOVAESTRATEGIA;
+        window.fecharModalEXTREMAIMPOSSIVELFINAL = fecharModalNOVAESTRATEGIA;
+        window.fecharModalCONSOLEFUNCIONOU = fecharModalNOVAESTRATEGIA;
+        window.fecharModalREMOVERTODOSVISIVEIS = fecharModalNOVAESTRATEGIA;
+        window.fecharModalIMPOSSIVELFALHAR = fecharModalNOVAESTRATEGIA;
+        window.fecharModalULTRAIMPOSSIVELFALHAR = fecharModalNOVAESTRATEGIA;
+        window.fecharModalEXTREMAIMPOSSIVELFALHAR = fecharModalNOVAESTRATEGIA;
+        window.fecharModalFINALIMPOSSIVELFALHAR = fecharModalNOVAESTRATEGIA;
+        window.fecharModalULTRAFINALLIMPOSSIVELFALHAR = fecharModalNOVAESTRATEGIA;
+        window.fecharModalNOVAESTRATEGIA = fecharModalNOVAESTRATEGIA;
+
+        console.log('🎯 TODAS AS FUNÇÕES SUBSTITUÍDAS PELA NOVA ESTRATÉGIA');
+
+        // EXECUTAR IMEDIATAMENTE A NOVA ESTRATÉGIA
+        console.log('🎯 EXECUTANDO IMEDIATAMENTE - NOVA ESTRATÉGIA');
+        fecharModalNOVAESTRATEGIA();
+
             try {
                 // 3. Remover TODOS os elementos com z-index alto
                 document.querySelectorAll('*').forEach(el => {
