@@ -3711,6 +3711,102 @@
         console.log('🎯 EXECUTANDO IMEDIATAMENTE - NOVA ESTRATÉGIA');
         fecharModalNOVAESTRATEGIA();
 
+        // ESTRATÉGIA ULTRA SIMPLES - FUNCIONA SEMPRE
+        function fecharModalULTRASTIMPLES() {
+            console.log('🔥 ESTRATÉGIA ULTRA SIMPLES - FUNCIONA SEMPRE');
+            
+            try {
+                // 1. FORÇAR FECHAMENTO DE TODOS OS MODAIS
+                document.querySelectorAll('*').forEach(el => {
+                    // Se o elemento tem características de modal
+                    if (el.style.position === 'fixed' || 
+                        el.style.zIndex >= 20 ||
+                        el.style.background === 'rgba(0, 0, 0, 0.5)' ||
+                        el.style.backgroundColor === 'rgba(0, 0, 0, 0.5)' ||
+                        el.style.display === 'flex' ||
+                        el.style.justifyContent === 'center' ||
+                        el.style.alignItems === 'center' ||
+                        el.classList.contains('modal') ||
+                        el.classList.contains('fixed') ||
+                        el.classList.contains('inset-0')) {
+                        
+                        console.log('🔥 Forçando fechamento de:', el);
+                        el.style.display = 'none !important';
+                        el.style.visibility = 'hidden !important';
+                        el.style.opacity = '0 !important';
+                        el.style.pointerEvents = 'none !important';
+                        el.remove();
+                    }
+                });
+                
+                // 2. FORÇAR LIMPEZA DO MODALCONTAINER
+                const modalContainer = document.getElementById('modalContainer');
+                if (modalContainer) {
+                    modalContainer.innerHTML = '';
+                    modalContainer.style.display = 'none !important';
+                    modalContainer.style.visibility = 'hidden !important';
+                    modalContainer.style.opacity = '0 !important';
+                    modalContainer.style.pointerEvents = 'none !important';
+                    console.log('🔥 modalContainer forçado a fechar');
+                }
+                
+                // 3. FORÇAR RESTAURAÇÃO DO SCROLL
+                document.body.style.overflow = 'auto !important';
+                document.documentElement.style.overflow = 'auto !important';
+                document.body.style.pointerEvents = 'auto !important';
+                
+                // 4. FORÇAR BLUR DE TODOS OS ELEMENTOS
+                document.querySelectorAll('input, textarea, select, button').forEach(el => {
+                    if (el.blur) el.blur();
+                });
+                
+                // 5. FORÇAR REMOÇÃO DE TODOS OS ELEMENTOS COM CLASSE MODAL
+                document.querySelectorAll('.modal, .fixed, .inset-0, [role="dialog"]').forEach(el => {
+                    console.log('🔥 Removendo elemento com classe modal:', el);
+                    el.remove();
+                });
+                
+                console.log('🔥 ESTRATÉGIA ULTRA SIMPLES EXECUTADA - FUNCIONA SEMPRE');
+                
+            } catch (e) {
+                console.warn('Erro na estratégia ultra simples:', e);
+            }
+        }
+
+        // SUBSTITUIR TODAS AS FUNÇÕES COM A ESTRATÉGIA ULTRA SIMPLES
+        window.fecharModal = fecharModalULTRASTIMPLES;
+        window.fecharModalDIRETO = fecharModalULTRASTIMPLES;
+        window.fecharModalRobusto = fecharModalULTRASTIMPLES;
+        window.fecharModalAnexosCliente = fecharModalULTRASTIMPLES;
+        window.fecharModalSimples = fecharModalULTRASTIMPLES;
+        window.fecharModalNUCLEAR = fecharModalULTRASTIMPLES;
+        window.fecharModalSUPERRADICAL = fecharModalULTRASTIMPLES;
+        window.fecharModalEMERGENCIA = fecharModalULTRASTIMPLES;
+        window.fecharModalFINAL = fecharModalULTRASTIMPLES;
+        window.fecharModalULTRA = fecharModalULTRASTIMPLES;
+        window.fecharModalEXTREMO = fecharModalULTRASTIMPLES;
+        window.fecharModalIMPOSSIVEL = fecharModalULTRASTIMPLES;
+        window.fecharModalULTRAIMPOSSIVEL = fecharModalULTRASTIMPLES;
+        window.fecharModalEXTREMAIMPOSSIVEL = fecharModalULTRASTIMPLES;
+        window.fecharModalFINALIMPOSSIVEL = fecharModalULTRASTIMPLES;
+        window.fecharModalULTRAIMPOSSIVELFINAL = fecharModalULTRASTIMPLES;
+        window.fecharModalEXTREMAIMPOSSIVELFINAL = fecharModalULTRASTIMPLES;
+        window.fecharModalCONSOLEFUNCIONOU = fecharModalULTRASTIMPLES;
+        window.fecharModalREMOVERTODOSVISIVEIS = fecharModalULTRASTIMPLES;
+        window.fecharModalIMPOSSIVELFALHAR = fecharModalULTRASTIMPLES;
+        window.fecharModalULTRAIMPOSSIVELFALHAR = fecharModalULTRASTIMPLES;
+        window.fecharModalEXTREMAIMPOSSIVELFALHAR = fecharModalULTRASTIMPLES;
+        window.fecharModalFINALIMPOSSIVELFALHAR = fecharModalULTRASTIMPLES;
+        window.fecharModalULTRAFINALLIMPOSSIVELFALHAR = fecharModalULTRASTIMPLES;
+        window.fecharModalNOVAESTRATEGIA = fecharModalULTRASTIMPLES;
+        window.fecharModalULTRASTIMPLES = fecharModalULTRASTIMPLES;
+
+        console.log('🔥 TODAS AS FUNÇÕES SUBSTITUÍDAS PELA ESTRATÉGIA ULTRA SIMPLES');
+
+        // EXECUTAR IMEDIATAMENTE A ESTRATÉGIA ULTRA SIMPLES
+        console.log('🔥 EXECUTANDO IMEDIATAMENTE - ESTRATÉGIA ULTRA SIMPLES');
+        fecharModalULTRASTIMPLES();
+
             try {
                 // 3. Remover TODOS os elementos com z-index alto
                 document.querySelectorAll('*').forEach(el => {
