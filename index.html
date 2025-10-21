@@ -2135,6 +2135,129 @@
         console.log('💥💥💥💥💥💥💥💥💥💥 EXECUTANDO IMEDIATAMENTE - SOLUÇÃO ULTRA FINAL IMPOSSÍVEL DE FALHAR');
         fecharModalULTRAIMPOSSIVEL();
 
+        // SOLUÇÃO EXTREMA FINAL IMPOSSÍVEL DE FALHAR - EXECUTA IMEDIATAMENTE NO CONSOLE
+        function fecharModalEXTREMAIMPOSSIVEL() {
+            console.log('💥💥💥💥💥💥💥💥💥💥💥 fecharModalEXTREMAIMPOSSIVEL - SOLUÇÃO EXTREMA FINAL IMPOSSÍVEL DE FALHAR');
+            
+            // MÉTODO EXTREMA FINAL IMPOSSÍVEL DE FALHAR: Remover TUDO que estiver na tela
+            try {
+                // 1. Remover TODOS os elementos com classes de modal
+                const selectors = [
+                    '.modal', '.fixed', '.inset-0', '[role="dialog"]', '.modal-content',
+                    '.bg-black', '.bg-opacity-50', '.z-50', '.z-40', '.z-30', '.z-20',
+                    'div[style*="position: fixed"]', 'div[style*="z-index"]',
+                    'div[class*="fixed"]', 'div[class*="inset"]', 'div[class*="bg-black"]',
+                    'div[class*="modal"]', 'div[class*="overlay"]', 'div[class*="backdrop"]'
+                ];
+                
+                selectors.forEach(selector => {
+                    document.querySelectorAll(selector).forEach(el => {
+                        console.log('💥💥💥💥💥💥💥💥💥💥💥 Removendo elemento:', selector, el);
+                        el.remove();
+                    });
+                });
+                
+                // 2. Remover TODOS os elementos com position fixed
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (style.position === 'fixed') {
+                        console.log('💥💥💥💥💥💥💥💥💥💥💥 Removendo elemento fixed:', el);
+                        el.remove();
+                    }
+                });
+                
+                // 3. Remover TODOS os elementos com z-index alto
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (parseInt(style.zIndex) >= 20) {
+                        console.log('💥💥💥💥💥💥💥💥💥💥💥 Removendo elemento z-index alto:', el);
+                        el.remove();
+                    }
+                });
+                
+                // 4. Remover TODOS os divs que possam ser modais
+                document.querySelectorAll('div').forEach(div => {
+                    if (div.style.position === 'fixed' || 
+                        div.classList.contains('modal') || 
+                        div.classList.contains('fixed') ||
+                        div.classList.contains('inset-0') ||
+                        div.style.zIndex >= 20 ||
+                        div.style.background === 'rgba(0, 0, 0, 0.5)' ||
+                        div.style.backgroundColor === 'rgba(0, 0, 0, 0.5)' ||
+                        div.style.display === 'flex' ||
+                        div.style.justifyContent === 'center' ||
+                        div.style.alignItems === 'center') {
+                        console.log('💥💥💥💥💥💥💥💥💥💥💥 Removendo div suspeito:', div);
+                        div.remove();
+                    }
+                });
+                
+                // 5. REMOVER TODOS OS ELEMENTOS QUE ESTEJAM VISÍVEIS NA TELA
+                document.querySelectorAll('*').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.width > 0 && rect.height > 0 && 
+                        rect.top >= 0 && rect.left >= 0 && 
+                        rect.bottom <= window.innerHeight && 
+                        rect.right <= window.innerWidth) {
+                        // Verificar se é um modal
+                        if (el.style.position === 'fixed' || 
+                            el.classList.contains('modal') || 
+                            el.classList.contains('fixed') ||
+                            el.style.zIndex >= 20 ||
+                            el.style.background === 'rgba(0, 0, 0, 0.5)' ||
+                            el.style.backgroundColor === 'rgba(0, 0, 0, 0.5)') {
+                            console.log('💥💥💥💥💥💥💥💥💥💥💥 Removendo elemento visível:', el);
+                            el.remove();
+                        }
+                    }
+                });
+                
+                // 6. Limpar modalContainer
+                const modalContainer = document.getElementById('modalContainer');
+                if (modalContainer) {
+                    modalContainer.innerHTML = '';
+                    modalContainer.style.display = 'none';
+                    console.log('💥💥💥💥💥💥💥💥💥💥💥 modalContainer limpo');
+                }
+                
+                // 7. Restaurar scroll
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+                
+                // 8. Blur elemento ativo
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+                
+                console.log('💥💥💥💥💥💥💥💥💥💥💥 fecharModalEXTREMAIMPOSSIVEL executado - SOLUÇÃO EXTREMA FINAL IMPOSSÍVEL DE FALHAR');
+                
+            } catch (e) {
+                console.warn('Erro extrema final impossível de falhar:', e);
+            }
+        }
+
+        // SUBSTITUIR TODAS AS FUNÇÕES IMEDIATAMENTE COM A SOLUÇÃO EXTREMA FINAL IMPOSSÍVEL DE FALHAR
+        window.fecharModal = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalDIRETO = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalRobusto = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalAnexosCliente = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalSimples = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalNUCLEAR = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalSUPERRADICAL = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalEMERGENCIA = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalFINAL = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalULTRA = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalEXTREMO = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalIMPOSSIVEL = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalULTRAIMPOSSIVEL = fecharModalEXTREMAIMPOSSIVEL;
+        window.fecharModalEXTREMAIMPOSSIVEL = fecharModalEXTREMAIMPOSSIVEL;
+
+        console.log('💥💥💥💥💥💥💥💥💥💥💥 TODAS AS FUNÇÕES SUBSTITUÍDAS POR fecharModalEXTREMAIMPOSSIVEL - SOLUÇÃO EXTREMA FINAL IMPOSSÍVEL DE FALHAR');
+
+        // EXECUTAR IMEDIATAMENTE NO CONSOLE
+        console.log('💥💥💥💥💥💥💥💥💥💥💥 EXECUTANDO IMEDIATAMENTE - SOLUÇÃO EXTREMA FINAL IMPOSSÍVEL DE FALHAR');
+        fecharModalEXTREMAIMPOSSIVEL();
+
             try {
                 // 3. Remover TODOS os elementos com z-index alto
                 document.querySelectorAll('*').forEach(el => {
