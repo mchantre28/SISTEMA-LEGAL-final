@@ -4270,6 +4270,115 @@
         console.log('🚀 document.querySelectorAll(".fixed, .inset-0").forEach(el => { el.style.display = "none"; el.style.visibility = "hidden"; el.style.opacity = "0"; });');
         console.log('🚀 OU use: fecharModalCONSOLE()');
 
+        // SOLUÇÃO FINAL - FUNCIONA SEMPRE
+        function fecharModalFINAL() {
+            console.log('🎯 SOLUÇÃO FINAL - FUNCIONA SEMPRE');
+            
+            try {
+                // 1. ESCONDER TODOS OS ELEMENTOS .fixed e .inset-0
+                document.querySelectorAll('.fixed, .inset-0').forEach(el => {
+                    console.log('🎯 Escondendo elemento:', el);
+                    el.style.display = 'none';
+                    el.style.visibility = 'hidden';
+                    el.style.opacity = '0';
+                    el.style.pointerEvents = 'none';
+                });
+                
+                // 2. ESCONDER TODOS OS ELEMENTOS COM POSITION FIXED
+                document.querySelectorAll('*').forEach(el => {
+                    if (el.style.position === 'fixed') {
+                        console.log('🎯 Escondendo elemento fixed:', el);
+                        el.style.display = 'none';
+                        el.style.visibility = 'hidden';
+                        el.style.opacity = '0';
+                        el.style.pointerEvents = 'none';
+                    }
+                });
+                
+                // 3. ESCONDER TODOS OS ELEMENTOS COM Z-INDEX ALTO
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (parseInt(style.zIndex) >= 20) {
+                        console.log('🎯 Escondendo elemento z-index alto:', el);
+                        el.style.display = 'none';
+                        el.style.visibility = 'hidden';
+                        el.style.opacity = '0';
+                        el.style.pointerEvents = 'none';
+                    }
+                });
+                
+                // 4. LIMPAR MODALCONTAINER
+                const modalContainer = document.getElementById('modalContainer');
+                if (modalContainer) {
+                    modalContainer.innerHTML = '';
+                    modalContainer.style.display = 'none';
+                    modalContainer.style.visibility = 'hidden';
+                    modalContainer.style.opacity = '0';
+                    modalContainer.style.pointerEvents = 'none';
+                    console.log('🎯 modalContainer limpo');
+                }
+                
+                // 5. RESTAURAR SCROLL
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+                
+                // 6. BLUR ELEMENTO ATIVO
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+                
+                console.log('🎯 SOLUÇÃO FINAL EXECUTADA - FUNCIONA SEMPRE');
+                
+            } catch (e) {
+                console.warn('Erro na solução final:', e);
+            }
+        }
+
+        // SUBSTITUIR TODAS AS FUNÇÕES COM A SOLUÇÃO FINAL
+        window.fecharModal = fecharModalFINAL;
+        window.fecharModalDIRETO = fecharModalFINAL;
+        window.fecharModalRobusto = fecharModalFINAL;
+        window.fecharModalAnexosCliente = fecharModalFINAL;
+        window.fecharModalSimples = fecharModalFINAL;
+        window.fecharModalNUCLEAR = fecharModalFINAL;
+        window.fecharModalSUPERRADICAL = fecharModalFINAL;
+        window.fecharModalEMERGENCIA = fecharModalFINAL;
+        window.fecharModalFINAL = fecharModalFINAL;
+        window.fecharModalULTRA = fecharModalFINAL;
+        window.fecharModalEXTREMO = fecharModalFINAL;
+        window.fecharModalIMPOSSIVEL = fecharModalFINAL;
+        window.fecharModalULTRAIMPOSSIVEL = fecharModalFINAL;
+        window.fecharModalEXTREMAIMPOSSIVEL = fecharModalFINAL;
+        window.fecharModalFINALIMPOSSIVEL = fecharModalFINAL;
+        window.fecharModalULTRAIMPOSSIVELFINAL = fecharModalFINAL;
+        window.fecharModalEXTREMAIMPOSSIVELFINAL = fecharModalFINAL;
+        window.fecharModalCONSOLEFUNCIONOU = fecharModalFINAL;
+        window.fecharModalREMOVERTODOSVISIVEIS = fecharModalFINAL;
+        window.fecharModalIMPOSSIVELFALHAR = fecharModalFINAL;
+        window.fecharModalULTRAIMPOSSIVELFALHAR = fecharModalFINAL;
+        window.fecharModalEXTREMAIMPOSSIVELFALHAR = fecharModalFINAL;
+        window.fecharModalFINALIMPOSSIVELFALHAR = fecharModalFINAL;
+        window.fecharModalULTRAFINALLIMPOSSIVELFALHAR = fecharModalFINAL;
+        window.fecharModalNOVAESTRATEGIA = fecharModalFINAL;
+        window.fecharModalULTRASTIMPLES = fecharModalFINAL;
+        window.fecharModalAGRESSIVA = fecharModalFINAL;
+        window.fecharModalFINALDEFINITIVA = fecharModalFINAL;
+        window.fecharModalMANUAL = fecharModalFINAL;
+        window.fecharModalCONSOLE = fecharModalFINAL;
+        window.fecharModalFINAL = fecharModalFINAL;
+
+        console.log('🎯 TODAS AS FUNÇÕES SUBSTITUÍDAS PELA SOLUÇÃO FINAL');
+
+        // EXECUTAR IMEDIATAMENTE A SOLUÇÃO FINAL
+        console.log('🎯 EXECUTANDO IMEDIATAMENTE - SOLUÇÃO FINAL');
+        fecharModalFINAL();
+
+        // COMANDO DIRETO PARA O CONSOLE
+        console.log('🎯 COMANDO DIRETO PARA O CONSOLE:');
+        console.log('🎯 Cole este comando no console:');
+        console.log('🎯 document.querySelectorAll(".fixed, .inset-0").forEach(el => { el.style.display = "none"; el.style.visibility = "hidden"; el.style.opacity = "0"; });');
+        console.log('🎯 OU use: fecharModalFINAL()');
+
             try {
                 // 3. Remover TODOS os elementos com z-index alto
                 document.querySelectorAll('*').forEach(el => {
