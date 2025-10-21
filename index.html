@@ -1425,11 +1425,11 @@
             }
         }, 2000);
 
-        // SOLUÇÃO ULTRA NUCLEAR - REMOVE TUDO ATÉ ENCONTRAR O MODAL
+        // SOLUÇÃO EXTREMA - REMOVE TUDO QUE ESTIVER NA TELA
         function fecharModalNUCLEAR() {
-            console.log('💥💥💥 fecharModalNUCLEAR - SOLUÇÃO ULTRA NUCLEAR');
+            console.log('💥💥💥💥💥 fecharModalNUCLEAR - SOLUÇÃO EXTREMA - REMOVE TUDO');
             
-            // MÉTODO ULTRA NUCLEAR: Remover TUDO que possa ser modal
+            // MÉTODO EXTREMO: Remover TUDO que estiver na tela
             try {
                 // 1. Remover TODOS os elementos com classes de modal
                 const selectors = [
@@ -1442,7 +1442,7 @@
                 
                 selectors.forEach(selector => {
                     document.querySelectorAll(selector).forEach(el => {
-                        console.log('💥💥💥 Removendo elemento:', selector, el);
+                        console.log('💥💥💥💥💥 Removendo elemento:', selector, el);
                         el.remove();
                     });
                 });
@@ -1451,7 +1451,7 @@
                 document.querySelectorAll('*').forEach(el => {
                     const style = getComputedStyle(el);
                     if (style.position === 'fixed') {
-                        console.log('💥💥💥 Removendo elemento fixed:', el);
+                        console.log('💥💥💥💥💥 Removendo elemento fixed:', el);
                         el.remove();
                     }
                 });
@@ -1460,7 +1460,7 @@
                 document.querySelectorAll('*').forEach(el => {
                     const style = getComputedStyle(el);
                     if (parseInt(style.zIndex) >= 20) {
-                        console.log('💥💥💥 Removendo elemento z-index alto:', el);
+                        console.log('💥💥💥💥💥 Removendo elemento z-index alto:', el);
                         el.remove();
                     }
                 });
@@ -1477,32 +1477,52 @@
                         div.style.display === 'flex' ||
                         div.style.justifyContent === 'center' ||
                         div.style.alignItems === 'center') {
-                        console.log('💥💥💥 Removendo div suspeito:', div);
+                        console.log('💥💥💥💥💥 Removendo div suspeito:', div);
                         div.remove();
                     }
                 });
                 
-                // 5. Limpar modalContainer
+                // 5. REMOVER TODOS OS ELEMENTOS QUE ESTEJAM VISÍVEIS NA TELA
+                document.querySelectorAll('*').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.width > 0 && rect.height > 0 && 
+                        rect.top >= 0 && rect.left >= 0 && 
+                        rect.bottom <= window.innerHeight && 
+                        rect.right <= window.innerWidth) {
+                        // Verificar se é um modal
+                        if (el.style.position === 'fixed' || 
+                            el.classList.contains('modal') || 
+                            el.classList.contains('fixed') ||
+                            el.style.zIndex >= 20 ||
+                            el.style.background === 'rgba(0, 0, 0, 0.5)' ||
+                            el.style.backgroundColor === 'rgba(0, 0, 0, 0.5)') {
+                            console.log('💥💥💥💥💥 Removendo elemento visível:', el);
+                            el.remove();
+                        }
+                    }
+                });
+                
+                // 6. Limpar modalContainer
                 const modalContainer = document.getElementById('modalContainer');
                 if (modalContainer) {
                     modalContainer.innerHTML = '';
                     modalContainer.style.display = 'none';
-                    console.log('💥💥💥 modalContainer limpo');
+                    console.log('💥💥💥💥💥 modalContainer limpo');
                 }
                 
-                // 6. Restaurar scroll
+                // 7. Restaurar scroll
                 document.body.style.overflow = '';
                 document.documentElement.style.overflow = '';
                 
-                // 7. Blur elemento ativo
+                // 8. Blur elemento ativo
                 if (document.activeElement && typeof document.activeElement.blur === 'function') {
                     document.activeElement.blur();
                 }
                 
-                console.log('💥💥💥 fecharModalNUCLEAR executado - SOLUÇÃO ULTRA NUCLEAR');
+                console.log('💥💥💥💥💥 fecharModalNUCLEAR executado - SOLUÇÃO EXTREMA');
                 
             } catch (e) {
-                console.warn('Erro ultra nuclear:', e);
+                console.warn('Erro extremo:', e);
             }
         }
 
