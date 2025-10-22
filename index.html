@@ -19989,6 +19989,66 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         console.log('🎯 Cole este comando no console:');
         console.log('🎯 document.querySelectorAll(".fixed, .inset-0").forEach(el => { el.remove(); });');
         console.log('🎯 OU use: fecharModalSIMPLES()');
+
+        // SUBSTITUIR TODAS AS FUNÇÕES fecharModalDIRETO POR UMA QUE FUNCIONA
+        function fecharModalDIRETO_FUNCIONA() {
+            console.log('🎯 fecharModalDIRETO_FUNCIONA chamado - SOLUÇÃO QUE FUNCIONA');
+            
+            try {
+                // 1. REMOVER TODOS OS ELEMENTOS .fixed e .inset-0
+                document.querySelectorAll('.fixed, .inset-0').forEach(el => {
+                    console.log('🎯 Removendo elemento:', el);
+                    el.remove();
+                });
+                
+                // 2. REMOVER TODOS OS ELEMENTOS COM POSITION FIXED
+                document.querySelectorAll('*').forEach(el => {
+                    if (el.style.position === 'fixed') {
+                        console.log('🎯 Removendo elemento fixed:', el);
+                        el.remove();
+                    }
+                });
+                
+                // 3. REMOVER TODOS OS ELEMENTOS COM Z-INDEX ALTO
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (parseInt(style.zIndex) >= 20) {
+                        console.log('🎯 Removendo elemento z-index alto:', el);
+                        el.remove();
+                    }
+                });
+                
+                // 4. LIMPAR MODALCONTAINER
+                const modalContainer = document.getElementById('modalContainer');
+                if (modalContainer) {
+                    modalContainer.innerHTML = '';
+                    modalContainer.style.display = 'none';
+                    modalContainer.style.visibility = 'hidden';
+                    modalContainer.style.opacity = '0';
+                    modalContainer.style.pointerEvents = 'none';
+                    console.log('🎯 modalContainer limpo');
+                }
+                
+                // 5. RESTAURAR SCROLL
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+                
+                // 6. BLUR ELEMENTO ATIVO
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+                
+                console.log('🎯 fecharModalDIRETO_FUNCIONA executado - SOLUÇÃO QUE FUNCIONA');
+                
+            } catch (e) {
+                console.warn('Erro na solução que funciona:', e);
+            }
+        }
+
+        // SUBSTITUIR A FUNÇÃO fecharModalDIRETO
+        window.fecharModalDIRETO = fecharModalDIRETO_FUNCIONA;
+
+        console.log('🎯 fecharModalDIRETO SUBSTITUÍDA POR FUNÇÃO QUE FUNCIONA');
     </script>
 </body>
 </html>
