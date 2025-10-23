@@ -1435,8 +1435,11 @@
         function fecharModalEMERGENCIA() { fecharModal(); }
         function fecharModalFINAL() { fecharModal(); }
         
-        // FUNÇÃO 'fechar' PARA O BOTÃO 'X'
-        function fechar() { fecharModal(); }
+        // FUNÇÃO 'fechar' PARA O BOTÃO 'X' - SOLUÇÃO AGRESSIVA
+        function fechar() { 
+            console.log('🎯 fechar() chamado - SOLUÇÃO AGRESSIVA');
+            fecharModal(); 
+        }
         
         // GARANTIR QUE TODAS AS FUNÇÕES ESTÃO DISPONÍVEIS GLOBALMENTE
         window.fechar = fechar;
@@ -1449,6 +1452,90 @@
         window.fecharModalSUPERRADICAL = fecharModalSUPERRADICAL;
         window.fecharModalEMERGENCIA = fecharModalEMERGENCIA;
         window.fecharModalFINAL = fecharModalFINAL;
+        
+        // SOLUÇÃO AGRESSIVA - FORÇAR FECHAMENTO IMEDIATO
+        function fecharModalAGRESSIVO() {
+            console.log('💥 fecharModalAGRESSIVO chamado - SOLUÇÃO AGRESSIVA');
+            
+            try {
+                // 1. FORÇAR ESCONDER TODOS OS ELEMENTOS .fixed e .inset-0
+                document.querySelectorAll('.fixed, .inset-0').forEach(el => {
+                    console.log('💥 FORÇANDO esconder elemento:', el);
+                    el.style.display = 'none !important';
+                    el.style.visibility = 'hidden !important';
+                    el.style.opacity = '0 !important';
+                    el.style.pointerEvents = 'none !important';
+                    el.style.position = 'static !important';
+                    el.style.zIndex = '-1 !important';
+                });
+                
+                // 2. FORÇAR ESCONDER TODOS OS ELEMENTOS COM POSITION FIXED
+                document.querySelectorAll('*').forEach(el => {
+                    if (el.style.position === 'fixed' || getComputedStyle(el).position === 'fixed') {
+                        console.log('💥 FORÇANDO esconder elemento fixed:', el);
+                        el.style.display = 'none !important';
+                        el.style.visibility = 'hidden !important';
+                        el.style.opacity = '0 !important';
+                        el.style.pointerEvents = 'none !important';
+                        el.style.position = 'static !important';
+                        el.style.zIndex = '-1 !important';
+                    }
+                });
+                
+                // 3. FORÇAR ESCONDER TODOS OS ELEMENTOS COM Z-INDEX ALTO
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (parseInt(style.zIndex) >= 20) {
+                        console.log('💥 FORÇANDO esconder elemento z-index alto:', el);
+                        el.style.display = 'none !important';
+                        el.style.visibility = 'hidden !important';
+                        el.style.opacity = '0 !important';
+                        el.style.pointerEvents = 'none !important';
+                        el.style.position = 'static !important';
+                        el.style.zIndex = '-1 !important';
+                    }
+                });
+                
+                // 4. FORÇAR LIMPAR MODALCONTAINER
+                const modalContainer = document.getElementById('modalContainer');
+                if (modalContainer) {
+                    modalContainer.innerHTML = '';
+                    modalContainer.style.display = 'none !important';
+                    modalContainer.style.visibility = 'hidden !important';
+                    modalContainer.style.opacity = '0 !important';
+                    modalContainer.style.pointerEvents = 'none !important';
+                    modalContainer.style.position = 'static !important';
+                    modalContainer.style.zIndex = '-1 !important';
+                    console.log('💥 modalContainer FORÇADO a limpar');
+                }
+                
+                // 5. FORÇAR RESTAURAR SCROLL
+                document.body.style.overflow = 'auto !important';
+                document.documentElement.style.overflow = 'auto !important';
+                
+                // 6. FORÇAR BLUR ELEMENTO ATIVO
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+                
+                console.log('💥 fecharModalAGRESSIVO executado - SOLUÇÃO AGRESSIVA');
+                
+            } catch (e) {
+                console.warn('Erro na solução agressiva:', e);
+            }
+        }
+        
+        // SUBSTITUIR TODAS AS FUNÇÕES COM A SOLUÇÃO AGRESSIVA
+        window.fechar = fecharModalAGRESSIVO;
+        window.fecharModal = fecharModalAGRESSIVO;
+        window.fecharModalRobusto = fecharModalAGRESSIVO;
+        window.fecharModalAnexosCliente = fecharModalAGRESSIVO;
+        window.fecharModalDIRETO = fecharModalAGRESSIVO;
+        window.fecharModalSimples = fecharModalAGRESSIVO;
+        window.fecharModalNUCLEAR = fecharModalAGRESSIVO;
+        window.fecharModalSUPERRADICAL = fecharModalAGRESSIVO;
+        window.fecharModalEMERGENCIA = fecharModalAGRESSIVO;
+        window.fecharModalFINAL = fecharModalAGRESSIVO;
 
         // FORÇAR RELOAD PARA GARANTIR VERSÃO MAIS RECENTE
         function forcarReload() {
