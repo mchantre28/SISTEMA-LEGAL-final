@@ -1453,75 +1453,54 @@
         window.fecharModalEMERGENCIA = fecharModalEMERGENCIA;
         window.fecharModalFINAL = fecharModalFINAL;
         
-        // SOLUÇÃO AGRESSIVA - FORÇAR FECHAMENTO IMEDIATO
+        // SOLUÇÃO ULTRA AGRESSIVA - REMOVER COMPLETAMENTE OS ELEMENTOS
         function fecharModalAGRESSIVO() {
-            console.log('💥 fecharModalAGRESSIVO chamado - SOLUÇÃO AGRESSIVA');
+            console.log('💥 fecharModalAGRESSIVO chamado - SOLUÇÃO ULTRA AGRESSIVA');
             
             try {
-                // 1. FORÇAR ESCONDER TODOS OS ELEMENTOS .fixed e .inset-0
+                // 1. REMOVER COMPLETAMENTE TODOS OS ELEMENTOS .fixed e .inset-0
                 document.querySelectorAll('.fixed, .inset-0').forEach(el => {
-                    console.log('💥 FORÇANDO esconder elemento:', el);
-                    el.style.display = 'none !important';
-                    el.style.visibility = 'hidden !important';
-                    el.style.opacity = '0 !important';
-                    el.style.pointerEvents = 'none !important';
-                    el.style.position = 'static !important';
-                    el.style.zIndex = '-1 !important';
+                    console.log('💥 REMOVENDO COMPLETAMENTE elemento:', el);
+                    el.remove();
                 });
                 
-                // 2. FORÇAR ESCONDER TODOS OS ELEMENTOS COM POSITION FIXED
+                // 2. REMOVER COMPLETAMENTE TODOS OS ELEMENTOS COM POSITION FIXED
                 document.querySelectorAll('*').forEach(el => {
                     if (el.style.position === 'fixed' || getComputedStyle(el).position === 'fixed') {
-                        console.log('💥 FORÇANDO esconder elemento fixed:', el);
-                        el.style.display = 'none !important';
-                        el.style.visibility = 'hidden !important';
-                        el.style.opacity = '0 !important';
-                        el.style.pointerEvents = 'none !important';
-                        el.style.position = 'static !important';
-                        el.style.zIndex = '-1 !important';
+                        console.log('💥 REMOVENDO COMPLETAMENTE elemento fixed:', el);
+                        el.remove();
                     }
                 });
                 
-                // 3. FORÇAR ESCONDER TODOS OS ELEMENTOS COM Z-INDEX ALTO
+                // 3. REMOVER COMPLETAMENTE TODOS OS ELEMENTOS COM Z-INDEX ALTO
                 document.querySelectorAll('*').forEach(el => {
                     const style = getComputedStyle(el);
                     if (parseInt(style.zIndex) >= 20) {
-                        console.log('💥 FORÇANDO esconder elemento z-index alto:', el);
-                        el.style.display = 'none !important';
-                        el.style.visibility = 'hidden !important';
-                        el.style.opacity = '0 !important';
-                        el.style.pointerEvents = 'none !important';
-                        el.style.position = 'static !important';
-                        el.style.zIndex = '-1 !important';
+                        console.log('💥 REMOVENDO COMPLETAMENTE elemento z-index alto:', el);
+                        el.remove();
                     }
                 });
                 
-                // 4. FORÇAR LIMPAR MODALCONTAINER
+                // 4. REMOVER COMPLETAMENTE MODALCONTAINER
                 const modalContainer = document.getElementById('modalContainer');
                 if (modalContainer) {
-                    modalContainer.innerHTML = '';
-                    modalContainer.style.display = 'none !important';
-                    modalContainer.style.visibility = 'hidden !important';
-                    modalContainer.style.opacity = '0 !important';
-                    modalContainer.style.pointerEvents = 'none !important';
-                    modalContainer.style.position = 'static !important';
-                    modalContainer.style.zIndex = '-1 !important';
-                    console.log('💥 modalContainer FORÇADO a limpar');
+                    modalContainer.remove();
+                    console.log('💥 modalContainer REMOVIDO COMPLETAMENTE');
                 }
                 
-                // 5. FORÇAR RESTAURAR SCROLL
-                document.body.style.overflow = 'auto !important';
-                document.documentElement.style.overflow = 'auto !important';
+                // 5. RESTAURAR SCROLL
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
                 
-                // 6. FORÇAR BLUR ELEMENTO ATIVO
+                // 6. BLUR ELEMENTO ATIVO
                 if (document.activeElement && typeof document.activeElement.blur === 'function') {
                     document.activeElement.blur();
                 }
                 
-                console.log('💥 fecharModalAGRESSIVO executado - SOLUÇÃO AGRESSIVA');
+                console.log('💥 fecharModalAGRESSIVO executado - SOLUÇÃO ULTRA AGRESSIVA');
                 
             } catch (e) {
-                console.warn('Erro na solução agressiva:', e);
+                console.warn('Erro na solução ultra agressiva:', e);
             }
         }
         
