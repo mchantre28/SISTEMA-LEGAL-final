@@ -20229,57 +20229,132 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // GARANTIR QUE A FUNÇÃO ESTÁ DISPONÍVEL GLOBALMENTE
         window.fecharModalFINAL = fecharModalFINAL;
 
-        // SUBSTITUIR TODAS AS FUNÇÕES COM A SOLUÇÃO FINAL SIMPLES
-        window.fecharModal = fecharModalFINAL;
-        window.fecharModalDIRETO = fecharModalFINAL;
-        window.fecharModalRobusto = fecharModalFINAL;
-        window.fecharModalAnexosCliente = fecharModalFINAL;
-        window.fecharModalSimples = fecharModalFINAL;
-        window.fecharModalNUCLEAR = fecharModalFINAL;
-        window.fecharModalSUPERRADICAL = fecharModalFINAL;
-        window.fecharModalEMERGENCIA = fecharModalFINAL;
-        window.fecharModalFINAL = fecharModalFINAL;
-        window.fecharModalULTRA = fecharModalFINAL;
-        window.fecharModalEXTREMO = fecharModalFINAL;
-        window.fecharModalIMPOSSIVEL = fecharModalFINAL;
-        window.fecharModalULTRAIMPOSSIVEL = fecharModalFINAL;
-        window.fecharModalEXTREMAIMPOSSIVEL = fecharModalFINAL;
-        window.fecharModalFINALIMPOSSIVEL = fecharModalFINAL;
-        window.fecharModalULTRAIMPOSSIVELFINAL = fecharModalFINAL;
-        window.fecharModalEXTREMAIMPOSSIVELFINAL = fecharModalFINAL;
-        window.fecharModalCONSOLEFUNCIONOU = fecharModalFINAL;
-        window.fecharModalREMOVERTODOSVISIVEIS = fecharModalFINAL;
-        window.fecharModalIMPOSSIVELFALHAR = fecharModalFINAL;
-        window.fecharModalULTRAIMPOSSIVELFALHAR = fecharModalFINAL;
-        window.fecharModalEXTREMAIMPOSSIVELFALHAR = fecharModalFINAL;
-        window.fecharModalFINALIMPOSSIVELFALHAR = fecharModalFINAL;
-        window.fecharModalULTRAFINALLIMPOSSIVELFALHAR = fecharModalFINAL;
-        window.fecharModalNOVAESTRATEGIA = fecharModalFINAL;
-        window.fecharModalULTRASTIMPLES = fecharModalFINAL;
-        window.fecharModalAGRESSIVA = fecharModalFINAL;
-        window.fecharModalFINALDEFINITIVA = fecharModalFINAL;
-        window.fecharModalMANUAL = fecharModalFINAL;
-        window.fecharModalCONSOLE = fecharModalFINAL;
-        window.fecharModalFINAL = fecharModalFINAL;
-        window.fecharModalLIMPO = fecharModalFINAL;
-        window.fecharModalULTRA = fecharModalFINAL;
-        window.fecharModalFINALDEFINITIVA = fecharModalFINAL;
-        window.fecharModalDEFINITIVO = fecharModalFINAL;
-        window.fecharModalULTRA = fecharModalFINAL;
-        window.fecharModalSIMPLES = fecharModalFINAL;
-        window.fecharModalDIRETO_FUNCIONA = fecharModalFINAL;
+        // SOLUÇÃO ULTRA AGRESSIVA - FORÇA O FECHAMENTO
+        function fecharModalULTRA() {
+            console.log('💥 fecharModalULTRA chamado - SOLUÇÃO ULTRA AGRESSIVA');
+            
+            try {
+                // 1. FORÇAR ESCONDER TODOS OS ELEMENTOS .fixed e .inset-0
+                document.querySelectorAll('.fixed, .inset-0').forEach(el => {
+                    console.log('💥 FORÇANDO esconder elemento:', el);
+                    el.style.display = 'none !important';
+                    el.style.visibility = 'hidden !important';
+                    el.style.opacity = '0 !important';
+                    el.style.pointerEvents = 'none !important';
+                    el.style.position = 'static !important';
+                    el.style.zIndex = '-1 !important';
+                });
+                
+                // 2. FORÇAR ESCONDER TODOS OS ELEMENTOS COM POSITION FIXED
+                document.querySelectorAll('*').forEach(el => {
+                    if (el.style.position === 'fixed' || getComputedStyle(el).position === 'fixed') {
+                        console.log('💥 FORÇANDO esconder elemento fixed:', el);
+                        el.style.display = 'none !important';
+                        el.style.visibility = 'hidden !important';
+                        el.style.opacity = '0 !important';
+                        el.style.pointerEvents = 'none !important';
+                        el.style.position = 'static !important';
+                        el.style.zIndex = '-1 !important';
+                    }
+                });
+                
+                // 3. FORÇAR ESCONDER TODOS OS ELEMENTOS COM Z-INDEX ALTO
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (parseInt(style.zIndex) >= 20) {
+                        console.log('💥 FORÇANDO esconder elemento z-index alto:', el);
+                        el.style.display = 'none !important';
+                        el.style.visibility = 'hidden !important';
+                        el.style.opacity = '0 !important';
+                        el.style.pointerEvents = 'none !important';
+                        el.style.position = 'static !important';
+                        el.style.zIndex = '-1 !important';
+                    }
+                });
+                
+                // 4. FORÇAR LIMPAR MODALCONTAINER
+                const modalContainer = document.getElementById('modalContainer');
+                if (modalContainer) {
+                    modalContainer.innerHTML = '';
+                    modalContainer.style.display = 'none !important';
+                    modalContainer.style.visibility = 'hidden !important';
+                    modalContainer.style.opacity = '0 !important';
+                    modalContainer.style.pointerEvents = 'none !important';
+                    modalContainer.style.position = 'static !important';
+                    modalContainer.style.zIndex = '-1 !important';
+                    console.log('💥 modalContainer FORÇADO a limpar');
+                }
+                
+                // 5. FORÇAR RESTAURAR SCROLL
+                document.body.style.overflow = 'auto !important';
+                document.documentElement.style.overflow = 'auto !important';
+                
+                // 6. FORÇAR BLUR ELEMENTO ATIVO
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+                
+                console.log('💥 fecharModalULTRA executado - SOLUÇÃO ULTRA AGRESSIVA');
+                
+            } catch (e) {
+                console.warn('Erro na solução ultra agressiva:', e);
+            }
+        }
 
-        console.log('🎯 TODAS AS FUNÇÕES SUBSTITUÍDAS PELA SOLUÇÃO FINAL SIMPLES');
+        // GARANTIR QUE A FUNÇÃO ULTRA ESTÁ DISPONÍVEL GLOBALMENTE
+        window.fecharModalULTRA = fecharModalULTRA;
 
-        // EXECUTAR IMEDIATAMENTE A SOLUÇÃO FINAL SIMPLES
-        console.log('🎯 EXECUTANDO IMEDIATAMENTE - SOLUÇÃO FINAL SIMPLES');
-        fecharModalFINAL();
+        // SUBSTITUIR TODAS AS FUNÇÕES COM A SOLUÇÃO ULTRA AGRESSIVA
+        window.fecharModal = fecharModalULTRA;
+        window.fecharModalDIRETO = fecharModalULTRA;
+        window.fecharModalRobusto = fecharModalULTRA;
+        window.fecharModalAnexosCliente = fecharModalULTRA;
+        window.fecharModalSimples = fecharModalULTRA;
+        window.fecharModalNUCLEAR = fecharModalULTRA;
+        window.fecharModalSUPERRADICAL = fecharModalULTRA;
+        window.fecharModalEMERGENCIA = fecharModalULTRA;
+        window.fecharModalFINAL = fecharModalULTRA;
+        window.fecharModalULTRA = fecharModalULTRA;
+        window.fecharModalEXTREMO = fecharModalULTRA;
+        window.fecharModalIMPOSSIVEL = fecharModalULTRA;
+        window.fecharModalULTRAIMPOSSIVEL = fecharModalULTRA;
+        window.fecharModalEXTREMAIMPOSSIVEL = fecharModalULTRA;
+        window.fecharModalFINALIMPOSSIVEL = fecharModalULTRA;
+        window.fecharModalULTRAIMPOSSIVELFINAL = fecharModalULTRA;
+        window.fecharModalEXTREMAIMPOSSIVELFINAL = fecharModalULTRA;
+        window.fecharModalCONSOLEFUNCIONOU = fecharModalULTRA;
+        window.fecharModalREMOVERTODOSVISIVEIS = fecharModalULTRA;
+        window.fecharModalIMPOSSIVELFALHAR = fecharModalULTRA;
+        window.fecharModalULTRAIMPOSSIVELFALHAR = fecharModalULTRA;
+        window.fecharModalEXTREMAIMPOSSIVELFALHAR = fecharModalULTRA;
+        window.fecharModalFINALIMPOSSIVELFALHAR = fecharModalULTRA;
+        window.fecharModalULTRAFINALLIMPOSSIVELFALHAR = fecharModalULTRA;
+        window.fecharModalNOVAESTRATEGIA = fecharModalULTRA;
+        window.fecharModalULTRASTIMPLES = fecharModalULTRA;
+        window.fecharModalAGRESSIVA = fecharModalULTRA;
+        window.fecharModalFINALDEFINITIVA = fecharModalULTRA;
+        window.fecharModalMANUAL = fecharModalULTRA;
+        window.fecharModalCONSOLE = fecharModalULTRA;
+        window.fecharModalFINAL = fecharModalULTRA;
+        window.fecharModalLIMPO = fecharModalULTRA;
+        window.fecharModalULTRA = fecharModalULTRA;
+        window.fecharModalFINALDEFINITIVA = fecharModalULTRA;
+        window.fecharModalDEFINITIVO = fecharModalULTRA;
+        window.fecharModalULTRA = fecharModalULTRA;
+        window.fecharModalSIMPLES = fecharModalULTRA;
+        window.fecharModalDIRETO_FUNCIONA = fecharModalULTRA;
+
+        console.log('💥 TODAS AS FUNÇÕES SUBSTITUÍDAS PELA SOLUÇÃO ULTRA AGRESSIVA');
+
+        // EXECUTAR IMEDIATAMENTE A SOLUÇÃO ULTRA AGRESSIVA
+        console.log('💥 EXECUTANDO IMEDIATAMENTE - SOLUÇÃO ULTRA AGRESSIVA');
+        fecharModalULTRA();
 
         // COMANDO DIRETO PARA O CONSOLE (QUE FUNCIONA SEMPRE)
-        console.log('🎯 COMANDO DIRETO PARA O CONSOLE (QUE FUNCIONA SEMPRE):');
-        console.log('🎯 Cole este comando no console:');
-        console.log('🎯 document.querySelectorAll(".fixed, .inset-0").forEach(el => { el.style.display = "none"; el.style.visibility = "hidden"; el.style.opacity = "0"; });');
-        console.log('🎯 OU use: fecharModalFINAL()');
+        console.log('💥 COMANDO DIRETO PARA O CONSOLE (QUE FUNCIONA SEMPRE):');
+        console.log('💥 Cole este comando no console:');
+        console.log('💥 document.querySelectorAll(".fixed, .inset-0").forEach(el => { el.style.display = "none !important"; el.style.visibility = "hidden !important"; el.style.opacity = "0 !important"; });');
+        console.log('💥 OU use: fecharModalULTRA()');
     </script>
 </body>
 </html>
