@@ -20226,6 +20226,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             }
         }
 
+        // GARANTIR QUE A FUNÇÃO ESTÁ DISPONÍVEL GLOBALMENTE
+        window.fecharModalFINAL = fecharModalFINAL;
+
         // SUBSTITUIR TODAS AS FUNÇÕES COM A SOLUÇÃO FINAL SIMPLES
         window.fecharModal = fecharModalFINAL;
         window.fecharModalDIRETO = fecharModalFINAL;
