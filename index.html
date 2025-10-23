@@ -1434,6 +1434,21 @@
         function fecharModalSUPERRADICAL() { fecharModal(); }
         function fecharModalEMERGENCIA() { fecharModal(); }
         function fecharModalFINAL() { fecharModal(); }
+        
+        // FUNÇÃO 'fechar' PARA O BOTÃO 'X'
+        function fechar() { fecharModal(); }
+        
+        // GARANTIR QUE TODAS AS FUNÇÕES ESTÃO DISPONÍVEIS GLOBALMENTE
+        window.fechar = fechar;
+        window.fecharModal = fecharModal;
+        window.fecharModalRobusto = fecharModalRobusto;
+        window.fecharModalAnexosCliente = fecharModalAnexosCliente;
+        window.fecharModalDIRETO = fecharModalDIRETO;
+        window.fecharModalSimples = fecharModalSimples;
+        window.fecharModalNUCLEAR = fecharModalNUCLEAR;
+        window.fecharModalSUPERRADICAL = fecharModalSUPERRADICAL;
+        window.fecharModalEMERGENCIA = fecharModalEMERGENCIA;
+        window.fecharModalFINAL = fecharModalFINAL;
 
         // FORÇAR RELOAD PARA GARANTIR VERSÃO MAIS RECENTE
         function forcarReload() {
