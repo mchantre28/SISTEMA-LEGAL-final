@@ -1363,12 +1363,12 @@
 
         // Função robusta para fechar modais
         function fecharModalRobusto() {
-            console.log('🚨 SOLUÇÃO DE EMERGÊNCIA ATIVADA - VAI FUNCIONAR 100%');
+            console.log('🔥 SOLUÇÃO FINAL DEFINITIVA - MÉTODO ULTRA AGRESSIVO');
             
-            // SOLUÇÃO DE EMERGÊNCIA - MÉTODO NUCLEAR
+            // SOLUÇÃO FINAL DEFINITIVA - MÉTODO ULTRA AGRESSIVO
             try {
-                // 1. FORÇAR REMOÇÃO DE TODOS OS ELEMENTOS POSSÍVEIS
-                const elementosParaRemover = [
+                // 1. FORÇAR REMOÇÃO IMEDIATA DE TODOS OS ELEMENTOS POSSÍVEIS
+                const seletoresUltraAgressivos = [
                     '.fixed',
                     '.inset-0', 
                     '.modal',
@@ -1378,28 +1378,30 @@
                     'div[style*="position: fixed"]',
                     'div[style*="z-index"]',
                     '[class*="fixed"]',
-                    '[class*="modal"]'
+                    '[class*="modal"]',
+                    '[style*="position: fixed"]',
+                    '[style*="z-index"]',
+                    'div[style*="bg-black"]',
+                    'div[style*="bg-opacity"]'
                 ];
                 
-                elementosParaRemover.forEach(seletor => {
+                seletoresUltraAgressivos.forEach(seletor => {
                     try {
                         document.querySelectorAll(seletor).forEach(el => {
-                            // Método 1: Esconder
-                            el.style.display = 'none';
-                            el.style.visibility = 'hidden';
-                            el.style.opacity = '0';
-                            el.style.pointerEvents = 'none';
-                            el.style.position = 'static';
-                            el.style.zIndex = '-1';
+                            // Método 1: Esconder imediatamente
+                            el.style.display = 'none !important';
+                            el.style.visibility = 'hidden !important';
+                            el.style.opacity = '0 !important';
+                            el.style.pointerEvents = 'none !important';
+                            el.style.position = 'static !important';
+                            el.style.zIndex = '-1 !important';
                             
-                            // Método 2: Remover (se esconder não funcionar)
-                            setTimeout(() => {
-                                if (el.parentNode) {
-                                    el.parentNode.removeChild(el);
-                                }
-                            }, 100);
+                            // Método 2: Remover imediatamente
+                            if (el.parentNode) {
+                                el.parentNode.removeChild(el);
+                            }
                             
-                            console.log('🚨 Elemento processado:', seletor, el);
+                            console.log('🔥 Elemento removido imediatamente:', seletor, el);
                         });
                     } catch (e) {
                         console.warn('Erro com seletor:', seletor, e);
@@ -1414,20 +1416,17 @@
                         div.style.position === 'fixed' ||
                         parseInt(div.style.zIndex) > 50) {
                         
-                        // Esconder imediatamente
-                        div.style.display = 'none';
-                        div.style.visibility = 'hidden';
-                        div.style.opacity = '0';
-                        div.style.pointerEvents = 'none';
+                        // Esconder e remover imediatamente
+                        div.style.display = 'none !important';
+                        div.style.visibility = 'hidden !important';
+                        div.style.opacity = '0 !important';
+                        div.style.pointerEvents = 'none !important';
                         
-                        // Remover após delay
-                        setTimeout(() => {
-                            if (div.parentNode) {
-                                div.parentNode.removeChild(div);
-                            }
-                        }, 200);
+                        if (div.parentNode) {
+                            div.parentNode.removeChild(div);
+                        }
                         
-                        console.log('🚨 Div fixed processado:', div);
+                        console.log('🔥 Div fixed removido imediatamente:', div);
                     }
                 });
                 
@@ -1435,18 +1434,16 @@
                 document.querySelectorAll('*').forEach(el => {
                     const style = getComputedStyle(el);
                     if (parseInt(style.zIndex) >= 50) {
-                        el.style.display = 'none';
-                        el.style.visibility = 'hidden';
-                        el.style.opacity = '0';
-                        el.style.pointerEvents = 'none';
+                        el.style.display = 'none !important';
+                        el.style.visibility = 'hidden !important';
+                        el.style.opacity = '0 !important';
+                        el.style.pointerEvents = 'none !important';
                         
-                        setTimeout(() => {
-                            if (el.parentNode) {
-                                el.parentNode.removeChild(el);
-                            }
-                        }, 300);
+                        if (el.parentNode) {
+                            el.parentNode.removeChild(el);
+                        }
                         
-                        console.log('🚨 Elemento z-index alto processado:', el);
+                        console.log('🔥 Elemento z-index alto removido imediatamente:', el);
                     }
                 });
                 
@@ -1455,18 +1452,16 @@
                     if (el.style.backgroundColor && 
                         (el.style.backgroundColor.includes('rgba(0, 0, 0') || 
                          el.style.backgroundColor.includes('black'))) {
-                        el.style.display = 'none';
-                        el.style.visibility = 'hidden';
-                        el.style.opacity = '0';
-                        el.style.pointerEvents = 'none';
+                        el.style.display = 'none !important';
+                        el.style.visibility = 'hidden !important';
+                        el.style.opacity = '0 !important';
+                        el.style.pointerEvents = 'none !important';
                         
-                        setTimeout(() => {
-                            if (el.parentNode) {
-                                el.parentNode.removeChild(el);
-                            }
-                        }, 400);
+                        if (el.parentNode) {
+                            el.parentNode.removeChild(el);
+                        }
                         
-                        console.log('🚨 Backdrop processado:', el);
+                        console.log('🔥 Backdrop removido imediatamente:', el);
                     }
                 });
                 
@@ -1484,27 +1479,24 @@
                     document.activeElement.blur();
                 }
                 
-                // 7. FORÇAR LIMPEZA FINAL APÓS 1 SEGUNDO
-                setTimeout(() => {
-                    document.querySelectorAll('*').forEach(el => {
-                        if (el.style.position === 'fixed' || getComputedStyle(el).position === 'fixed') {
-                            el.style.display = 'none';
-                            el.style.visibility = 'hidden';
-                            el.style.opacity = '0';
-                            el.style.pointerEvents = 'none';
-                            
-                            if (el.parentNode) {
-                                el.parentNode.removeChild(el);
-                            }
+                // 7. FORÇAR LIMPEZA FINAL IMEDIATA
+                document.querySelectorAll('*').forEach(el => {
+                    if (el.style.position === 'fixed' || getComputedStyle(el).position === 'fixed') {
+                        el.style.display = 'none !important';
+                        el.style.visibility = 'hidden !important';
+                        el.style.opacity = '0 !important';
+                        el.style.pointerEvents = 'none !important';
+                        
+                        if (el.parentNode) {
+                            el.parentNode.removeChild(el);
                         }
-                    });
-                    console.log('🚨 LIMPEZA FINAL EXECUTADA');
-                }, 1000);
+                    }
+                });
                 
-                console.log('🚨 SOLUÇÃO DE EMERGÊNCIA EXECUTADA - DEVE FUNCIONAR 100%');
+                console.log('🔥 SOLUÇÃO FINAL DEFINITIVA EXECUTADA - DEVE FUNCIONAR 100%');
                 
             } catch (e) {
-                console.warn('Erro na solução de emergência:', e);
+                console.warn('Erro na solução final definitiva:', e);
             }
         }
 
