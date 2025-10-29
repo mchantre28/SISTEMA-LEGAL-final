@@ -1363,88 +1363,74 @@
 
         // Função robusta para fechar modais
         function fecharModalRobusto() {
-            console.log('🔧 fecharModalRobusto chamado - SOLUÇÃO DEFINITIVA REAL');
+            console.log('🔧 fecharModalRobusto chamado - BASEADO NA FUNÇÃO QUE FUNCIONA');
             
-            // SOLUÇÃO DEFINITIVA REAL - BASEADA NO QUE FUNCIONOU NA CONSOLA
+            // SOLUÇÃO BASEADA NA FUNÇÃO fecharModal() QUE FUNCIONA
             try {
-                // MÉTODO 1: COMANDO QUE FUNCIONOU NA CONSOLA
-                console.log('🎯 Executando comando que funcionou na consola...');
-                document.querySelectorAll(".fixed, .inset-0").forEach(el => {
-                    console.log('🎯 Encontrado elemento:', el);
-                    el.style.display = 'none';
-                    el.style.visibility = 'hidden';
-                    el.style.opacity = '0';
-                    el.style.pointerEvents = 'none';
-                    console.log('✅ Elemento escondido:', el);
+                // MÉTODO 1: REMOVER TODOS OS MODAIS COM CLASSE 'modal' (COMO A FUNÇÃO QUE FUNCIONA)
+                console.log('🎯 Removendo modais com classe .modal...');
+                const todosModais = document.querySelectorAll('.modal');
+                todosModais.forEach(modal => {
+                    console.log('🎯 Removendo modal:', modal.className);
+                    modal.remove();
                 });
                 
-                // MÉTODO 2: ESCONDER TODOS OS MODAIS
-                console.log('🎯 Escondendo todos os modais...');
-                document.querySelectorAll('.modal').forEach(modal => {
-                    console.log('🎯 Modal encontrado:', modal);
-                    modal.style.display = 'none';
-                    modal.style.visibility = 'hidden';
-                    modal.style.opacity = '0';
-                    modal.style.pointerEvents = 'none';
-                    console.log('✅ Modal escondido:', modal);
+                // MÉTODO 2: REMOVER MODAIS COM CLASSES fixed e inset-0 (COMO A FUNÇÃO QUE FUNCIONA)
+                console.log('🎯 Removendo modais com classes fixed e inset-0...');
+                const modalsNoBody = document.querySelectorAll('.fixed.inset-0');
+                modalsNoBody.forEach(modal => {
+                    console.log('🎯 Removendo modal do body:', modal.id);
+                    modal.remove();
                 });
                 
-                // MÉTODO 3: ESCONDER ELEMENTOS COM POSITION FIXED
-                console.log('🎯 Escondendo elementos com position fixed...');
+                // MÉTODO 3: REMOVER ELEMENTOS COM POSITION FIXED
+                console.log('🎯 Removendo elementos com position fixed...');
                 document.querySelectorAll('div').forEach(div => {
                     const computedStyle = getComputedStyle(div);
                     if (computedStyle.position === 'fixed' || div.style.position === 'fixed') {
-                        console.log('🎯 Div fixed encontrado:', div);
-                        div.style.display = 'none';
-                        div.style.visibility = 'hidden';
-                        div.style.opacity = '0';
-                        div.style.pointerEvents = 'none';
-                        console.log('✅ Div fixed escondido:', div);
+                        console.log('🎯 Div fixed encontrado e removido:', div);
+                        div.remove();
                     }
                 });
                 
-                // MÉTODO 4: ESCONDER ELEMENTOS COM Z-INDEX ALTO
-                console.log('🎯 Escondendo elementos com z-index alto...');
+                // MÉTODO 4: REMOVER ELEMENTOS COM Z-INDEX ALTO
+                console.log('🎯 Removendo elementos com z-index alto...');
                 document.querySelectorAll('*').forEach(el => {
                     const style = getComputedStyle(el);
                     if (parseInt(style.zIndex) >= 50) {
-                        console.log('🎯 Elemento z-index alto encontrado:', el, 'z-index:', style.zIndex);
-                        el.style.display = 'none';
-                        el.style.visibility = 'hidden';
-                        el.style.opacity = '0';
-                        el.style.pointerEvents = 'none';
-                        console.log('✅ Elemento z-index alto escondido:', el);
+                        console.log('🎯 Elemento z-index alto encontrado e removido:', el, 'z-index:', style.zIndex);
+                        el.remove();
                     }
                 });
                 
-                // MÉTODO 5: ESCONDER ELEMENTOS COM CLASSES ESPECÍFICAS
-                console.log('🎯 Escondendo elementos com classes específicas...');
+                // MÉTODO 5: REMOVER ELEMENTOS COM CLASSES ESPECÍFICAS
+                console.log('🎯 Removendo elementos com classes específicas...');
                 const classes = ['fixed', 'inset-0', 'modal', 'bg-black', 'bg-opacity-50', 'bg-opacity-75'];
                 classes.forEach(classe => {
                     document.querySelectorAll(`.${classe}`).forEach(el => {
-                        console.log(`🎯 Elemento com classe ${classe} encontrado:`, el);
-                        el.style.display = 'none';
-                        el.style.visibility = 'hidden';
-                        el.style.opacity = '0';
-                        el.style.pointerEvents = 'none';
-                        console.log(`✅ Elemento com classe ${classe} escondido:`, el);
+                        console.log(`🎯 Elemento com classe ${classe} encontrado e removido:`, el);
+                        el.remove();
                     });
                 });
                 
-                // MÉTODO 6: ESCONDER ELEMENTOS COM BACKGROUND PRETO
-                console.log('🎯 Escondendo elementos com background preto...');
+                // MÉTODO 6: REMOVER ELEMENTOS COM BACKGROUND PRETO
+                console.log('🎯 Removendo elementos com background preto...');
                 document.querySelectorAll('*').forEach(el => {
                     if (el.style.backgroundColor && 
                         (el.style.backgroundColor.includes('rgba(0, 0, 0') || 
                          el.style.backgroundColor.includes('black'))) {
-                        console.log('🎯 Elemento com background preto encontrado:', el);
-                        el.style.display = 'none';
-                        el.style.visibility = 'hidden';
-                        el.style.opacity = '0';
-                        el.style.pointerEvents = 'none';
-                        console.log('✅ Elemento com background preto escondido:', el);
+                        console.log('🎯 Elemento com background preto encontrado e removido:', el);
+                        el.remove();
                     }
                 });
+                
+                // LIMPAR modalContainer (COMO A FUNÇÃO QUE FUNCIONA)
+                const modalContainer = document.getElementById('modalContainer');
+                if (modalContainer) {
+                    modalContainer.classList.remove('show');
+                    modalContainer.innerHTML = '';
+                    console.log('✅ modalContainer limpo');
+                }
                 
                 // RESTAURAR SCROLL
                 document.body.style.overflow = '';
@@ -1455,10 +1441,10 @@
                     document.activeElement.blur();
                 }
                 
-                console.log('✅ fecharModalRobusto executado - SOLUÇÃO DEFINITIVA REAL');
+                console.log('✅ fecharModalRobusto executado - BASEADO NA FUNÇÃO QUE FUNCIONA');
                 
             } catch (e) {
-                console.warn('Erro na solução definitiva real:', e);
+                console.warn('Erro na solução baseada na função que funciona:', e);
             }
         }
 
