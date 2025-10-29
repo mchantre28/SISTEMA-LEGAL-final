@@ -1363,81 +1363,77 @@
 
         // Função robusta para fechar modais
         function fecharModalRobusto() {
-            console.log('🔧 fecharModalRobusto chamado');
+            console.log('🔧 fecharModalRobusto chamado - SOLUÇÃO FINAL DEFINITIVA');
             
-            // MÉTODO ULTRA DEFINITIVO - ESCONDER TODOS OS ELEMENTOS POSSÍVEIS
-            const seletores = [
-                '.modal',
-                '.fixed',
-                '.inset-0',
-                'div[style*="position: fixed"]',
-                'div[style*="z-index"]',
-                '[class*="fixed"]',
-                '[class*="modal"]',
-                '[style*="position: fixed"]',
-                '[style*="z-index"]'
-            ];
-            
-            seletores.forEach(seletor => {
-                try {
-                    document.querySelectorAll(seletor).forEach(el => {
-                        el.style.display = 'none !important';
-                        el.style.visibility = 'hidden !important';
-                        el.style.opacity = '0 !important';
-                        el.style.pointerEvents = 'none !important';
-                        el.style.position = 'static !important';
-                        el.style.zIndex = '-1 !important';
-                        console.log('✅ Elemento escondido:', seletor, el);
+            // COMANDO QUE FUNCIONOU NA CONSOLA - IMPLEMENTADO DIRETAMENTE
+            try {
+                // Método 1: Comando que funcionou na consola
+                document.querySelectorAll(".fixed, .inset-0").forEach(el => {
+                    el.style.display = 'none';
+                    el.style.visibility = 'hidden';
+                    el.style.opacity = '0';
+                    el.style.pointerEvents = 'none';
+                    console.log('✅ Elemento escondido (método consola):', el);
+                });
+                
+                // Método 2: Esconder todos os modais
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                    modal.style.visibility = 'hidden';
+                    modal.style.opacity = '0';
+                    modal.style.pointerEvents = 'none';
+                    console.log('✅ Modal escondido:', modal);
+                });
+                
+                // Método 3: Esconder elementos com position fixed
+                document.querySelectorAll('div').forEach(div => {
+                    if (div.style.position === 'fixed' || getComputedStyle(div).position === 'fixed') {
+                        div.style.display = 'none';
+                        div.style.visibility = 'hidden';
+                        div.style.opacity = '0';
+                        div.style.pointerEvents = 'none';
+                        console.log('✅ Elemento fixed escondido:', div);
+                    }
+                });
+                
+                // Método 4: Esconder elementos com z-index alto
+                document.querySelectorAll('*').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (parseInt(style.zIndex) >= 50) {
+                        el.style.display = 'none';
+                        el.style.visibility = 'hidden';
+                        el.style.opacity = '0';
+                        el.style.pointerEvents = 'none';
+                        console.log('✅ Elemento z-index alto escondido:', el);
+                    }
+                });
+                
+                // Método 5: Forçar esconder todos os elementos com classes específicas
+                const classesParaEsconder = ['fixed', 'inset-0', 'modal', 'bg-black', 'bg-opacity'];
+                classesParaEsconder.forEach(classe => {
+                    document.querySelectorAll(`.${classe}`).forEach(el => {
+                        el.style.display = 'none';
+                        el.style.visibility = 'hidden';
+                        el.style.opacity = '0';
+                        el.style.pointerEvents = 'none';
+                        console.log(`✅ Elemento com classe ${classe} escondido:`, el);
                     });
-                } catch (e) {
-                    console.warn('Erro com seletor:', seletor, e);
+                });
+                
+                // Restaurar scroll
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+                
+                // Blur elemento ativo
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
                 }
-            });
-            
-            // MÉTODO ESPECÍFICO PARA MODAIS CRIADOS DINAMICAMENTE
-            document.querySelectorAll('div').forEach(div => {
-                const style = getComputedStyle(div);
-                if (style.position === 'fixed' || 
-                    style.zIndex > '50' || 
-                    div.classList.contains('fixed') ||
-                    div.classList.contains('inset-0') ||
-                    div.classList.contains('modal') ||
-                    div.style.position === 'fixed' ||
-                    parseInt(div.style.zIndex) > 50) {
-                    
-                    div.style.display = 'none !important';
-                    div.style.visibility = 'hidden !important';
-                    div.style.opacity = '0 !important';
-                    div.style.pointerEvents = 'none !important';
-                    div.style.position = 'static !important';
-                    div.style.zIndex = '-1 !important';
-                    console.log('✅ Modal dinâmico escondido:', div);
-                }
-            });
-            
-            // FORÇAR REMOÇÃO DE TODOS OS BACKDROPS
-            document.querySelectorAll('*').forEach(el => {
-                if (el.style.backgroundColor && 
-                    (el.style.backgroundColor.includes('rgba(0, 0, 0') || 
-                     el.style.backgroundColor.includes('black'))) {
-                    el.style.display = 'none !important';
-                    el.style.visibility = 'hidden !important';
-                    el.style.opacity = '0 !important';
-                    el.style.pointerEvents = 'none !important';
-                    console.log('✅ Backdrop escondido:', el);
-                }
-            });
-            
-            // RESTAURAR SCROLL
-            document.body.style.overflow = '';
-            document.documentElement.style.overflow = '';
-            
-            // BLUR ELEMENTO ATIVO
-            if (document.activeElement && typeof document.activeElement.blur === 'function') {
-                document.activeElement.blur();
+                
+                console.log('✅ fecharModalRobusto executado - SOLUÇÃO FINAL DEFINITIVA');
+                
+            } catch (e) {
+                console.warn('Erro na solução final:', e);
             }
-            
-            console.log('✅ fecharModalRobusto executado - MÉTODO ULTRA DEFINITIVO');
         }
 
         // Função simples para fechar modal (backup)
