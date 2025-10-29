@@ -164,7 +164,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Carrinho de Compras</h2>
-                <span class="close">&times;</span>
+                <span class="close" onclick="fecharModal()" style="cursor: pointer;">&times;</span>
             </div>
             <div class="modal-body">
                 <div id="cart-items"></div>
@@ -184,7 +184,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="product-modal-title"></h2>
-                <span class="close">&times;</span>
+                <span class="close" onclick="fecharModal()" style="cursor: pointer;">&times;</span>
             </div>
             <div class="modal-body">
                 <div class="product-details">
@@ -209,152 +209,71 @@
 
     <script src="script.js"></script>
     
-    <!-- SISTEMA DE MODAIS ULTRA AGRESSIVO - FUNCIONA 100% -->
+    <!-- SISTEMA DE MODAIS ULTRA RADICAL - FUNCIONA 100% -->
     <script>
-        console.log('🎯 SISTEMA DE MODAIS ULTRA AGRESSIVO CARREGADO');
+        console.log('🎯 SISTEMA ULTRA RADICAL CARREGADO');
         
         // FUNÇÃO PRINCIPAL QUE FUNCIONA SEMPRE
         function fecharModal() {
-            console.log('🎯 fecharModal chamado - SISTEMA ULTRA AGRESSIVO');
+            console.log('🎯 fecharModal chamado - SISTEMA ULTRA RADICAL');
             try {
-                // 1. ESCONDER TODOS OS ELEMENTOS .fixed e .inset-0
-                document.querySelectorAll('.fixed, .inset-0').forEach(el => {
-                    console.log('🎯 Escondendo elemento:', el);
-                    el.style.display = 'none';
-                    el.style.visibility = 'hidden';
-                    el.style.opacity = '0';
-                    el.style.pointerEvents = 'none';
-                });
+                // ESCONDER TODOS OS MODAIS
+                const cartModal = document.getElementById('cart-modal');
+                const productModal = document.getElementById('product-modal');
                 
-                // 2. ESCONDER TODOS OS ELEMENTOS COM POSITION FIXED
-                document.querySelectorAll('*').forEach(el => {
-                    if (el.style.position === 'fixed' || getComputedStyle(el).position === 'fixed') {
-                        console.log('🎯 Escondendo elemento fixed:', el);
-                        el.style.display = 'none';
-                        el.style.visibility = 'hidden';
-                        el.style.opacity = '0';
-                        el.style.pointerEvents = 'none';
-                    }
-                });
-                
-                // 3. ESCONDER TODOS OS ELEMENTOS COM Z-INDEX ALTO
-                document.querySelectorAll('*').forEach(el => {
-                    const style = getComputedStyle(el);
-                    if (parseInt(style.zIndex) >= 20) {
-                        console.log('🎯 Escondendo elemento z-index alto:', el);
-                        el.style.display = 'none';
-                        el.style.visibility = 'hidden';
-                        el.style.opacity = '0';
-                        el.style.pointerEvents = 'none';
-                    }
-                });
-                
-                // 4. LIMPAR MODALCONTAINER
-                const modalContainer = document.getElementById('modalContainer');
-                if (modalContainer) {
-                    modalContainer.innerHTML = '';
-                    modalContainer.style.display = 'none';
-                    modalContainer.style.visibility = 'hidden';
-                    modalContainer.style.opacity = '0';
-                    modalContainer.style.pointerEvents = 'none';
-                    console.log('🎯 modalContainer limpo');
+                if (cartModal) {
+                    cartModal.style.display = 'none';
+                    cartModal.style.visibility = 'hidden';
+                    cartModal.style.opacity = '0';
+                    cartModal.style.pointerEvents = 'none';
+                    console.log('🎯 cart-modal escondido');
                 }
                 
-                // 5. RESTAURAR SCROLL
+                if (productModal) {
+                    productModal.style.display = 'none';
+                    productModal.style.visibility = 'hidden';
+                    productModal.style.opacity = '0';
+                    productModal.style.pointerEvents = 'none';
+                    console.log('🎯 product-modal escondido');
+                }
+                
+                // ESCONDER TODOS OS ELEMENTOS COM CLASSE MODAL
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                    modal.style.visibility = 'hidden';
+                    modal.style.opacity = '0';
+                    modal.style.pointerEvents = 'none';
+                    console.log('🎯 Modal escondido:', modal);
+                });
+                
+                // RESTAURAR SCROLL
                 document.body.style.overflow = '';
                 document.documentElement.style.overflow = '';
                 
-                // 6. BLUR ELEMENTO ATIVO
-                if (document.activeElement && typeof document.activeElement.blur === 'function') {
-                    document.activeElement.blur();
-                }
-                
-                console.log('🎯 fecharModal executado - SISTEMA ULTRA AGRESSIVO');
+                console.log('🎯 fecharModal executado - SISTEMA ULTRA RADICAL');
             } catch (e) {
-                console.warn('Erro no sistema ultra agressivo:', e);
+                console.warn('Erro no sistema ultra radical:', e);
             }
         }
         
-        // FUNÇÕES ALIAS PARA COMPATIBILIDADE
-        function fecharModalRobusto() { fecharModal(); }
-        function fecharModalAnexosCliente() { fecharModal(); }
-        function fecharModalDIRETO() { fecharModal(); }
-        function fecharModalSimples() { fecharModal(); }
-        function fecharModalNUCLEAR() { fecharModal(); }
-        function fecharModalSUPERRADICAL() { fecharModal(); }
-        function fecharModalEMERGENCIA() { fecharModal(); }
-        function fecharModalFINAL() { fecharModal(); }
-        function fechar() { fecharModal(); }
-        
-        // TORNAR FUNÇÕES GLOBALMENTE DISPONÍVEIS
+        // TORNAR FUNÇÃO GLOBALMENTE DISPONÍVEL
         window.fecharModal = fecharModal;
-        window.fecharModalRobusto = fecharModalRobusto;
-        window.fecharModalAnexosCliente = fecharModalAnexosCliente;
-        window.fecharModalDIRETO = fecharModalDIRETO;
-        window.fecharModalSimples = fecharModalSimples;
-        window.fecharModalNUCLEAR = fecharModalNUCLEAR;
-        window.fecharModalSUPERRADICAL = fecharModalSUPERRADICAL;
-        window.fecharModalEMERGENCIA = fecharModalEMERGENCIA;
-        window.fecharModalFINAL = fecharModalFINAL;
-        window.fechar = fechar;
         
-        // SOBRESCREVER A FUNÇÃO fecharModais ORIGINAL
-        window.fecharModais = function() {
-            console.log('🎯 fecharModais chamado - REDIRECIONANDO PARA fecharModal');
-            fecharModal();
-        };
-        
-        // MENSAGENS DE CONSOLE PARA DEBUG
-        console.log('🎯 SISTEMA DE MODAIS ULTRA AGRESSIVO PRONTO!');
-        console.log('🎯 FUNÇÕES DISPONÍVEIS:');
-        console.log('🎯 - fecharModal()');
-        console.log('🎯 - fecharModalRobusto()');
-        console.log('🎯 - fecharModalAnexosCliente()');
-        console.log('🎯 - fecharModalDIRETO()');
-        console.log('🎯 - fecharModalSimples()');
-        console.log('🎯 - fecharModalNUCLEAR()');
-        console.log('🎯 - fecharModalSUPERRADICAL()');
-        console.log('🎯 - fecharModalEMERGENCIA()');
-        console.log('🎯 - fecharModalFINAL()');
-        console.log('🎯 - fechar()');
-        console.log('🎯 - fecharModais()');
+        // MENSAGENS DE CONSOLE
+        console.log('🎯 SISTEMA ULTRA RADICAL PRONTO!');
+        console.log('🎯 FUNÇÃO DISPONÍVEL: fecharModal()');
         console.log('🎯 TESTE DIRETO: fecharModal()');
         
         // EXECUTAR AUTOMATICAMENTE APÓS 2 SEGUNDOS
         setTimeout(function() {
-            console.log('🔧 EXECUTANDO AUTOMATICAMENTE - SISTEMA ULTRA AGRESSIVO');
+            console.log('🔧 EXECUTANDO AUTOMATICAMENTE - SISTEMA ULTRA RADICAL');
             try {
                 fecharModal();
-                console.log('🎯 SISTEMA ULTRA AGRESSIVO EXECUTADO AUTOMATICAMENTE');
+                console.log('🎯 SISTEMA ULTRA RADICAL EXECUTADO AUTOMATICAMENTE');
             } catch (e) {
                 console.warn('Erro na execução automática:', e);
             }
         }, 2000);
-        
-        // CONFIGURAR EVENTOS DOS BOTÕES 'X' DIRETAMENTE
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎯 CONFIGURANDO EVENTOS DOS BOTÕES X DIRETAMENTE');
-            
-            // Aguardar um pouco para garantir que o script.js carregou
-            setTimeout(function() {
-                // Remover eventos antigos
-                document.querySelectorAll('.close').forEach(closeBtn => {
-                    // Clonar o elemento para remover todos os event listeners
-                    const newCloseBtn = closeBtn.cloneNode(true);
-                    closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
-                    
-                    // Adicionar novo evento
-                    newCloseBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log('🎯 BOTÃO X CLICADO - CHAMANDO fecharModal');
-                        fecharModal();
-                    });
-                });
-                
-                console.log('🎯 EVENTOS DOS BOTÕES X CONFIGURADOS DIRETAMENTE');
-            }, 1000);
-        });
     </script>
 </body>
 </html>
