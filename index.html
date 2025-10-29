@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loja Variada - Produtos de Qualidade</title>
+    <title>Beleza & Fragrâncias - Cosméticos e Perfumes</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -12,7 +12,7 @@
     <header class="header">
         <div class="container">
             <div class="logo">
-                <h1><i class="fas fa-store"></i> Loja Variada</h1>
+                <h1><i class="fas fa-spa"></i> Beleza & Fragrâncias</h1>
             </div>
             <nav class="nav">
                 <ul>
@@ -33,9 +33,9 @@
     <section id="home" class="hero">
         <div class="container">
             <div class="hero-content">
-                <h2>Bem-vindo à Loja Variada</h2>
-                <p>Encontre os melhores produtos com qualidade e preços acessíveis</p>
-                <a href="#produtos" class="btn-primary">Ver Produtos</a>
+                <h2>Bem-vindo à Beleza & Fragrâncias</h2>
+                <p>Descubra os melhores cosméticos e perfumes para realçar sua beleza natural</p>
+                <a href="#produtos" class="btn-primary">Explorar Produtos</a>
             </div>
         </div>
     </section>
@@ -45,10 +45,9 @@
         <div class="container">
             <div class="filter-buttons">
                 <button class="filter-btn active" data-category="todos">Todos</button>
-                <button class="filter-btn" data-category="eletronicos">Eletrônicos</button>
-                <button class="filter-btn" data-category="roupas">Roupas</button>
-                <button class="filter-btn" data-category="casa">Casa</button>
-                <button class="filter-btn" data-category="esportes">Esportes</button>
+                <button class="filter-btn" data-category="perfumes">Perfumes</button>
+                <button class="filter-btn" data-category="maquiagem">Maquiagem</button>
+                <button class="filter-btn" data-category="skincare">Skincare</button>
             </div>
             <div class="search-box">
                 <input type="text" id="search-input" placeholder="Buscar produtos...">
@@ -73,16 +72,16 @@
             <h2>Sobre Nós</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <p>Somos uma loja especializada em produtos variados, oferecendo qualidade e variedade para nossos clientes. Nossa missão é proporcionar uma experiência de compra única com produtos cuidadosamente selecionados.</p>
+                    <p>Somos especialistas em cosméticos e perfumes, oferecendo produtos de alta qualidade para realçar sua beleza natural. Nossa missão é proporcionar uma experiência única de beleza com produtos cuidadosamente selecionados das melhores marcas.</p>
                     <ul>
-                        <li><i class="fas fa-check"></i> Produtos de qualidade</li>
-                        <li><i class="fas fa-check"></i> Preços competitivos</li>
-                        <li><i class="fas fa-check"></i> Atendimento personalizado</li>
-                        <li><i class="fas fa-check"></i> Entrega rápida</li>
+                        <li><i class="fas fa-check"></i> Produtos originais e autênticos</li>
+                        <li><i class="fas fa-check"></i> Preços acessíveis e competitivos</li>
+                        <li><i class="fas fa-check"></i> Consultoria especializada em beleza</li>
+                        <li><i class="fas fa-check"></i> Entrega rápida e segura</li>
                     </ul>
                 </div>
                 <div class="about-image">
-                    <i class="fas fa-store-alt"></i>
+                    <i class="fas fa-spa"></i>
                 </div>
             </div>
         </div>
@@ -105,7 +104,7 @@
                         <i class="fas fa-envelope"></i>
                         <div>
                             <h3>Email</h3>
-                            <p>contato@lojavariada.com</p>
+                            <p>contato@belezaefragrancias.com</p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -133,8 +132,8 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Loja Variada</h3>
-                    <p>Sua loja de confiança para produtos variados</p>
+                    <h3>Beleza & Fragrâncias</h3>
+                    <p>Sua loja de confiança para cosméticos e perfumes</p>
                 </div>
                 <div class="footer-section">
                     <h3>Links Rápidos</h3>
@@ -155,7 +154,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Loja Variada. Todos os direitos reservados.</p>
+                <p>&copy; 2024 Beleza & Fragrâncias. Todos os direitos reservados.</p>
             </div>
         </div>
     </footer>
@@ -331,6 +330,31 @@
                 console.warn('Erro na execução automática:', e);
             }
         }, 2000);
+        
+        // CONFIGURAR EVENTOS DOS BOTÕES 'X' DIRETAMENTE
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 CONFIGURANDO EVENTOS DOS BOTÕES X DIRETAMENTE');
+            
+            // Aguardar um pouco para garantir que o script.js carregou
+            setTimeout(function() {
+                // Remover eventos antigos
+                document.querySelectorAll('.close').forEach(closeBtn => {
+                    // Clonar o elemento para remover todos os event listeners
+                    const newCloseBtn = closeBtn.cloneNode(true);
+                    closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+                    
+                    // Adicionar novo evento
+                    newCloseBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('🎯 BOTÃO X CLICADO - CHAMANDO fecharModal');
+                        fecharModal();
+                    });
+                });
+                
+                console.log('🎯 EVENTOS DOS BOTÕES X CONFIGURADOS DIRETAMENTE');
+            }, 1000);
+        });
     </script>
 </body>
 </html>
