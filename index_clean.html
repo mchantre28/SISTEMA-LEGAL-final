@@ -1363,66 +1363,69 @@
 
         // Função robusta para fechar modais
         function fecharModalRobusto() {
-            console.log('🔧 fecharModalRobusto chamado - BASEADO NA FUNÇÃO QUE FUNCIONA');
+            console.log('🔧 fecharModalRobusto chamado - SOLUÇÃO DEFINITIVA FINAL');
             
-            // SOLUÇÃO BASEADA NA FUNÇÃO fecharModal() QUE FUNCIONA
+            // SOLUÇÃO DEFINITIVA FINAL - BASEADA NA FUNÇÃO fecharModal() QUE FUNCIONA
             try {
-                // MÉTODO 1: REMOVER TODOS OS MODAIS COM CLASSE 'modal' (COMO A FUNÇÃO QUE FUNCIONA)
-                console.log('🎯 Removendo modais com classe .modal...');
+                // MÉTODO 1: REMOVER MODAIS COM CLASSES fixed e inset-0 (PRIORIDADE MÁXIMA - É O MODAL QUE NÃO FECHAVA)
+                console.log('🎯 MÉTODO 1: Removendo modais com classes fixed e inset-0...');
+                const modalsFixedInset = document.querySelectorAll('.fixed.inset-0');
+                console.log('🎯 Encontrados', modalsFixedInset.length, 'modais com .fixed.inset-0');
+                modalsFixedInset.forEach((modal, index) => {
+                    console.log(`🎯 Removendo modal ${index + 1}:`, modal);
+                    if (modal.parentNode) {
+                        modal.remove();
+                        console.log(`✅ Modal ${index + 1} removido`);
+                    } else {
+                        console.log(`⚠️ Modal ${index + 1} já não tem parentNode`);
+                    }
+                });
+                
+                // MÉTODO 2: REMOVER TODOS OS MODAIS COM CLASSE 'modal'
+                console.log('🎯 MÉTODO 2: Removendo modais com classe .modal...');
                 const todosModais = document.querySelectorAll('.modal');
-                todosModais.forEach(modal => {
-                    console.log('🎯 Removendo modal:', modal.className);
-                    modal.remove();
+                console.log('🎯 Encontrados', todosModais.length, 'modais com .modal');
+                todosModais.forEach((modal, index) => {
+                    console.log(`🎯 Removendo modal ${index + 1}:`, modal.className);
+                    if (modal.parentNode) {
+                        modal.remove();
+                        console.log(`✅ Modal ${index + 1} removido`);
+                    } else {
+                        console.log(`⚠️ Modal ${index + 1} já não tem parentNode`);
+                    }
                 });
                 
-                // MÉTODO 2: REMOVER MODAIS COM CLASSES fixed e inset-0 (COMO A FUNÇÃO QUE FUNCIONA)
-                console.log('🎯 Removendo modais com classes fixed e inset-0...');
-                const modalsNoBody = document.querySelectorAll('.fixed.inset-0');
-                modalsNoBody.forEach(modal => {
-                    console.log('🎯 Removendo modal do body:', modal.id);
-                    modal.remove();
-                });
-                
-                // MÉTODO 3: REMOVER ELEMENTOS COM POSITION FIXED
-                console.log('🎯 Removendo elementos com position fixed...');
+                // MÉTODO 3: REMOVER ELEMENTOS COM POSITION FIXED E Z-INDEX ALTO
+                console.log('🎯 MÉTODO 3: Removendo elementos com position fixed...');
+                let count = 0;
                 document.querySelectorAll('div').forEach(div => {
                     const computedStyle = getComputedStyle(div);
                     if (computedStyle.position === 'fixed' || div.style.position === 'fixed') {
-                        console.log('🎯 Div fixed encontrado e removido:', div);
-                        div.remove();
+                        count++;
+                        console.log(`🎯 Removendo div fixed ${count}:`, div);
+                        if (div.parentNode) {
+                            div.remove();
+                            console.log(`✅ Div fixed ${count} removido`);
+                        }
                     }
                 });
+                console.log(`✅ Total de ${count} divs fixed removidos`);
                 
-                // MÉTODO 4: REMOVER ELEMENTOS COM Z-INDEX ALTO
-                console.log('🎯 Removendo elementos com z-index alto...');
+                // MÉTODO 4: REMOVER ELEMENTOS COM Z-INDEX ALTO (>= 50)
+                console.log('🎯 MÉTODO 4: Removendo elementos com z-index alto...');
+                let zIndexCount = 0;
                 document.querySelectorAll('*').forEach(el => {
                     const style = getComputedStyle(el);
                     if (parseInt(style.zIndex) >= 50) {
-                        console.log('🎯 Elemento z-index alto encontrado e removido:', el, 'z-index:', style.zIndex);
-                        el.remove();
+                        zIndexCount++;
+                        console.log(`🎯 Removendo elemento z-index alto ${zIndexCount}:`, el, 'z-index:', style.zIndex);
+                        if (el.parentNode) {
+                            el.remove();
+                            console.log(`✅ Elemento z-index alto ${zIndexCount} removido`);
+                        }
                     }
                 });
-                
-                // MÉTODO 5: REMOVER ELEMENTOS COM CLASSES ESPECÍFICAS
-                console.log('🎯 Removendo elementos com classes específicas...');
-                const classes = ['fixed', 'inset-0', 'modal', 'bg-black', 'bg-opacity-50', 'bg-opacity-75'];
-                classes.forEach(classe => {
-                    document.querySelectorAll(`.${classe}`).forEach(el => {
-                        console.log(`🎯 Elemento com classe ${classe} encontrado e removido:`, el);
-                        el.remove();
-                    });
-                });
-                
-                // MÉTODO 6: REMOVER ELEMENTOS COM BACKGROUND PRETO
-                console.log('🎯 Removendo elementos com background preto...');
-                document.querySelectorAll('*').forEach(el => {
-                    if (el.style.backgroundColor && 
-                        (el.style.backgroundColor.includes('rgba(0, 0, 0') || 
-                         el.style.backgroundColor.includes('black'))) {
-                        console.log('🎯 Elemento com background preto encontrado e removido:', el);
-                        el.remove();
-                    }
-                });
+                console.log(`✅ Total de ${zIndexCount} elementos com z-index alto removidos`);
                 
                 // LIMPAR modalContainer (COMO A FUNÇÃO QUE FUNCIONA)
                 const modalContainer = document.getElementById('modalContainer');
@@ -1441,10 +1444,10 @@
                     document.activeElement.blur();
                 }
                 
-                console.log('✅ fecharModalRobusto executado - BASEADO NA FUNÇÃO QUE FUNCIONA');
+                console.log('✅ fecharModalRobusto executado - SOLUÇÃO DEFINITIVA FINAL');
                 
             } catch (e) {
-                console.warn('Erro na solução baseada na função que funciona:', e);
+                console.warn('❌ Erro na solução definitiva final:', e);
             }
         }
 
