@@ -1395,37 +1395,71 @@
                     }
                 });
                 
-                // MÉTODO 3: REMOVER ELEMENTOS COM POSITION FIXED E Z-INDEX ALTO
-                console.log('🎯 MÉTODO 3: Removendo elementos com position fixed...');
+                // MÉTODO 3: REMOVER ELEMENTOS COM POSITION FIXED QUE SÃO MODAIS (EXCLUINDO SIDEBAR)
+                console.log('🎯 MÉTODO 3: Removendo elementos fixed que são modais (excluindo sidebar)...');
                 let count = 0;
                 document.querySelectorAll('div').forEach(div => {
                     const computedStyle = getComputedStyle(div);
-                    if (computedStyle.position === 'fixed' || div.style.position === 'fixed') {
-                        count++;
-                        console.log(`🎯 Removendo div fixed ${count}:`, div);
-                        if (div.parentNode) {
-                            div.remove();
-                            console.log(`✅ Div fixed ${count} removido`);
+                    // Verificar se é fixed e NÃO é a sidebar ou outros elementos importantes
+                    if ((computedStyle.position === 'fixed' || div.style.position === 'fixed') &&
+                        div.id !== 'sidebar' && 
+                        !div.classList.contains('sidebar') &&
+                        !div.id.includes('header') &&
+                        !div.id.includes('nav')) {
+                        
+                        // Verificar se parece ser um modal (tem classes de modal ou backdrop)
+                        if (div.classList.contains('modal') ||
+                            div.classList.contains('backdrop') ||
+                            div.classList.contains('bg-black') ||
+                            div.classList.contains('bg-opacity') ||
+                            div.getAttribute('onclick')?.includes('fecharModal')) {
+                            
+                            count++;
+                            console.log(`🎯 Removendo div fixed (modal) ${count}:`, div);
+                            if (div.parentNode) {
+                                div.remove();
+                                console.log(`✅ Div fixed (modal) ${count} removido`);
+                            }
+                        } else {
+                            console.log(`⏭️ Div fixed ignorado (não é modal):`, div.id || div.className);
                         }
                     }
                 });
-                console.log(`✅ Total de ${count} divs fixed removidos`);
+                console.log(`✅ Total de ${count} divs fixed (modais) removidos`);
                 
-                // MÉTODO 4: REMOVER ELEMENTOS COM Z-INDEX ALTO (>= 50)
-                console.log('🎯 MÉTODO 4: Removendo elementos com z-index alto...');
+                // MÉTODO 4: REMOVER ELEMENTOS COM Z-INDEX ALTO QUE SÃO MODAIS (EXCLUINDO BOTÕES E SIDEBAR)
+                console.log('🎯 MÉTODO 4: Removendo elementos com z-index alto que são modais (excluindo botões)...');
                 let zIndexCount = 0;
                 document.querySelectorAll('*').forEach(el => {
                     const style = getComputedStyle(el);
-                    if (parseInt(style.zIndex) >= 50) {
-                        zIndexCount++;
-                        console.log(`🎯 Removendo elemento z-index alto ${zIndexCount}:`, el, 'z-index:', style.zIndex);
-                        if (el.parentNode) {
-                            el.remove();
-                            console.log(`✅ Elemento z-index alto ${zIndexCount} removido`);
+                    // Verificar se tem z-index alto e NÃO é botão, sidebar ou header
+                    if (parseInt(style.zIndex) >= 50 &&
+                        el.id !== 'sidebar' &&
+                        el.id !== 'mobileMenuBtn' &&
+                        el.id !== 'menuHamburguer' &&
+                        !el.classList.contains('sidebar') &&
+                        !el.classList.contains('header') &&
+                        el.tagName !== 'BUTTON') {
+                        
+                        // Verificar se parece ser um modal ou backdrop
+                        if (el.classList.contains('modal') ||
+                            el.classList.contains('backdrop') ||
+                            el.classList.contains('bg-black') ||
+                            el.classList.contains('bg-opacity') ||
+                            el.classList.contains('fixed') && el.classList.contains('inset-0')) {
+                            
+                            zIndexCount++;
+                            console.log(`🎯 Removendo elemento z-index alto (modal) ${zIndexCount}:`, el, 'z-index:', style.zIndex);
+                            if (el.parentNode) {
+                                el.remove();
+                                console.log(`✅ Elemento z-index alto (modal) ${zIndexCount} removido`);
+                            }
+                        } else {
+                            console.log(`⏭️ Elemento z-index alto ignorado (não é modal):`, el.id || el.className);
                         }
                     }
                 });
-                console.log(`✅ Total de ${zIndexCount} elementos com z-index alto removidos`);
+                console.log(`✅ Total de ${zIndexCount} elementos com z-index alto (modais) removidos`);
                 
                 // LIMPAR modalContainer (COMO A FUNÇÃO QUE FUNCIONA)
                 const modalContainer = document.getElementById('modalContainer');
