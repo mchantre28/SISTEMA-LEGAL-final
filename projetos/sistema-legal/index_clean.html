@@ -9942,11 +9942,17 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             console.log('🔧 enviarMensagemConvidado chamado');
             
             const convidados = obterConvidados();
+            console.log('🔧 Total de convidados:', convidados.length);
+            console.log('🔧 Convidados:', convidados);
+            
             const convidadosAtivos = convidados.filter(c => c.ativo);
+            console.log('🔧 Convidados ativos:', convidadosAtivos.length);
+            console.log('🔧 Convidados ativos:', convidadosAtivos);
             
             if (convidadosAtivos.length === 0) {
-                mostrarNotificacao('Nenhum convidado ativo encontrado!', 'error');
-                return;
+                console.warn('⚠️ Nenhum convidado ativo encontrado!');
+                mostrarNotificacao('Nenhum convidado ativo encontrado! Crie um convidado na seção "Gestão de Convidados" primeiro.', 'warning');
+                // Não retornar - permitir abrir modal mesmo sem convidados para mostrar mensagem mais clara
             }
             
             const modalContainer = document.getElementById('modalContainer');
@@ -9971,13 +9977,25 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 <div class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Destinatário *</label>
-                                        <select id="convidadoDestinatario" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
-                                            <option value="">Selecione um convidado</option>
-                                            ${convidadosAtivos.map(c => `
-                                                <option value="${c.id}">${c.nome} (${c.email})</option>
-                                            `).join('')}
-                                            <option value="todos">Todos os Convidados</option>
-                                        </select>
+                                        ${convidadosAtivos.length === 0 ? `
+                                            <div class="bg-yellow-50 border border-yellow-200 rounded px-4 py-3 mb-3">
+                                                <p class="text-sm text-yellow-800">
+                                                    <i data-lucide="alert-triangle" class="w-4 h-4 inline mr-2"></i>
+                                                    Nenhum convidado ativo encontrado. Vá para "Gestão de Convidados" para criar um convidado primeiro.
+                                                </p>
+                                            </div>
+                                            <select id="convidadoDestinatario" required disabled class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black bg-gray-100">
+                                                <option value="">Nenhum convidado disponível</option>
+                                            </select>
+                                        ` : `
+                                            <select id="convidadoDestinatario" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                                <option value="">Selecione um convidado</option>
+                                                ${convidadosAtivos.map(c => `
+                                                    <option value="${c.id}">${c.nome} ${c.email ? '(' + c.email + ')' : ''}</option>
+                                                `).join('')}
+                                                ${convidadosAtivos.length > 1 ? '<option value="todos">Todos os Convidados</option>' : ''}
+                                            </select>
+                                        `}
                                     </div>
                                     
                                     <div>
@@ -10005,9 +10023,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                     <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary" ${convidadosAtivos.length === 0 ? 'disabled' : ''}>
                                         <i data-lucide="send" class="w-4 h-4"></i>
-                                        Enviar Mensagem
+                                        ${convidadosAtivos.length === 0 ? 'Nenhum Convidado Disponível' : 'Enviar Mensagem'}
                                     </button>
                                 </div>
                             </form>
@@ -10025,6 +10043,15 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             console.log('🔧 salvarMensagemConvidado chamado');
             event.preventDefault();
             event.stopPropagation();
+            
+            // Verificar se há convidados ativos
+            const convidados = obterConvidados();
+            const convidadosAtivos = convidados.filter(c => c.ativo);
+            
+            if (convidadosAtivos.length === 0) {
+                mostrarNotificacao('Nenhum convidado ativo encontrado! Crie um convidado na seção "Gestão de Convidados" primeiro.', 'error');
+                return;
+            }
             
             const destinatarioId = document.getElementById('convidadoDestinatario').value;
             const titulo = document.getElementById('mensagemTitulo').value.trim();
