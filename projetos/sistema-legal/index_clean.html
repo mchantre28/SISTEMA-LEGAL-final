@@ -7625,29 +7625,77 @@ Sistema Legal - ANA PAULA MEDINA
 
         function atualizarCliente(event, id) {
             console.log('🔧 atualizarCliente chamado com ID:', id);
-            event.preventDefault();
+            
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
             
             try {
-                const clienteIndex = clientes.findIndex(c => c.id === id);
+                // Verificar se o ID é válido
+                const clienteId = parseInt(id);
+                if (isNaN(clienteId)) {
+                    console.error('❌ ID inválido:', id);
+                    mostrarNotificacao('ID de cliente inválido!', 'error');
+                    return false;
+                }
+                
+                // Verificar se clientes está definido
+                if (!clientes || !Array.isArray(clientes)) {
+                    console.error('❌ Array de clientes não está definido');
+                    // Tentar carregar do localStorage
+                    const clientesSalvos = localStorage.getItem('clientes');
+                    if (clientesSalvos) {
+                        clientes = JSON.parse(clientesSalvos);
+                        window.clientes = clientes;
+                    } else {
+                        mostrarNotificacao('Erro: Clientes não carregados!', 'error');
+                        return false;
+                    }
+                }
+                
+                const clienteIndex = clientes.findIndex(c => c.id === clienteId);
                 console.log('🔧 Cliente encontrado no índice:', clienteIndex);
                 
                 if (clienteIndex === -1) {
-                    console.error('❌ Cliente não encontrado com ID:', id);
+                    console.error('❌ Cliente não encontrado com ID:', clienteId);
                     mostrarNotificacao('Cliente não encontrado!', 'error');
-                    return;
+                    return false;
                 }
                 
-                // Validar dados únicos
-                const nome = document.getElementById('editarClienteNome').value;
-                const email = document.getElementById('editarClienteEmail').value;
-                const telefone = document.getElementById('editarClienteTelefone').value;
-                const nif = document.getElementById('editarClienteNIF').value;
+                // Obter valores do formulário
+                const nomeInput = document.getElementById('editarClienteNome');
+                const emailInput = document.getElementById('editarClienteEmail');
+                const telefoneInput = document.getElementById('editarClienteTelefone');
+                const nifInput = document.getElementById('editarClienteNIF');
+                const enderecoInput = document.getElementById('editarClienteEndereco');
+                const statusInput = document.getElementById('editarClienteStatus');
                 
-                console.log('🔧 Dados do formulário:', { nome, email, telefone, nif });
+                if (!nomeInput || !emailInput || !telefoneInput || !nifInput) {
+                    console.error('❌ Campos do formulário não encontrados');
+                    mostrarNotificacao('Erro: Formulário não encontrado!', 'error');
+                    return false;
+                }
+                
+                const nome = nomeInput.value.trim();
+                const email = emailInput.value.trim();
+                const telefone = telefoneInput.value.trim();
+                const nif = nifInput.value.trim();
+                const endereco = enderecoInput ? enderecoInput.value.trim() : '';
+                const status = statusInput ? statusInput.value : 'ativo';
+                
+                console.log('🔧 Dados do formulário:', { nome, email, telefone, nif, endereco, status });
+                
+                // Validar campos obrigatórios
+                if (!nome || !email || !telefone || !nif) {
+                    console.error('❌ Campos obrigatórios não preenchidos');
+                    mostrarNotificacao('Por favor, preencha todos os campos obrigatórios!', 'error');
+                    return false;
+                }
                 
                 // Verificar se já existe outro cliente com os mesmos dados (excluindo o cliente atual)
                 const clienteExistente = clientes.find(c => 
-                    c.id !== id && (
+                    c.id !== clienteId && (
                         c.nome.toLowerCase() === nome.toLowerCase() ||
                         (email && c.email && c.email.toLowerCase() === email.toLowerCase()) ||
                         (telefone && c.telefone && c.telefone === telefone) ||
@@ -7672,7 +7720,7 @@ Sistema Legal - ANA PAULA MEDINA
                     
                     console.warn('⚠️ Cliente duplicado encontrado:', clienteExistente);
                     mostrarNotificacao(mensagemErro, 'error');
-                    return;
+                    return false;
                 }
                 
                 // Manter bilhete existente ou gerar novo se não existir
@@ -7682,23 +7730,39 @@ Sistema Legal - ANA PAULA MEDINA
                 }
                 
                 // Atualizar cliente
-                clientes[clienteIndex] = {
+                const clienteAtualizado = {
                     ...clientes[clienteIndex],
                     nome: nome,
                     email: email,
                     telefone: telefone,
                     nif: nif,
                     bilhete: bilhete,
-                    endereco: document.getElementById('editarClienteEndereco')?.value || '',
-                    status: document.getElementById('editarClienteStatus')?.value || 'ativo',
+                    endereco: endereco,
+                    status: status,
                     dataAtualizacao: new Date().toISOString()
                 };
                 
-                console.log('🔧 Cliente atualizado:', clientes[clienteIndex]);
+                clientes[clienteIndex] = clienteAtualizado;
+                console.log('🔧 Cliente atualizado:', clienteAtualizado);
                 
-                // Salvar dados
-                salvarDados('clientes', clientes);
-                console.log('✅ Dados salvos');
+                // Salvar dados no localStorage diretamente
+                try {
+                    const dadosString = JSON.stringify(clientes);
+                    localStorage.setItem('clientes', dadosString);
+                    window.clientes = clientes;
+                    console.log('✅ Dados salvos no localStorage:', dadosString.length, 'caracteres');
+                    
+                    // Verificar se foi salvo corretamente
+                    const verificar = localStorage.getItem('clientes');
+                    if (!verificar) {
+                        throw new Error('Dados não foram salvos no localStorage');
+                    }
+                    console.log('✅ Dados confirmados no localStorage');
+                } catch (saveError) {
+                    console.error('❌ Erro ao salvar no localStorage:', saveError);
+                    mostrarNotificacao('Erro ao salvar dados: ' + saveError.message, 'error');
+                    return false;
+                }
                 
                 // Mostrar notificação
                 mostrarNotificacao('Cliente atualizado com sucesso!', 'success');
@@ -7714,11 +7778,15 @@ Sistema Legal - ANA PAULA MEDINA
                     console.log('🔧 Recarregando seção clientes...');
                     carregarSecao('clientes');
                     console.log('✅ Seção recarregada');
-                }, 200);
+                }, 300);
+                
+                return true;
                 
             } catch (error) {
                 console.error('❌ Erro ao atualizar cliente:', error);
+                console.error('❌ Stack trace:', error.stack);
                 mostrarNotificacao('Erro ao atualizar cliente: ' + error.message, 'error');
+                return false;
             }
         }
 
