@@ -1245,48 +1245,44 @@
         // === FUNÇÕES DE EDIÇÃO DIRETA ===
         function editarContratoDireto(id) {
             console.log('🔧 EDITANDO CONTRATO ID:', id);
-            alert('EDITANDO CONTRATO ID: ' + id);
             
             const contrato = contratos.find(c => c.id === id);
             if (contrato) {
                 console.log('✅ Contrato encontrado:', contrato);
-                alert('Contrato encontrado: ' + contrato.clienteNome);
                 
                 // Fechar qualquer modal aberto primeiro
-                fecharModal();
+                fecharModalRobusto();
                 
                 // Aguardar um pouco para garantir que o modal anterior foi fechado
                 setTimeout(() => {
                     console.log('🚀 Abrindo modal de edição...');
                     abrirModalEdicaoContrato(contrato);
+                    console.log('✅ Modal de edição aberto!');
                 }, 200);
             } else {
                 console.error('❌ Contrato não encontrado com ID:', id);
-                alert('❌ Contrato não encontrado com ID: ' + id);
                 mostrarNotificacao('Contrato não encontrado!', 'error');
             }
         }
 
         function editarHonorarioDireto(id) {
             console.log('🔧 EDITANDO HONORÁRIO ID:', id);
-            alert('EDITANDO HONORÁRIO ID: ' + id);
             
             const honorario = honorarios.find(h => h.id === id);
             if (honorario) {
                 console.log('✅ Honorário encontrado:', honorario);
-                alert('Honorário encontrado: ' + honorario.cliente);
                 
                 // Fechar qualquer modal aberto primeiro
-                fecharModal();
+                fecharModalRobusto();
                 
                 // Aguardar um pouco para garantir que o modal anterior foi fechado
                 setTimeout(() => {
                     console.log('🚀 Abrindo modal de edição...');
                     abrirModalEdicaoHonorario(honorario);
+                    console.log('✅ Modal de edição aberto!');
                 }, 200);
             } else {
                 console.error('❌ Honorário não encontrado com ID:', id);
-                alert('❌ Honorário não encontrado com ID: ' + id);
                 mostrarNotificacao('Honorário não encontrado!', 'error');
             }
         }
@@ -13356,6 +13352,15 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
         
         function abrirModalEdicaoHonorario(honorario) {
+            console.log('🔧 abrirModalEdicaoHonorario chamado com:', honorario);
+            
+            const modalContainer = document.getElementById('modalContainer');
+            if (!modalContainer) {
+                console.error('❌ modalContainer não encontrado!');
+                mostrarNotificacao('Erro: Container do modal não encontrado!', 'error');
+                return;
+            }
+            
             const modal = `
                 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
@@ -13367,7 +13372,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </button>
                             </div>
                             
-                            <form onsubmit="atualizarHonorario(event, ${honorario.id})">
+                            <form id="formEditarHonorario_${honorario.id}" onsubmit="return atualizarHonorario(event, ${honorario.id});">
                                 <div class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Cliente *</label>
@@ -13414,8 +13419,12 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     </div>
                 </div>
             `;
-            document.getElementById('modalContainer').innerHTML = modal;
+            
+            console.log('🔧 Inserindo modal de honorário no container...');
+            modalContainer.innerHTML = modal;
+            console.log('🔧 Modal inserido, criando ícones...');
             lucide.createIcons();
+            console.log('✅ Modal de edição de honorário aberto com sucesso!');
         }
 
         function abrirModalEdicaoHeranca(heranca) {
