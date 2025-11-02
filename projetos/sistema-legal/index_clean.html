@@ -1267,8 +1267,28 @@
 
         function editarHonorarioDireto(id) {
             console.log('🔧 EDITANDO HONORÁRIO ID:', id);
+            console.log('🔧 Tipo do ID:', typeof id);
             
-            const honorario = honorarios.find(h => h.id === id);
+            // Carregar honorários do localStorage
+            const honorariosSalvos = localStorage.getItem('honorarios');
+            let honorarios = [];
+            if (honorariosSalvos) {
+                honorarios = JSON.parse(honorariosSalvos);
+                console.log('🔧 Honorários carregados do localStorage:', honorarios.length);
+                console.log('🔧 IDs dos honorários:', honorarios.map(h => ({ id: h.id, tipo: typeof h.id })));
+            } else {
+                console.warn('⚠️ Nenhum honorário encontrado no localStorage');
+            }
+            
+            // Converter ID para número se necessário
+            const honorarioId = typeof id === 'string' ? parseInt(id) : id;
+            console.log('🔧 Procurando honorário com ID:', honorarioId);
+            
+            const honorario = honorarios.find(h => {
+                const hId = typeof h.id === 'string' ? parseInt(h.id) : h.id;
+                return hId === honorarioId;
+            });
+            
             if (honorario) {
                 console.log('✅ Honorário encontrado:', honorario);
                 
@@ -1282,7 +1302,8 @@
                     console.log('✅ Modal de edição aberto!');
                 }, 200);
             } else {
-                console.error('❌ Honorário não encontrado com ID:', id);
+                console.error('❌ Honorário não encontrado com ID:', honorarioId);
+                console.error('❌ Honorários disponíveis:', honorarios);
                 mostrarNotificacao('Honorário não encontrado!', 'error');
             }
         }
