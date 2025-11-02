@@ -1369,14 +1369,7 @@
         function init() {
             console.log('🚀 TESTE RADICAL v67.0 - CACHE FORÇADO!');
             
-            // LIMPAR CACHE APÓS INICIALIZAÇÃO
-            try {
-                localStorage.clear();
-                console.log('🧹 localStorage limpo completamente');
-            } catch (error) {
-                console.log('❌ Erro ao limpar localStorage:', error);
-            }
-            
+            // CARREGAR DADOS DO LOCALSTORAGE (NÃO LIMPAR - PRESERVA DADOS DO USUÁRIO)
             carregarDados();
             carregarDadosExemplo();
             
