@@ -8280,8 +8280,17 @@ Sistema Legal - ANA PAULA MEDINA
                     <td>${contrato.tipo}</td>
                     <td>${contrato.descricao || '-'}</td>
                     <td>
-                        <div class="text-sm font-bold text-black">€${(Math.round((parseFloat(contrato.valor) || 0) * 100) / 100).toFixed(2)}</div>
-                        <div class="text-xs font-bold text-red-600">+ IVA: €${((contrato.valor || 0) + ((contrato.valor || 0) * (contrato.iva || 0) / 100)).toFixed(2)}</div>
+                        ${(() => {
+                            const valor = parseFloat(contrato.valor) || 0;
+                            const iva = parseFloat(contrato.iva) || 0;
+                            const valorComIVA = Number(valor) + (Number(valor) * Number(iva) / 100);
+                            const valorFormatado = Math.round(valor * 100) / 100;
+                            const valorComIVAFormatado = Math.round(valorComIVA * 100) / 100;
+                            return `
+                                <div class="text-sm font-bold text-black">€${valorFormatado.toFixed(2)}</div>
+                                <div class="text-xs font-bold text-red-600">+ IVA: €${valorComIVAFormatado.toFixed(2)}</div>
+                            `;
+                        })()}
                     </td>
                     <td><span class="status-badge status-${contrato.status}">${contrato.status === 'concluido' ? 'Concluído' : contrato.status === 'em_andamento' ? 'Em Andamento' : 'Pendente'}</span></td>
                     <td>${contrato.dataInicio ? new Date(contrato.dataInicio).toLocaleDateString('pt-PT') : '-'}</td>
