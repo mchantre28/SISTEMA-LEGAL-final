@@ -7624,15 +7624,26 @@ Sistema Legal - ANA PAULA MEDINA
         }
 
         function atualizarCliente(event, id) {
+            console.log('🔧 atualizarCliente chamado com ID:', id);
             event.preventDefault();
             
-            const clienteIndex = clientes.findIndex(c => c.id === id);
-            if (clienteIndex !== -1) {
+            try {
+                const clienteIndex = clientes.findIndex(c => c.id === id);
+                console.log('🔧 Cliente encontrado no índice:', clienteIndex);
+                
+                if (clienteIndex === -1) {
+                    console.error('❌ Cliente não encontrado com ID:', id);
+                    mostrarNotificacao('Cliente não encontrado!', 'error');
+                    return;
+                }
+                
                 // Validar dados únicos
                 const nome = document.getElementById('editarClienteNome').value;
                 const email = document.getElementById('editarClienteEmail').value;
                 const telefone = document.getElementById('editarClienteTelefone').value;
                 const nif = document.getElementById('editarClienteNIF').value;
+                
+                console.log('🔧 Dados do formulário:', { nome, email, telefone, nif });
                 
                 // Verificar se já existe outro cliente com os mesmos dados (excluindo o cliente atual)
                 const clienteExistente = clientes.find(c => 
@@ -7659,6 +7670,7 @@ Sistema Legal - ANA PAULA MEDINA
                         mensagemErro += ' • NIF igual';
                     }
                     
+                    console.warn('⚠️ Cliente duplicado encontrado:', clienteExistente);
                     mostrarNotificacao(mensagemErro, 'error');
                     return;
                 }
@@ -7669,6 +7681,7 @@ Sistema Legal - ANA PAULA MEDINA
                     bilhete = 'BIL' + Date.now() + Math.random().toString(36).substring(2, 8).toUpperCase();
                 }
                 
+                // Atualizar cliente
                 clientes[clienteIndex] = {
                     ...clientes[clienteIndex],
                     nome: nome,
@@ -7676,21 +7689,36 @@ Sistema Legal - ANA PAULA MEDINA
                     telefone: telefone,
                     nif: nif,
                     bilhete: bilhete,
-                    endereco: document.getElementById('editarClienteEndereco').value,
-                    status: document.getElementById('editarClienteStatus').value,
+                    endereco: document.getElementById('editarClienteEndereco')?.value || '',
+                    status: document.getElementById('editarClienteStatus')?.value || 'ativo',
                     dataAtualizacao: new Date().toISOString()
                 };
                 
-                salvarDados('clientes', clientes);
-                mostrarNotificacao('Cliente atualizado com sucesso!', 'success');
+                console.log('🔧 Cliente atualizado:', clientes[clienteIndex]);
                 
-                // Fechar modal imediatamente
-                fecharModal();
+                // Salvar dados
+                salvarDados('clientes', clientes);
+                console.log('✅ Dados salvos');
+                
+                // Mostrar notificação
+                mostrarNotificacao('Cliente atualizado com sucesso!', 'success');
+                console.log('✅ Notificação mostrada');
+                
+                // Fechar modal usando fecharModalRobusto para garantir que funciona
+                console.log('🔧 Fechando modal...');
+                fecharModalRobusto();
+                console.log('✅ Modal fechado');
                 
                 // Recarregar seção após um pequeno delay
                 setTimeout(() => {
+                    console.log('🔧 Recarregando seção clientes...');
                     carregarSecao('clientes');
-                }, 100);
+                    console.log('✅ Seção recarregada');
+                }, 200);
+                
+            } catch (error) {
+                console.error('❌ Erro ao atualizar cliente:', error);
+                mostrarNotificacao('Erro ao atualizar cliente: ' + error.message, 'error');
             }
         }
 
