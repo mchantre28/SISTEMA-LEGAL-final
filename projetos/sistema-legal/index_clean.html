@@ -2874,6 +2874,13 @@ END:VCALENDAR`;
                 }, 100);
             }
             
+            if (secao === 'prazos') {
+                setTimeout(() => {
+                    aplicarFiltrosPrazos();
+                    lucide.createIcons();
+                }, 100);
+            }
+            
             if (secao === 'herancas') {
                 console.log('🔧 Carregando seção herancas');
                 console.log('🔧 herancas array:', herancas);
