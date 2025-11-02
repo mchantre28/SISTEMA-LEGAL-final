@@ -675,12 +675,14 @@
                 debugLog(`Dados carregados: ${clientes.length} clientes, ${processos.length} processos, ${financeiro.length} registros financeiros`);
                 
                 // Atualizar estatísticas
-                document.getElementById('clientesAtivos').textContent = clientes.length;
-                document.getElementById('processosAtivos').textContent = processos.filter(p => p.estado === 'Em curso').length;
-                document.getElementById('processosConcluidos').textContent = processos.filter(p => p.estado === 'Concluído').length;
+                document.getElementById('clientesAtivos').textContent = clientes.length || 0;
+                const processosEmCurso = processos.filter(p => p.estado === 'Em curso' || p.estado === 'Em Curso').length;
+                document.getElementById('processosAtivos').textContent = processosEmCurso || 0;
+                const processosConcluidos = processos.filter(p => p.estado === 'Concluído' || p.estado === 'Concluido').length;
+                document.getElementById('processosConcluidos').textContent = processosConcluidos || 0;
                 
                 const receitas = financeiro.filter(f => f.tipo === 'Honorário').reduce((sum, f) => sum + (f.valor || 0), 0);
-                document.getElementById('receitasTotais').textContent = `€${receitas.toFixed(2)}`;
+                document.getElementById('receitasTotais').textContent = receitas > 0 ? `€${receitas.toFixed(2)}` : '€0.00';
 
                 // Criar gráficos
                 createProcessosChart(processos);
@@ -1183,3 +1185,8 @@
     </script>
 </body>
 </html>
+
+
+
+
+

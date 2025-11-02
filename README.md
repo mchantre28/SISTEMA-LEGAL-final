@@ -1,290 +1,131 @@
-# 🚀 Novo Projeto Local
+# Beleza & Fragrâncias - Loja de Cosméticos e Perfumes
 
-## 📋 Descrição
-Sistema completo de gestão empresarial com banco de dados MySQL, API RESTful em Node.js e interface web moderna. Inclui gestão de profissionais, escritórios, especializações, localizações e histórico com funcionalidades CRUD completas e sistema de autenticação.
+Um site moderno e elegante especializado em cosméticos e perfumes, desenvolvido com HTML, CSS e JavaScript puro.
 
-## 🏗️ Estrutura do Projeto
+## 🌸 Características
+
+- **Design Elegante**: Interface feminina e sofisticada com tons rosa e roxo
+- **Catálogo Especializado**: Produtos de beleza organizados por categoria
+- **Sistema de Busca**: Busca em tempo real por nome e descrição
+- **Carrinho de Compras**: Adicionar, remover e alterar quantidades
+- **Modal de Detalhes**: Visualização detalhada dos produtos
+- **Interface Intuitiva**: Navegação suave e experiência de usuário otimizada
+
+## 📁 Estrutura do Projeto
 
 ```
-/novo-projeto-local/
-├── database/
-│   ├── schema.sql          # Estrutura completa do banco
-│   └── seed.sql           # Dados iniciais
-├── backend/
-│   └── app.js             # Servidor principal
-├── frontend/
-│   └── index.html         # Interface web moderna
-├── config/                # Arquivos de configuração
-├── .env                   # Variáveis de ambiente
-├── docker-compose.yml     # Configuração Docker
-├── Dockerfile            # Imagem Docker
-├── package.json          # Dependências Node.js
-└── README.md             # Documentação
+beleza-fragrancias/
+├── index.html          # Página principal
+├── styles.css          # Estilos CSS
+├── script.js           # Funcionalidades JavaScript
+└── README.md           # Este arquivo
 ```
 
-## ✨ Funcionalidades
+## 💄 Funcionalidades
 
-### 🔐 **Sistema de Autenticação**
-- Login seguro com JWT
-- Diferentes perfis de utilizador
-- Sessões persistentes
-- Logout automático
+### Catálogo de Produtos
+- 16 produtos pré-cadastrados em 3 categorias:
+  - **Perfumes**: Fragrâncias femininas, masculinas e unissex
+  - **Maquiagem**: Base, batom, sombras, rímel e kits completos
+  - **Skincare**: Cremes, séruns, máscaras e produtos de cuidado
+- Cards elegantes com informações detalhadas
+- Preços em formato brasileiro (R$)
 
-### 👨‍💼 **Gestão de Profissionais**
-- Cadastro completo (nome, NIF, cédula, especializações)
-- Gestão de estado (ativo, inativo, suspenso, aposentado)
-- Associação com escritórios e localizações
-- Histórico de registos
+### Sistema de Filtros
+- Filtro por categoria com botões interativos
+- Busca em tempo real por nome ou descrição
+- Combinação inteligente de filtros e busca
 
-### 🏢 **Gestão de Escritórios**
-- Cadastro de escritórios de advocacia
-- Contatos e websites
-- Localizações geográficas
-- Status ativo/inativo
+### Carrinho de Compras
+- Adicionar produtos com um clique
+- Alterar quantidades (+ e -)
+- Remover itens individuais
+- Limpar carrinho completo
+- Cálculo automático do total
+- Contador visual no ícone do carrinho
 
-### 📚 **Especializações**
-- Categorias de especialização
-- Gestão de áreas de atuação
-- Associação com profissionais
-- Níveis de especialização
+### Detalhes do Produto
+- Modal com informações completas
+- Seleção de quantidade
+- Adicionar múltiplas unidades ao carrinho
 
-### 📍 **Localizações**
-- Distrito, concelho, freguesia
-- Códigos postais e coordenadas GPS
-- Gestão geográfica completa
+### Seções Informativas
+- **Sobre**: Informações sobre a empresa especializada em beleza
+- **Contato**: Formulário funcional e dados de contato
+- **Footer**: Links úteis e redes sociais
 
-### 📋 **Histórico e Auditoria**
-- Registos de atos profissionais
-- Sistema de auditoria completo
-- Logs de operações
-- Rastreabilidade total
+## 🎨 Design
 
-### 📊 **Dashboard e Estatísticas**
-- Estatísticas em tempo real
-- Gráficos de performance
-- Relatórios detalhados
-- Métricas de utilização
+- **Cores**: Gradientes suaves em tons de rosa e roxo
+- **Tipografia**: Segoe UI para elegância e legibilidade
+- **Ícones**: Font Awesome com tema de beleza (spa, cosméticos)
+- **Animações**: Transições suaves e efeitos hover delicados
+- **Layout**: Grid responsivo com visual feminino
 
-## 🚀 **Tecnologias Utilizadas**
+## 📱 Responsividade
 
-### **Backend**
-- **Node.js** - Runtime JavaScript
-- **Express.js** - Framework web
-- **MySQL2** - Driver do banco de dados
-- **JWT** - Autenticação
-- **bcryptjs** - Hash de passwords
-- **CORS** - Controle de acesso
+O site é totalmente responsivo e se adapta a diferentes tamanhos de tela:
 
-### **Frontend**
-- **HTML5** - Estrutura semântica
-- **CSS3** - Estilização moderna
-- **JavaScript** - Funcionalidades interativas
-- **Fetch API** - Comunicação com backend
+- **Desktop**: Layout completo com sidebar e grid de produtos
+- **Tablet**: Ajustes no grid e navegação
+- **Mobile**: Layout em coluna única com navegação otimizada
 
-### **Banco de Dados**
-- **MySQL 8.0** - Sistema de gerenciamento
-- **Schema SQL** - Estrutura das tabelas
-- **Seed SQL** - Dados iniciais
-- **Triggers** - Auditoria automática
-- **Views** - Consultas otimizadas
-- **Procedures** - Lógica de negócio
+## 🚀 Como Usar
 
-### **DevOps**
-- **Docker** - Containerização
-- **Docker Compose** - Orquestração
-- **phpMyAdmin** - Interface de administração
+1. **Abrir o Site**: Abra o arquivo `index.html` em qualquer navegador moderno
+2. **Navegar**: Use o menu superior para navegar entre as seções
+3. **Filtrar Produtos**: Use os botões de categoria ou a barra de busca
+4. **Ver Detalhes**: Clique em qualquer produto para ver mais informações
+5. **Comprar**: Adicione produtos ao carrinho e finalize a compra
 
-## 📱 **Recursos**
+## 🔧 Personalização
 
-- ✅ Sistema de autenticação completo
-- ✅ API RESTful com autenticação JWT
-- ✅ Interface web moderna e responsiva
-- ✅ Banco de dados relacional otimizado
-- ✅ Sistema de auditoria automática
-- ✅ Validação de dados robusta
-- ✅ Tratamento de erros avançado
-- ✅ Containerização Docker
-- ✅ Documentação completa
-- ✅ Dados de exemplo realistas
+### Adicionar Novos Produtos
+Edite o array `produtos` no arquivo `script.js`:
 
-## 🎯 **Como Usar**
-
-### **Instalação Local**
-
-1. **Clone o repositório**
-   ```bash
-   git clone <url-do-repositorio>
-   cd novo-projeto-local
-   ```
-
-2. **Configure o banco de dados**
-   - Instale MySQL 8.0
-   - Crie o banco: `novo_projeto_local`
-   - Execute os scripts SQL:
-     ```bash
-     mysql -u root -p < database/schema.sql
-     mysql -u root -p < database/seed.sql
-     ```
-
-3. **Configure as variáveis de ambiente**
-   - Edite o arquivo `.env` com suas configurações
-
-4. **Instale as dependências**
-   ```bash
-   npm install
-   ```
-
-5. **Inicie o servidor**
-   ```bash
-   npm start
-   ```
-
-6. **Acesse a aplicação**
-   - Sistema: `http://localhost:3000`
-   - API: `http://localhost:3000/api`
-
-### **Instalação com Docker**
-
-1. **Clone o repositório**
-   ```bash
-   git clone <url-do-repositorio>
-   cd novo-projeto-local
-   ```
-
-2. **Inicie com Docker Compose**
-   ```bash
-   docker-compose up -d
-   ```
-
-3. **Acesse a aplicação**
-   - Sistema: `http://localhost:3000`
-   - phpMyAdmin: `http://localhost:8080`
-
-## 📊 **Endpoints da API**
-
-### **Autenticação**
-- `POST /api/auth/login` - Login de utilizador
-
-### **Profissionais**
-- `GET /api/profissionais` - Listar profissionais
-- `POST /api/profissionais` - Criar profissional
-- `GET /api/profissionais/:id` - Buscar profissional
-
-### **Escritórios**
-- `GET /api/escritorios` - Listar escritórios
-- `POST /api/escritorios` - Criar escritório
-
-### **Especializações**
-- `GET /api/especializacoes` - Listar especializações
-- `POST /api/especializacoes` - Criar especialização
-
-### **Localizações**
-- `GET /api/localizacoes` - Listar localizações
-- `POST /api/localizacoes` - Criar localização
-
-### **Histórico**
-- `GET /api/historico` - Listar registos
-- `POST /api/historico` - Criar registo
-
-### **Estatísticas**
-- `GET /api/estatisticas` - Obter estatísticas
-
-## 🗄️ **Estrutura do Banco**
-
-### **Tabelas Principais**
-- `Profissional` - Dados dos profissionais
-- `Escritorio` - Escritórios de advocacia
-- `Especializacao` - Especializações disponíveis
-- `Localizacao` - Localizações geográficas
-- `Historico_Registo` - Registos históricos
-- `Utilizador` - Utilizadores do sistema
-- `Auditoria_Log` - Logs de auditoria
-
-### **Relacionamentos**
-- Profissional → Escritório (N:1)
-- Profissional → Localização (N:1)
-- Profissional → Especializações (N:N)
-- Profissional → Histórico (1:N)
-- Utilizador → Profissional (1:1)
-
-### **Recursos Avançados**
-- Triggers de auditoria automática
-- Views otimizadas para consultas
-- Procedures para lógica de negócio
-- Índices para performance
-- Constraints de integridade
-
-## 🔧 **Configuração**
-
-### **Variáveis de Ambiente (.env)**
-```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=
-DB_NAME=novo_projeto_local
-DB_PORT=3306
-PORT=3000
-JWT_SECRET=seu_jwt_secret_super_seguro_aqui_2024
+```javascript
+{
+    id: 17,
+    nome: "Nome do Produto",
+    categoria: "perfumes", // ou "maquiagem" ou "skincare"
+    preco: 99.99,
+    descricao: "Descrição do produto",
+    imagem: "🌸"
+}
 ```
 
-### **Docker Compose**
-- MySQL 8.0 com dados persistentes
-- Aplicação Node.js
-- phpMyAdmin para administração
-- Rede isolada e segura
+### Modificar Categorias
+As categorias são:
+- **perfumes**: Fragrâncias e colônias
+- **maquiagem**: Produtos de maquiagem
+- **skincare**: Produtos de cuidados com a pele
 
-## 📈 **Funcionalidades Avançadas**
+### Personalizar Cores
+Edite as variáveis CSS no arquivo `styles.css`:
+- Gradientes principais em tons de rosa
+- Cores dos botões e elementos interativos
+- Cores de destaque e hover
 
-### **Sistema de Auditoria**
-- Log automático de todas as operações
-- Rastreabilidade completa
-- Dados anteriores e novos
-- IP e user agent
+## 📞 Informações de Contato
 
-### **Autenticação e Segurança**
-- JWT com expiração
-- Hash de passwords com bcrypt
-- Middleware de autenticação
-- Controle de acesso por perfil
+- **Telefone**: (11) 99999-9999
+- **Email**: contato@belezaefragrancias.com
+- **Endereço**: Rua das Flores, 123 - São Paulo - SP
 
-### **Performance**
-- Pool de conexões MySQL
-- Índices otimizados
-- Views para consultas complexas
-- Procedures para lógica de negócio
+## 🌟 Próximas Melhorias
 
-### **Interface Moderna**
-- Design responsivo
-- Autenticação integrada
-- Formulários intuitivos
-- Dashboard em tempo real
+- [ ] Integração com sistema de pagamento
+- [ ] Cadastro de usuários
+- [ ] Histórico de compras
+- [ ] Sistema de avaliações de produtos
+- [ ] Consultoria online de beleza
+- [ ] Backend com banco de dados
+- [ ] Painel administrativo
 
-## 🧪 **Testes**
+## 📄 Licença
 
-```bash
-# Executar testes
-npm test
-
-# Modo desenvolvimento
-npm run dev
-
-# Reset do banco de dados
-npm run reset-db
-```
-
-## 📝 **Credenciais de Teste**
-
-### **Utilizadores Disponíveis**
-- **admin** / **password** - Administrador
-- **joao.silva** / **password** - Profissional
-- **maria.santos** / **password** - Profissional
-- **publico1** / **password** - Utilizador público
-
-## 📝 **Versão**
-**v2.0.0** - Novo Projeto Local Completo
-
-## 👨‍💻 **Desenvolvido por**
-Sistema de Gestão Empresarial
+Este projeto é de código aberto e pode ser usado livremente para fins comerciais e educacionais.
 
 ---
-*Projeto completo com backend, frontend, banco de dados e sistema de autenticação*
+
+**Desenvolvido com 💄 para facilitar a venda de cosméticos e perfumes**

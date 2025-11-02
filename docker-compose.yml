@@ -1,7 +1,23 @@
 version: '3.8'
 
 services:
-  # Banco de dados MySQL
+  # Banco de dados PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: novo_projeto_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: clinica_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - projeto_network
+
+  # Banco de dados MySQL (mantido para compatibilidade)
   mysql:
     image: mysql:8.0
     container_name: novo_projeto_mysql
@@ -62,6 +78,7 @@ services:
       - projeto_network
 
 volumes:
+  postgres_data:
   mysql_data:
 
 networks:

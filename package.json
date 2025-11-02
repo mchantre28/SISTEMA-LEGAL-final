@@ -6,9 +6,15 @@
   "scripts": {
     "start": "node backend/app.js",
     "dev": "nodemon backend/app.js",
+    "start:prisma": "node backend/app-prisma.js",
+    "dev:prisma": "nodemon backend/app-prisma.js",
     "test": "jest",
     "setup-db": "mysql -u root -p < database/schema.sql && mysql -u root -p < database/seed.sql",
-    "reset-db": "mysql -u root -p -e 'DROP DATABASE IF EXISTS novo_projeto_local; CREATE DATABASE novo_projeto_local;' && npm run setup-db"
+    "reset-db": "mysql -u root -p -e 'DROP DATABASE IF EXISTS novo_projeto_local; CREATE DATABASE novo_projeto_local;' && npm run setup-db",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "prisma:push": "prisma db push"
   },
   "keywords": [
     "nodejs",
@@ -24,6 +30,7 @@
   "author": "Sistema de Gestão",
   "license": "MIT",
   "dependencies": {
+    "@prisma/client": "^5.22.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -35,7 +42,8 @@
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "prisma": "^5.22.0"
   },
   "engines": {
     "node": ">=18.0.0"

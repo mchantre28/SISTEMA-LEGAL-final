@@ -12,44 +12,67 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('frontend'));
 
 // Configuração do SQLite
 const dbPath = path.join(__dirname, '../database/solicitadora.db');
 const db = new sqlite3.Database(dbPath);
 
-// Inicializar base de dados se não existir
+// Inicializar base de dados (idempotente)
 function initDatabase() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         console.log('📁 Inicializando base de dados SQLite...');
-        
-        // Ler e executar o schema
-        const schema = fs.readFileSync(path.join(__dirname, '../database/schema-sqlite.sql'), 'utf8');
+
+        const schemaPath = path.join(__dirname, '../database/schema-sqlite.sql');
+        let schema = fs.readFileSync(schemaPath, 'utf8');
+
+        // Tornar CREATE TABLE idempotente
+        schema = schema.replace(/CREATE\s+TABLE\s+(?!IF\s+NOT\s+EXISTS)/gi, 'CREATE TABLE IF NOT EXISTS ');
+
         const statements = schema.split(';').filter(stmt => stmt.trim());
-        
+
         let completed = 0;
-        const totalStatements = statements.length;
-        
-        statements.forEach((statement, index) => {
-            if (statement.trim()) {
-                db.exec(statement, (err) => {
-                    if (err) {
-                        console.error('Erro ao executar statement:', err);
-                        console.error('Statement:', statement);
-                    }
-                    completed++;
-                    if (completed === totalStatements) {
-                        console.log('✅ Base de dados SQLite criada com sucesso!');
-                        resolve();
-                    }
-                });
-            } else {
-                completed++;
-                if (completed === totalStatements) {
-                    console.log('✅ Base de dados SQLite criada com sucesso!');
-                    resolve();
+        const total = statements.length;
+
+        const onDone = () => {
+            console.log('✅ Estrutura verificada.');
+            // Seed apenas quando vazio
+            db.get('SELECT COUNT(*) as total FROM clientes', (err, row) => {
+                if (!err && row && row.total > 0) {
+                    console.log('ℹ️ Seed ignorado (tabelas já possuem dados).');
+                    return resolve();
                 }
-            }
+
+                const seedPath = path.join(__dirname, '../database/seed.sql');
+                if (!fs.existsSync(seedPath)) {
+                    console.log('ℹ️ Seed não encontrado, seguindo sem semear.');
+                    return resolve();
+                }
+
+                const seedRaw = fs.readFileSync(seedPath, 'utf8');
+                const seedStatements = seedRaw.split(';').filter(s => s.trim());
+                let done = 0;
+                if (seedStatements.length === 0) return resolve();
+                seedStatements.forEach(stmt => {
+                    db.exec(stmt, (e) => {
+                        // Ignorar violações de UNIQUE e similares no seed
+                        done++;
+                        if (done === seedStatements.length) {
+                            console.log('🌱 Seed aplicado (ou ignorado onde já existia).');
+                            resolve();
+                        }
+                    });
+                });
+            });
+        };
+
+        if (total === 0) return onDone();
+
+        statements.forEach((statement) => {
+            db.exec(statement, () => {
+                // Ignorar erros de "already exists" silenciosamente
+                completed++;
+                if (completed === total) onDone();
+            });
         });
     });
 }
@@ -72,10 +95,13 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-// Rota principal
+// Rota principal (prioritária sobre conteúdo estático)
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/sistema-funcional.html'));
 });
+
+// Conteúdo estático servido sob /static para não colidir com '/'
+app.use('/static', express.static(path.join(__dirname, '../frontend')));
 
 // Rota principal da API
 app.get('/api', (req, res) => {
@@ -105,6 +131,65 @@ app.get('/api/health', async (req, res) => {
         database: 'SQLite Conectado',
         timestamp: new Date().toISOString()
     });
+});
+
+// ========================================
+// DASHBOARD - resumo
+// ========================================
+
+function dbGet(sql, params = []) {
+    return new Promise((resolve, reject) => {
+        db.get(sql, params, (err, row) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(row);
+        });
+    });
+}
+
+function dbAll(sql, params = []) {
+    return new Promise((resolve, reject) => {
+        db.all(sql, params, (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+    });
+}
+
+app.get('/api/dashboard', authenticateToken, async (req, res) => {
+    try {
+        const [totalClientesRow, totalProcessosRow, estados, proximosEventos, sumHonorariosRow, sumDespesasRow, sumPagosRow, sumPendentesRow] = await Promise.all([
+            dbGet('SELECT COUNT(*) AS total FROM clientes'),
+            dbGet('SELECT COUNT(*) AS total FROM processos'),
+            dbAll("SELECT estado, COUNT(*) AS total FROM processos GROUP BY estado"),
+            dbAll("SELECT id_evento, titulo, data_evento FROM agenda WHERE data_evento IS NOT NULL ORDER BY datetime(data_evento) ASC LIMIT 5"),
+            dbGet("SELECT IFNULL(SUM(valor), 0) AS total FROM financeiro WHERE tipo = 'Honorário'"),
+            dbGet("SELECT IFNULL(SUM(valor), 0) AS total FROM financeiro WHERE tipo = 'Despesa'"),
+            dbGet("SELECT IFNULL(SUM(valor), 0) AS total FROM financeiro WHERE status = 'Pago'"),
+            dbGet("SELECT IFNULL(SUM(valor), 0) AS total FROM financeiro WHERE status = 'Pendente'")
+        ]);
+
+        res.json({
+            totalClientes: totalClientesRow?.total || 0,
+            totalProcessos: totalProcessosRow?.total || 0,
+            processosPorEstado: estados,
+            proximosEventos,
+            financeiro: {
+                honorarios: sumHonorariosRow?.total || 0,
+                despesas: sumDespesasRow?.total || 0,
+                pagos: sumPagosRow?.total || 0,
+                pendentes: sumPendentesRow?.total || 0
+            },
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // ========================================
@@ -213,6 +298,27 @@ app.get('/api/processos', authenticateToken, async (req, res) => {
                 return;
             }
             res.json(rows);
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/processos', authenticateToken, async (req, res) => {
+    try {
+        const { id_cliente, numero_processo, tipo_processo, descricao, estado } = req.body;
+        if (!id_cliente || !numero_processo) {
+            return res.status(400).json({ error: 'id_cliente e numero_processo são obrigatórios' });
+        }
+        const st = db.prepare(`
+            INSERT INTO processos (id_cliente, numero_processo, tipo_processo, descricao, estado, data_abertura)
+            VALUES (?, ?, ?, ?, COALESCE(?, 'Em curso'), DATE('now'))
+        `);
+        st.run([id_cliente, numero_processo, tipo_processo || '', descricao || '', estado || 'Em curso'], function(err){
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            return res.status(201).json({ id_processo: this.lastID });
         });
     } catch (error) {
         res.status(500).json({ error: error.message });

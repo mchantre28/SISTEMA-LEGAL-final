@@ -22,9 +22,11 @@
                     <li><a href="#contato">Contato</a></li>
                 </ul>
             </nav>
-            <div class="cart-icon">
-                <i class="fas fa-shopping-cart" id="cart-icon"></i>
-                <span class="cart-count" id="cart-count">0</span>
+            <div class="whatsapp-btn">
+                <a href="https://wa.me/447456777339" target="_blank">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>WhatsApp</span>
+                </a>
             </div>
         </div>
     </header>
@@ -159,22 +161,35 @@
         </div>
     </footer>
 
-    <!-- Modal do Carrinho -->
-    <div id="cart-modal" class="modal">
+
+    <!-- Modal de Quantidade para WhatsApp -->
+    <div id="quantity-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Carrinho de Compras</h2>
-                <span class="close" onclick="fecharModal()" style="cursor: pointer;">&times;</span>
+                <h2>Escolher Quantidade</h2>
+                <span class="close" onclick="fecharModais()" style="cursor: pointer;">&times;</span>
             </div>
             <div class="modal-body">
-                <div id="cart-items"></div>
-                <div class="cart-total">
-                    <h3>Total: R$ <span id="cart-total">0,00</span></h3>
+                <div class="quantity-selection">
+                    <div class="product-info-quantity">
+                        <h3 id="quantity-product-name"></h3>
+                        <p id="quantity-product-price"></p>
+                    </div>
+                    <div class="quantity-controls">
+                        <label>Quantidade:</label>
+                        <div class="quantity-input-group">
+                            <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                            <input type="number" id="quantity-input" min="1" value="1" readonly>
+                            <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                        </div>
+                        <div class="total-price">
+                            <strong>Total: <span id="total-price-display">€0.00</span></strong>
+                        </div>
+                    </div>
+                    <button class="btn-whatsapp-modal" onclick="enviarParaWhatsApp()">
+                        <i class="fab fa-whatsapp"></i> Enviar para WhatsApp
+                    </button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" id="clear-cart">Limpar Carrinho</button>
-                <button class="btn-primary" id="checkout">Finalizar Compra</button>
             </div>
         </div>
     </div>
@@ -184,7 +199,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="product-modal-title"></h2>
-                <span class="close" onclick="fecharModal()" style="cursor: pointer;">&times;</span>
+                <span class="close" onclick="fecharModais()" style="cursor: pointer;">&times;</span>
             </div>
             <div class="modal-body">
                 <div class="product-details">

@@ -170,7 +170,7 @@
             <div class="test-section">
                 <h2>🧪 Teste do Sistema</h2>
                 <p>Clique no botão abaixo para testar se o sistema está funcionando:</p>
-                <button class="test-button" onclick="testSystem()">
+                <button id="btn-test" class="test-button" onclick="testSystem()">
                     🚀 TESTAR SISTEMA COMPLETO
                 </button>
                 <div id="status" class="status info">
@@ -182,41 +182,46 @@
                 <div class="module">
                     <h3>👥 Clientes</h3>
                     <p>Gestão completa de clientes</p>
-                    <button class="module-button" onclick="loadModule('clientes')">
-                        Abrir Módulo
-                    </button>
+                    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+                        <button class="module-button" onclick="listClientes()">Listar</button>
+                        <button class="module-button" onclick="createCliente()">Criar</button>
+                    </div>
                 </div>
                 
                 <div class="module">
                     <h3>📋 Processos</h3>
                     <p>Gestão de processos jurídicos</p>
-                    <button class="module-button" onclick="loadModule('processos')">
-                        Abrir Módulo
-                    </button>
+                    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+                        <button class="module-button" onclick="listProcessos()">Listar</button>
+                        <button class="module-button" onclick="createProcesso()">Criar</button>
+                    </div>
                 </div>
                 
                 <div class="module">
                     <h3>📄 Documentos</h3>
                     <p>Gestão de documentos e ficheiros</p>
-                    <button class="module-button" onclick="loadModule('documentos')">
-                        Abrir Módulo
-                    </button>
+                    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+                        <button class="module-button" onclick="listDocumentos()">Listar</button>
+                        <button class="module-button" onclick="createDocumento()">Criar</button>
+                    </div>
                 </div>
                 
                 <div class="module">
                     <h3>💰 Financeiro</h3>
                     <p>Gestão de honorários e despesas</p>
-                    <button class="module-button" onclick="loadModule('financeiro')">
-                        Abrir Módulo
-                    </button>
+                    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+                        <button class="module-button" onclick="listFinanceiro()">Listar</button>
+                        <button class="module-button" onclick="createFinanceiro()">Criar</button>
+                    </div>
                 </div>
                 
                 <div class="module">
                     <h3>📅 Agenda</h3>
                     <p>Gestão de compromissos e prazos</p>
-                    <button class="module-button" onclick="loadModule('agenda')">
-                        Abrir Módulo
-                    </button>
+                    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+                        <button class="module-button" onclick="listAgenda()">Listar</button>
+                        <button class="module-button" onclick="createEventoAgenda()">Criar</button>
+                    </div>
                 </div>
                 
                 <div class="module">
@@ -231,6 +236,24 @@
             <div class="debug-info" id="debug-info">
                 Sistema carregado. Clique em "TESTAR SISTEMA COMPLETO" para começar.
             </div>
+        </div>
+    </div>
+
+    <!-- Modal genérico -->
+    <div id="app-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:#fff; width:100%; max-width:560px; border-radius:14px; box-shadow:0 20px 60px rgba(0,0,0,.25); overflow:hidden;">
+            <div style="padding:16px 20px; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; display:flex; align-items:center; justify-content:space-between;">
+                <h3 id="modal-title" style="margin:0; font-weight:600;">Novo</h3>
+                <button onclick="closeModal()" style="background:transparent; border:none; color:#fff; font-size:20px; cursor:pointer">✕</button>
+            </div>
+            <form id="modal-form" style="padding:22px 20px; display:grid; gap:14px;">
+                <!-- campos injetados via JS -->
+                <div id="modal-fields"></div>
+                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:8px;">
+                    <button type="button" onclick="closeModal()" style="background:#e9ecef; color:#333; border:none; padding:10px 18px; border-radius:9px; cursor:pointer;">Cancelar</button>
+                    <button id="modal-submit" type="submit" style="background:#667eea; color:#fff; border:none; padding:10px 18px; border-radius:9px; cursor:pointer;">Guardar</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -259,6 +282,7 @@
 
         async function login() {
             try {
+                console.log('[UI] Clique em TESTAR');
                 updateDebugInfo('Tentando fazer login...');
                 const response = await fetch(`${API_BASE_URL}/auth/login`, {
                     method: 'POST',
@@ -284,10 +308,18 @@
         }
 
         async function testSystem() {
+            console.log('[UI] testSystem() iniciado');
             updateStatus('Testando sistema...', 'info');
             updateDebugInfo('🧪 Iniciando teste do sistema...');
             
             try {
+                // Passo 0: teste sem autenticação (health)
+                updateDebugInfo('Ping ao /api/health (sem token)...');
+                const healthResp = await fetch(`${API_BASE_URL}/health`);
+                const healthData = await healthResp.json();
+                updateDebugInfo(`/api/health → ${healthResp.status} ${JSON.stringify(healthData)}`);
+                console.log('[NET] /api/health status', healthResp.status);
+
                 // Primeiro, tentar fazer login
                 if (!authToken) {
                     updateDebugInfo('Token não encontrado. Fazendo login...');
@@ -305,6 +337,7 @@
                 });
                 
                 const data = await response.json();
+                console.log('[NET] /api/dashboard status', response.status, data);
                 
                 if (response.ok) {
                     updateStatus('✅ Sistema funcionando perfeitamente!', 'success');
@@ -318,6 +351,7 @@
             } catch (error) {
                 updateStatus(`❌ Erro de conexão: ${error.message}`, 'error');
                 updateDebugInfo(`❌ Erro de conexão: ${error.message}`, true);
+                console.error('[NET] erro', error);
             }
         }
 
@@ -332,8 +366,306 @@
             }, 1000);
         }
 
+        async function ensureLogin() {
+            if (!authToken) {
+                const ok = await login();
+                if (!ok) throw new Error('Login falhou');
+            }
+        }
+
+        async function listClientes() {
+            try {
+                await ensureLogin();
+                updateDebugInfo('📋 Listando clientes...');
+                const resp = await fetch(`${API_BASE_URL}/clientes`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const rows = await resp.json();
+                if (!resp.ok) throw new Error(rows.error || resp.statusText);
+                console.table(rows);
+                updateDebugInfo(`✅ ${rows.length} clientes encontrados.`);
+                alert(`Clientes encontrados: ${rows.length}`);
+            } catch (e) {
+                console.error(e);
+                updateDebugInfo(`❌ Erro ao listar clientes: ${e.message}`, true);
+                alert(`Erro ao listar: ${e.message}`);
+            }
+        }
+
+        function openModalCliente() {
+            const fields = `
+                <label style='display:grid; gap:6px;'>
+                    <span>Nome *</span>
+                    <input name="nome" required placeholder="Ex.: Ana Costa" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                </label>
+                <div style='display:grid; gap:10px; grid-template-columns:1fr 1fr;'>
+                    <label style='display:grid; gap:6px;'>
+                        <span>NIF</span>
+                        <input name="nif" placeholder="Ex.: 123456789" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                    </label>
+                    <label style='display:grid; gap:6px;'>
+                        <span>Telefone</span>
+                        <input name="telefone" placeholder="Ex.: +351 912 345 678" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                    </label>
+                </div>
+                <label style='display:grid; gap:6px;'>
+                    <span>Email</span>
+                    <input name="email" type="email" placeholder="ana@email.com" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                </label>
+                <label style='display:grid; gap:6px;'>
+                    <span>Morada</span>
+                    <input name="morada" placeholder="Rua, nº, cidade" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                </label>
+            `;
+            openModal('Criar Cliente', fields, async (form) => {
+                await ensureLogin();
+                const payload = Object.fromEntries(new FormData(form).entries());
+                if (!payload.nome) throw new Error('Nome é obrigatório');
+                updateDebugInfo('➕ Criando cliente...');
+                const resp = await fetch(`${API_BASE_URL}/clientes`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+                    body: JSON.stringify(payload)
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.error || resp.statusText);
+                updateDebugInfo(`✅ Cliente criado (id=${data.id}).`);
+                closeModal();
+                alert(`Cliente criado com sucesso (id=${data.id}).`);
+            });
+        }
+        async function createCliente(){ openModalCliente(); }
+
+        async function listProcessos() {
+            try {
+                await ensureLogin();
+                updateDebugInfo('📋 Listando processos...');
+                const resp = await fetch(`${API_BASE_URL}/processos`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const rows = await resp.json();
+                if (!resp.ok) throw new Error(rows.error || resp.statusText);
+                console.table(rows);
+                updateDebugInfo(`✅ ${rows.length} processos encontrados.`);
+                alert(`Processos encontrados: ${rows.length}`);
+            } catch (e) {
+                console.error(e);
+                updateDebugInfo(`❌ Erro ao listar processos: ${e.message}`, true);
+                alert(`Erro ao listar: ${e.message}`);
+            }
+        }
+
+        function openModalProcesso() {
+            const fields = `
+                <label style='display:grid; gap:6px;'>
+                    <span>ID do cliente *</span>
+                    <input name="id_cliente" type="number" required placeholder="Ex.: 1" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                </label>
+                <label style='display:grid; gap:6px;'>
+                    <span>Número do processo *</span>
+                    <input name="numero_processo" required placeholder="Ex.: PROC-2025-001" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                </label>
+                <div style='display:grid; gap:10px; grid-template-columns:1fr 1fr;'>
+                    <label style='display:grid; gap:6px;'>
+                        <span>Tipo</span>
+                        <input name="tipo_processo" placeholder="Civil / Trabalho / Comercial" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                    </label>
+                    <label style='display:grid; gap:6px;'>
+                        <span>Estado</span>
+                        <select name="estado" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;">
+                            <option>Em curso</option>
+                            <option>Concluído</option>
+                            <option>Suspenso</option>
+                        </select>
+                    </label>
+                </div>
+                <label style='display:grid; gap:6px;'>
+                    <span>Descrição</span>
+                    <textarea name="descricao" rows="3" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;"></textarea>
+                </label>
+            `;
+            openModal('Criar Processo', fields, async (form) => {
+                await ensureLogin();
+                const payload = Object.fromEntries(new FormData(form).entries());
+                payload.id_cliente = Number(payload.id_cliente);
+                updateDebugInfo('➕ Criando processo...');
+                const resp = await fetch(`${API_BASE_URL}/processos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+                    body: JSON.stringify(payload)
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.error || resp.statusText);
+                updateDebugInfo(`✅ Processo criado (id=${data.id_processo}).`);
+                closeModal();
+                alert(`Processo criado com sucesso (id=${data.id_processo}).`);
+            });
+        }
+        async function createProcesso(){ openModalProcesso(); }
+
+        // Infra do modal
+        function openModal(title, fieldsHtml, onSubmit) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-fields').innerHTML = fieldsHtml;
+            const form = document.getElementById('modal-form');
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                try {
+                    await onSubmit(form);
+                } catch (err) {
+                    updateDebugInfo(`❌ ${err.message}`, true);
+                    alert(err.message);
+                }
+            };
+            document.getElementById('app-modal').style.display = 'flex';
+        }
+        function closeModal(){ document.getElementById('app-modal').style.display = 'none'; }
+
+        // ===== Documentos =====
+        async function listDocumentos(){
+            try{
+                await ensureLogin();
+                const resp = await fetch(`${API_BASE_URL}/documentos`, { headers:{ Authorization:`Bearer ${authToken}` }});
+                const rows = await resp.json();
+                if(!resp.ok) throw new Error(rows.error||resp.statusText);
+                const table = rows.map(d=>`<tr><td>${d.id_documento}</td><td>${d.id_processo}</td><td>${d.nome_documento||''}</td><td>${d.tipo_documento||''}</td><td>${d.data_upload||''}</td></tr>`).join('');
+                openModal('Documentos', `<div style='overflow:auto'><table style='width:100%; border-collapse:collapse'>
+                    <thead><tr><th>ID</th><th>Processo</th><th>Nome</th><th>Tipo</th><th>Data</th></tr></thead>
+                    <tbody>${table||'<tr><td colspan=5>Sem registos</td></tr>'}</tbody>
+                </table></div>`, ()=>{});
+                document.getElementById('modal-submit').style.display='none';
+            }catch(e){ updateDebugInfo(`❌ Erro ao listar documentos: ${e.message}`, true); }
+        }
+        function openModalDocumento(){
+            const fields = `
+                <label style='display:grid; gap:6px;'>
+                    <span>ID do processo *</span>
+                    <input name="id_processo" type="number" required style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                </label>
+                <label style='display:grid; gap:6px;'>
+                    <span>Nome do documento</span>
+                    <input name="nome_documento" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                </label>
+                <label style='display:grid; gap:6px;'>
+                    <span>Tipo</span>
+                    <input name="tipo_documento" placeholder="pdf/word/..." style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                </label>`;
+            openModal('Criar Documento', fields, async (form)=>{
+                await ensureLogin();
+                const payload = Object.fromEntries(new FormData(form).entries());
+                payload.id_processo = Number(payload.id_processo);
+                const resp = await fetch(`${API_BASE_URL}/documentos`,{ method:'POST', headers:{ 'Content-Type':'application/json', Authorization:`Bearer ${authToken}` }, body:JSON.stringify(payload)});
+                const data = await resp.json();
+                if(!resp.ok) throw new Error(data.error||resp.statusText);
+                updateDebugInfo(`✅ Documento criado (id=${data.id_documento}).`); closeModal();
+                listDocumentos();
+            });
+        }
+        async function createDocumento(){ openModalDocumento(); }
+
+        // ===== Financeiro =====
+        async function listFinanceiro(){
+            try{
+                await ensureLogin();
+                const resp = await fetch(`${API_BASE_URL}/financeiro`, { headers:{ Authorization:`Bearer ${authToken}` }});
+                const rows = await resp.json();
+                if(!resp.ok) throw new Error(rows.error||resp.statusText);
+                const table = rows.map(f=>`<tr><td>${f.id_financeiro}</td><td>${f.id_processo}</td><td>${f.tipo}</td><td>${f.valor}</td><td>${f.status}</td><td>${f.data_registo||''}</td></tr>`).join('');
+                openModal('Movimentos Financeiros', `<div style='overflow:auto'><table style='width:100%; border-collapse:collapse'>
+                    <thead><tr><th>ID</th><th>Processo</th><th>Tipo</th><th>Valor</th><th>Status</th><th>Data</th></tr></thead>
+                    <tbody>${table||'<tr><td colspan=6>Sem registos</td></tr>'}</tbody>
+                </table></div>`, ()=>{});
+                document.getElementById('modal-submit').style.display='none';
+            }catch(e){ updateDebugInfo(`❌ Erro ao listar financeiro: ${e.message}`, true); }
+        }
+        function openModalFinanceiro(){
+            const fields = `
+                <label style='display:grid; gap:6px;'>
+                    <span>ID do processo *</span>
+                    <input name="id_processo" type="number" required style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                </label>
+                <div style='display:grid; gap:10px; grid-template-columns:1fr 1fr;'>
+                    <label style='display:grid; gap:6px;'>
+                        <span>Tipo</span>
+                        <select name="tipo" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;">
+                            <option>Honorário</option>
+                            <option>Despesa</option>
+                            <option>Pagamento</option>
+                        </select>
+                    </label>
+                    <label style='display:grid; gap:6px;'>
+                        <span>Valor</span>
+                        <input name="valor" type="number" step="0.01" required style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                    </label>
+                </div>
+                <label style='display:grid; gap:6px;'>
+                    <span>Descrição</span>
+                    <input name="descricao" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                </label>`;
+            openModal('Lançar Movimento', fields, async (form)=>{
+                await ensureLogin();
+                const payload = Object.fromEntries(new FormData(form).entries());
+                payload.id_processo = Number(payload.id_processo);
+                payload.valor = Number(payload.valor);
+                const resp = await fetch(`${API_BASE_URL}/financeiro`,{ method:'POST', headers:{ 'Content-Type':'application/json', Authorization:`Bearer ${authToken}` }, body:JSON.stringify(payload)});
+                const data = await resp.json();
+                if(!resp.ok) throw new Error(data.error||resp.statusText);
+                updateDebugInfo(`✅ Movimento criado (id=${data.id_financeiro}).`); closeModal();
+                listFinanceiro();
+            });
+        }
+        async function createFinanceiro(){ openModalFinanceiro(); }
+
+        // ===== Agenda =====
+        async function listAgenda(){
+            try{
+                await ensureLogin();
+                const resp = await fetch(`${API_BASE_URL}/agenda`, { headers:{ Authorization:`Bearer ${authToken}` }});
+                const rows = await resp.json();
+                if(!resp.ok) throw new Error(rows.error||resp.statusText);
+                const table = rows.map(a=>`<tr><td>${a.id_evento}</td><td>${a.id_processo}</td><td>${a.titulo}</td><td>${a.data_evento||''}</td><td>${a.observacoes||''}</td></tr>`).join('');
+                openModal('Agenda', `<div style='overflow:auto'><table style='width:100%; border-collapse:collapse'>
+                    <thead><tr><th>ID</th><th>Processo</th><th>Título</th><th>Data</th><th>Obs.</th></tr></thead>
+                    <tbody>${table||'<tr><td colspan=5>Sem eventos</td></tr>'}</tbody>
+                </table></div>`, ()=>{});
+                document.getElementById('modal-submit').style.display='none';
+            }catch(e){ updateDebugInfo(`❌ Erro ao listar agenda: ${e.message}`, true); }
+        }
+        function openModalAgenda(){
+            const fields = `
+                <label style='display:grid; gap:6px;'>
+                    <span>Título *</span>
+                    <input name="titulo" required style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                </label>
+                <div style='display:grid; gap:10px; grid-template-columns:1fr 1fr;'>
+                    <label style='display:grid; gap:6px;'>
+                        <span>ID do processo</span>
+                        <input name="id_processo" type="number" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                    </label>
+                    <label style='display:grid; gap:6px;'>
+                        <span>Data e hora</span>
+                        <input name="data_evento" type="datetime-local" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;" />
+                    </label>
+                </div>
+                <label style='display:grid; gap:6px;'>
+                    <span>Observações</span>
+                    <textarea name="observacoes" rows="3" style="padding:10px 12px; border:1px solid #dfe3e8; border-radius:9px;"></textarea>
+                </label>`;
+            openModal('Novo Evento', fields, async (form)=>{
+                await ensureLogin();
+                const payload = Object.fromEntries(new FormData(form).entries());
+                const resp = await fetch(`${API_BASE_URL}/agenda`,{ method:'POST', headers:{ 'Content-Type':'application/json', Authorization:`Bearer ${authToken}` }, body:JSON.stringify(payload)});
+                const data = await resp.json();
+                if(!resp.ok) throw new Error(data.error||resp.statusText);
+                updateDebugInfo(`✅ Evento criado (id=${data.id_evento}).`); closeModal();
+                listAgenda();
+            });
+        }
+        async function createEventoAgenda(){ openModalAgenda(); }
+
         // Inicializar sistema
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('[UI] DOMContentLoaded');
             updateDebugInfo('🚀 Sistema de Solicitadora carregado!');
             updateDebugInfo('✅ Interface carregada com sucesso');
             updateDebugInfo('✅ Todos os módulos disponíveis');
