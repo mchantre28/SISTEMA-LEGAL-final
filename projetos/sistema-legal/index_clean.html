@@ -1291,6 +1291,43 @@
             }
         }
 
+        function excluirHonorarioDireto(id) {
+            console.log('🔧 excluirHonorarioDireto chamado com ID:', id);
+            
+            if (confirm('Tem certeza que deseja excluir este honorário? Esta ação não pode ser desfeita.')) {
+                // Carregar dados dos honorários
+                const honorariosSalvos = localStorage.getItem('honorarios');
+                let honorarios = [];
+                if (honorariosSalvos) {
+                    honorarios = JSON.parse(honorariosSalvos);
+                }
+                
+                console.log('🔧 Honorários antes da exclusão:', honorarios.length);
+                
+                // Filtrar honorário a ser excluído
+                const honorariosAtualizados = honorarios.filter(h => h.id !== parseInt(id));
+                
+                console.log('🔧 Honorários após exclusão:', honorariosAtualizados.length);
+                
+                // Salvar dados atualizados
+                localStorage.setItem('honorarios', JSON.stringify(honorariosAtualizados));
+                window.honorarios = honorariosAtualizados;
+                
+                console.log('✅ Honorários salvos no localStorage');
+                
+                mostrarNotificacao('Honorário excluído com sucesso!', 'success');
+                
+                // Recarregar seção
+                setTimeout(() => {
+                    console.log('🔧 Recarregando seção honorarios');
+                    carregarSecao('honorarios');
+                    if (typeof atualizarListaHonorarios === 'function') {
+                        atualizarListaHonorarios(honorariosAtualizados);
+                    }
+                }, 100);
+            }
+        }
+
         function editarClienteDireto(id) {
             console.log('EDITANDO CLIENTE ID:', id);
             
