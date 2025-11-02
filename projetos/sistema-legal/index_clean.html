@@ -6940,22 +6940,26 @@ Sistema Legal - ANA PAULA MEDINA
                                 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Serviço *</label>
-                                    <select id="editarContratoTipo" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
-                                        <option value="">Selecionar Tipo</option>
-                                        <option value="Alteração de pactos sociais" ${contrato.tipo === 'Alteração de pactos sociais' ? 'selected' : ''}>Alteração de pactos sociais</option>
-                                        <option value="Análise e revisão de contratos" ${contrato.tipo === 'Análise e revisão de contratos' ? 'selected' : ''}>Análise e revisão de contratos</option>
-                                        <option value="Cessão de quotas" ${contrato.tipo === 'Cessão de quotas' ? 'selected' : ''}>Cessão de quotas</option>
-                                        <option value="Constituição de sociedades" ${contrato.tipo === 'Constituição de sociedades' ? 'selected' : ''}>Constituição de sociedades</option>
-                                        <option value="Contratos de arrendamento" ${contrato.tipo === 'Contratos de arrendamento' ? 'selected' : ''}>Contratos de arrendamento</option>
-                                        <option value="Contratos de compra e venda" ${contrato.tipo === 'Contratos de compra e venda' ? 'selected' : ''}>Contratos de compra e venda</option>
-                                        <option value="Contratos de prestação de serviços" ${contrato.tipo === 'Contratos de prestação de serviços' ? 'selected' : ''}>Contratos de prestação de serviços</option>
-                                        <option value="Contratos de trabalho" ${contrato.tipo === 'Contratos de trabalho' ? 'selected' : ''}>Contratos de trabalho</option>
-                                        <option value="Pactos sociais" ${contrato.tipo === 'Pactos sociais' ? 'selected' : ''}>Pactos sociais</option>
-                                        <option value="Consultoria" ${contrato.tipo === 'Consultoria' ? 'selected' : ''}>Consultoria</option>
-                                        <option value="Assessoria" ${contrato.tipo === 'Assessoria' ? 'selected' : ''}>Assessoria</option>
-                                        <option value="Representação" ${contrato.tipo === 'Representação' ? 'selected' : ''}>Representação</option>
-                                        <option value="Outro" ${contrato.tipo === 'Outro' ? 'selected' : ''}>Outro</option>
-                                    </select>
+                                    <input type="text" id="editarContratoTipo" value="${contrato.tipo || ''}" list="tiposContratoEdicao2" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Digite ou selecione um tipo">
+                                    <datalist id="tiposContratoEdicao2">
+                                        <option value="Alteração de pactos sociais">
+                                        <option value="Análise e revisão de contratos">
+                                        <option value="Cessão de quotas">
+                                        <option value="Constituição de sociedades">
+                                        <option value="Contratos de arrendamento">
+                                        <option value="Contratos de compra e venda">
+                                        <option value="Contratos de prestação de serviços">
+                                        <option value="Contratos de trabalho">
+                                        <option value="Pactos sociais">
+                                        <option value="Consultoria">
+                                        <option value="Assessoria">
+                                        <option value="Representação">
+                                        <option value="Compra e Venda">
+                                        <option value="Arrendamento">
+                                        <option value="Prestação de Serviços">
+                                        <option value="Empréstimo">
+                                        <option value="Outro">
+                                    </datalist>
                                 </div>
                                 
                                 <div>
@@ -7433,22 +7437,26 @@ Sistema Legal - ANA PAULA MEDINA
                                 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Serviço *</label>
-                                    <select id="editarContratoTipo" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
-                                        <option value="">Selecionar Tipo</option>
-                                        <option value="Alteração de pactos sociais" ${contrato.tipo === 'Alteração de pactos sociais' ? 'selected' : ''}>Alteração de pactos sociais</option>
-                                        <option value="Análise e revisão de contratos" ${contrato.tipo === 'Análise e revisão de contratos' ? 'selected' : ''}>Análise e revisão de contratos</option>
-                                        <option value="Cessão de quotas" ${contrato.tipo === 'Cessão de quotas' ? 'selected' : ''}>Cessão de quotas</option>
-                                        <option value="Constituição de sociedades" ${contrato.tipo === 'Constituição de sociedades' ? 'selected' : ''}>Constituição de sociedades</option>
-                                        <option value="Contratos de arrendamento" ${contrato.tipo === 'Contratos de arrendamento' ? 'selected' : ''}>Contratos de arrendamento</option>
-                                        <option value="Contratos de compra e venda" ${contrato.tipo === 'Contratos de compra e venda' ? 'selected' : ''}>Contratos de compra e venda</option>
-                                        <option value="Contratos de prestação de serviços" ${contrato.tipo === 'Contratos de prestação de serviços' ? 'selected' : ''}>Contratos de prestação de serviços</option>
-                                        <option value="Contratos de trabalho" ${contrato.tipo === 'Contratos de trabalho' ? 'selected' : ''}>Contratos de trabalho</option>
-                                        <option value="Pactos sociais" ${contrato.tipo === 'Pactos sociais' ? 'selected' : ''}>Pactos sociais</option>
-                                        <option value="Consultoria" ${contrato.tipo === 'Consultoria' ? 'selected' : ''}>Consultoria</option>
-                                        <option value="Assessoria" ${contrato.tipo === 'Assessoria' ? 'selected' : ''}>Assessoria</option>
-                                        <option value="Representação" ${contrato.tipo === 'Representação' ? 'selected' : ''}>Representação</option>
-                                        <option value="Outro" ${contrato.tipo === 'Outro' ? 'selected' : ''}>Outro</option>
-                                    </select>
+                                    <input type="text" id="editarContratoTipo" value="${contrato.tipo || ''}" list="tiposContratoEdicao2" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Digite ou selecione um tipo">
+                                    <datalist id="tiposContratoEdicao2">
+                                        <option value="Alteração de pactos sociais">
+                                        <option value="Análise e revisão de contratos">
+                                        <option value="Cessão de quotas">
+                                        <option value="Constituição de sociedades">
+                                        <option value="Contratos de arrendamento">
+                                        <option value="Contratos de compra e venda">
+                                        <option value="Contratos de prestação de serviços">
+                                        <option value="Contratos de trabalho">
+                                        <option value="Pactos sociais">
+                                        <option value="Consultoria">
+                                        <option value="Assessoria">
+                                        <option value="Representação">
+                                        <option value="Compra e Venda">
+                                        <option value="Arrendamento">
+                                        <option value="Prestação de Serviços">
+                                        <option value="Empréstimo">
+                                        <option value="Outro">
+                                    </datalist>
                                 </div>
                                 
                                 <div>
@@ -13275,14 +13283,26 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                     
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Tipo *</label>
-                                        <select id="contratoTipo" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
-                                            <option value="">Selecionar Tipo</option>
-                                            <option value="Compra e Venda" ${contrato.tipo === 'Compra e Venda' ? 'selected' : ''}>Compra e Venda</option>
-                                            <option value="Arrendamento" ${contrato.tipo === 'Arrendamento' ? 'selected' : ''}>Arrendamento</option>
-                                            <option value="Prestação de Serviços" ${contrato.tipo === 'Prestação de Serviços' ? 'selected' : ''}>Prestação de Serviços</option>
-                                            <option value="Empréstimo" ${contrato.tipo === 'Empréstimo' ? 'selected' : ''}>Empréstimo</option>
-                                            <option value="Outro" ${contrato.tipo === 'Outro' ? 'selected' : ''}>Outro</option>
-                                        </select>
+                                        <input type="text" id="contratoTipo" value="${contrato.tipo || ''}" list="tiposContrato" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Digite ou selecione um tipo">
+                                        <datalist id="tiposContrato">
+                                            <option value="Compra e Venda">
+                                            <option value="Arrendamento">
+                                            <option value="Prestação de Serviços">
+                                            <option value="Empréstimo">
+                                            <option value="Alteração de pactos sociais">
+                                            <option value="Análise e revisão de contratos">
+                                            <option value="Cessão de quotas">
+                                            <option value="Constituição de sociedades">
+                                            <option value="Contratos de arrendamento">
+                                            <option value="Contratos de compra e venda">
+                                            <option value="Contratos de prestação de serviços">
+                                            <option value="Contratos de trabalho">
+                                            <option value="Pactos sociais">
+                                            <option value="Consultoria">
+                                            <option value="Assessoria">
+                                            <option value="Representação">
+                                            <option value="Outro">
+                                        </datalist>
                                     </div>
                                     
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
