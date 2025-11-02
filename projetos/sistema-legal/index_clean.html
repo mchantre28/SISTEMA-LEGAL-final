@@ -7671,6 +7671,13 @@ Sistema Legal - ANA PAULA MEDINA
             salvarDados('contratos', contratos);
             
             // Criar prazo automático para o contrato
+            // Carregar prazos do localStorage antes de adicionar
+            const prazosSalvos = localStorage.getItem('prazos');
+            if (prazosSalvos) {
+                prazos = JSON.parse(prazosSalvos);
+                window.prazos = prazos;
+            }
+            
             const prazoContrato = {
                 id: Date.now() + 1,
                 clienteId: clienteId,
@@ -7679,11 +7686,13 @@ Sistema Legal - ANA PAULA MEDINA
                 dataLimite: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 dias
                 status: 'ativo',
                 tipo: 'contrato',
+                prioridade: 'media',
                 referenciaId: contrato.id,
                 dataCriacao: new Date().toISOString()
             };
             
             prazos.push(prazoContrato);
+            window.prazos = prazos;
             salvarDados('prazos', prazos);
             
             mostrarNotificacao('Contrato e prazo criados com sucesso!', 'success');
@@ -12056,6 +12065,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             salvarDados('herancas', herancas);
             
             // Criar prazo automático para a herança
+            // Carregar prazos do localStorage antes de adicionar
+            const prazosSalvos = localStorage.getItem('prazos');
+            if (prazosSalvos) {
+                prazos = JSON.parse(prazosSalvos);
+                window.prazos = prazos;
+            }
+            
             const prazoHeranca = {
                 id: Date.now() + 1,
                 clienteId: clienteId,
@@ -12064,11 +12080,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 dataLimite: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 60 dias
                 status: 'ativo',
                 tipo: 'heranca',
+                prioridade: 'media',
                 referenciaId: novaHeranca.id,
                 dataCriacao: new Date().toISOString()
             };
             
             prazos.push(prazoHeranca);
+            window.prazos = prazos;
             salvarDados('prazos', prazos);
             
             mostrarNotificacao('Herança e prazo criados com sucesso!', 'success');
@@ -12127,19 +12145,28 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 console.log('🔧 Migração salva no localStorage');
             
             // Criar prazo automático para a migração
+            // Carregar prazos do localStorage antes de adicionar
+            const prazosSalvos = localStorage.getItem('prazos');
+            if (prazosSalvos) {
+                prazos = JSON.parse(prazosSalvos);
+                window.prazos = prazos;
+            }
+            
             const prazoMigracao = {
                 id: Date.now() + 1,
                 clienteId: clienteId,
                 clienteNome: cliente ? cliente.nome : 'Cliente não encontrado',
-                    descricao: `Prazo para ${novaMigracao.tipo}`,
+                descricao: `Prazo para ${novaMigracao.tipo}`,
                 dataLimite: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 90 dias
                 status: 'ativo',
                 tipo: 'migracao',
+                prioridade: 'media',
                 referenciaId: novaMigracao.id,
                 dataCriacao: new Date().toISOString()
             };
             
             prazos.push(prazoMigracao);
+            window.prazos = prazos;
             salvarDados('prazos', prazos);
                 console.log('🔧 Prazo criado e salvo');
             
@@ -12189,6 +12216,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             salvarDados('registos', registos);
             
             // Criar prazo automático para o registo
+            // Carregar prazos do localStorage antes de adicionar
+            const prazosSalvos = localStorage.getItem('prazos');
+            if (prazosSalvos) {
+                prazos = JSON.parse(prazosSalvos);
+                window.prazos = prazos;
+            }
+            
             const prazoRegisto = {
                 id: Date.now() + 1,
                 clienteId: clienteId,
@@ -12197,11 +12231,13 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 dataLimite: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 15 dias
                 status: 'ativo',
                 tipo: 'registo',
+                prioridade: 'media',
                 referenciaId: novoRegisto.id,
                 dataCriacao: new Date().toISOString()
             };
             
             prazos.push(prazoRegisto);
+            window.prazos = prazos;
             salvarDados('prazos', prazos);
             
             mostrarNotificacao('Registo e prazo criados com sucesso!', 'success');
