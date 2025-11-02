@@ -973,7 +973,10 @@
                     prazos = [];
                     notificacoes = [];
                     
-                    mostrarNotificacao('✅ Sistema limpo com sucesso! Pronto para uso profissional.', 'success');
+                    // Marcar que os dados foram limpos - não recriar dados de exemplo
+                    localStorage.setItem('dadosLimpos', 'true');
+                    
+                    mostrarNotificacao('✅ Sistema limpo com sucesso! Pronto para uso profissional. Você pode editar tudo agora.', 'success');
                     
                     // Recarregar página após 2 segundos
                     setTimeout(() => {
@@ -2504,6 +2507,13 @@ END:VCALENDAR`;
         }
 
         function carregarDadosExemplo() {
+            // Verificar se os dados foram limpos - se sim, não recriar dados de exemplo
+            const dadosLimpos = localStorage.getItem('dadosLimpos');
+            if (dadosLimpos === 'true') {
+                console.log('🔧 Dados foram limpos - não recriando dados de exemplo');
+                return;
+            }
+            
             if (clientes.length === 0) {
                 clientes = [
                     {
