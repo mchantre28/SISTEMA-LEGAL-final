@@ -6835,10 +6835,59 @@ Sistema Legal - ANA PAULA MEDINA
         }
 
         function abrirModalEdicaoCliente(cliente) {
+            console.log('🔧 abrirModalEdicaoCliente chamado (versão criarModalEdicaoCliente) com:', cliente);
             const modal = criarModalEdicaoCliente(cliente);
-            document.getElementById('modalContainer').innerHTML = modal;
-            document.getElementById('modalContainer').classList.add('show');
+            const modalContainer = document.getElementById('modalContainer');
+            if (!modalContainer) {
+                console.error('❌ modalContainer não encontrado!');
+                return;
+            }
+            modalContainer.innerHTML = modal;
+            modalContainer.classList.add('show');
             lucide.createIcons();
+            console.log('✅ Modal de edição de cliente aberto (versão criarModalEdicaoCliente)!');
+            
+            // Adicionar listener direto no formulário após criá-lo
+            setTimeout(() => {
+                const form = document.getElementById(`formEditarCliente_${cliente.id}`);
+                const btnSalvar = form ? form.querySelector('button[type="submit"]') : null;
+                
+                if (form) {
+                    console.log('🔧 Formulário encontrado (versão criarModalEdicaoCliente), adicionando listener direto...');
+                    
+                    // Adicionar listener no formulário
+                    form.addEventListener('submit', function(e) {
+                        console.log('🔧 Evento submit capturado diretamente (versão criarModalEdicaoCliente)!');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('🔧 Chamando atualizarCliente com ID:', cliente.id);
+                        const resultado = atualizarCliente(e, cliente.id);
+                        console.log('🔧 Resultado de atualizarCliente:', resultado);
+                        return false;
+                    }, false);
+                    
+                    console.log('✅ Listener direto adicionado ao formulário (versão criarModalEdicaoCliente)!');
+                } else {
+                    console.error('❌ Formulário não encontrado após criar modal (versão criarModalEdicaoCliente)!');
+                }
+                
+                if (btnSalvar) {
+                    btnSalvar.addEventListener('click', function(e) {
+                        console.log('🔧 Botão Salvar clicado diretamente (versão criarModalEdicaoCliente)!');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const form = document.getElementById(`formEditarCliente_${cliente.id}`);
+                        if (form) {
+                            console.log('🔧 Chamando atualizarCliente diretamente do botão com ID:', cliente.id);
+                            const resultado = atualizarCliente(e, cliente.id);
+                            console.log('🔧 Resultado de atualizarCliente do botão:', resultado);
+                        }
+                    }, false);
+                    console.log('✅ Listener adicionado ao botão Salvar (versão criarModalEdicaoCliente)!');
+                } else {
+                    console.error('❌ Botão Salvar não encontrado após criar modal (versão criarModalEdicaoCliente)!');
+                }
+            }, 100);
         }
 
         function abrirModalEdicaoContrato(contrato) {
@@ -7037,7 +7086,7 @@ Sistema Legal - ANA PAULA MEDINA
                             </button>
                         </div>
                         
-                        <form id="formEditarCliente" onsubmit="atualizarCliente(event, ${cliente.id})">
+                        <form id="formEditarCliente_${cliente.id}" onsubmit="return atualizarCliente(event, ${cliente.id});">
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Nome *</label>
@@ -7789,6 +7838,9 @@ Sistema Legal - ANA PAULA MEDINA
                 return false;
             }
         }
+        
+        // Garantir que atualizarCliente seja globalmente acessível
+        window.atualizarCliente = atualizarCliente;
 
         function excluirCliente(id) {
             if (confirm('Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita.')) {
@@ -13085,7 +13137,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                 </button>
                             </div>
                             
-                            <form onsubmit="atualizarCliente(event, ${cliente.id})">
+                            <form id="formEditarCliente_${cliente.id}" onsubmit="return atualizarCliente(event, ${cliente.id});">
                                 <div class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Nome *</label>
@@ -13126,7 +13178,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                                     <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
                                         Cancelar
                                     </button>
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" id="btnSalvarCliente_${cliente.id}" class="btn btn-primary">
                                         Salvar Alterações
                                     </button>
                                 </div>
@@ -13136,11 +13188,53 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 </div>
             `;
             
-            console.log('Inserindo modal de cliente no container...');
+            console.log('🔧 Inserindo modal de cliente no container...');
             modalContainer.innerHTML = modal;
-            console.log('Modal inserido, criando ícones...');
+            console.log('🔧 Modal inserido, criando ícones...');
             lucide.createIcons();
-            console.log('Modal de edição de cliente aberto com sucesso!');
+            console.log('✅ Modal de edição de cliente aberto com sucesso!');
+            
+            // Adicionar listener direto no formulário após criá-lo
+            setTimeout(() => {
+                const form = document.getElementById(`formEditarCliente_${cliente.id}`);
+                const btnSalvar = document.getElementById(`btnSalvarCliente_${cliente.id}`);
+                
+                if (form) {
+                    console.log('🔧 Formulário encontrado, adicionando listener direto...');
+                    
+                    // Adicionar listener no formulário (sem clonar para manter listeners internos)
+                    form.addEventListener('submit', function(e) {
+                        console.log('🔧 Evento submit capturado diretamente!');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('🔧 Chamando atualizarCliente com ID:', cliente.id);
+                        const resultado = atualizarCliente(e, cliente.id);
+                        console.log('🔧 Resultado de atualizarCliente:', resultado);
+                        return false;
+                    }, false);
+                    
+                    console.log('✅ Listener direto adicionado ao formulário!');
+                } else {
+                    console.error('❌ Formulário não encontrado após criar modal!');
+                }
+                
+                if (btnSalvar) {
+                    btnSalvar.addEventListener('click', function(e) {
+                        console.log('🔧 Botão Salvar clicado diretamente!');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const form = document.getElementById(`formEditarCliente_${cliente.id}`);
+                        if (form) {
+                            console.log('🔧 Chamando atualizarCliente diretamente do botão com ID:', cliente.id);
+                            const resultado = atualizarCliente(e, cliente.id);
+                            console.log('🔧 Resultado de atualizarCliente do botão:', resultado);
+                        }
+                    }, false);
+                    console.log('✅ Listener adicionado ao botão Salvar!');
+                } else {
+                    console.error('❌ Botão Salvar não encontrado após criar modal!');
+                }
+            }, 100);
         }
         
         function abrirModalEdicaoContrato(contrato) {
