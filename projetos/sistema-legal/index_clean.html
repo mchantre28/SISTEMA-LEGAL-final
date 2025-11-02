@@ -13072,26 +13072,8 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // === FUNÇÕES PARA PRAZOS ===
         
         
-        function atualizarCliente(id) {
-            const clienteIndex = clientes.findIndex(c => c.id === id);
-            if (clienteIndex !== -1) {
-                clientes[clienteIndex] = {
-                    ...clientes[clienteIndex],
-                    nome: document.getElementById('clienteNome').value,
-                    email: document.getElementById('clienteEmail').value,
-                    telefone: document.getElementById('clienteTelefone').value,
-                    nif: document.getElementById('clienteNIF').value,
-                    morada: document.getElementById('clienteMorada').value,
-                    notas: document.getElementById('clienteNotas').value,
-                    dataAtualizacao: new Date().toISOString()
-                };
-                
-                salvarDados('clientes', clientes);
-                mostrarNotificacao('Cliente atualizado com sucesso!', 'success');
-                fecharModal();
-                carregarSecao('clientes');
-            }
-        }
+        // FUNÇÃO atualizarCliente DUPLICADA REMOVIDA - A FUNÇÃO CORRETA ESTÁ NA LINHA 7675
+        // Esta função antiga estava sobrescrevendo a função correta com validações e logs
         
         function atualizarPrazo(event, id) {
             event.preventDefault();
