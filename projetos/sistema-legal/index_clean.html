@@ -13890,20 +13890,50 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         // === FUNÇÕES DE ATUALIZAÇÃO ===
         
         function atualizarContrato(event, id) {
+            console.log('🔧 atualizarContrato chamado com ID:', id);
             event.preventDefault();
             
-            const contratoIndex = contratos.findIndex(c => c.id === id);
+            // Carregar contratos do localStorage se necessário
+            const contratosSalvos = localStorage.getItem('contratos');
+            let contratosAtual = contratos;
+            if (contratosSalvos && (!contratos || contratos.length === 0)) {
+                contratosAtual = JSON.parse(contratosSalvos);
+                contratos = contratosAtual;
+                window.contratos = contratos;
+                console.log('🔧 Contratos carregados do localStorage:', contratosAtual.length);
+            }
+            
+            // Converter ID para número se necessário
+            const contratoId = typeof id === 'string' ? parseInt(id) : id;
+            
+            const contratoIndex = contratosAtual.findIndex(c => {
+                const cId = typeof c.id === 'string' ? parseInt(c.id) : c.id;
+                return cId === contratoId;
+            });
+            
             if (contratoIndex !== -1) {
                 const clienteId = document.getElementById('contratoClienteId').value;
                 const cliente = clientes.find(c => c.id === parseInt(clienteId));
                 
-                contratos[contratoIndex] = {
-                    ...contratos[contratoIndex],
+                // Obter e converter valores
+                const valor = parseFloat(document.getElementById('contratoValor').value) || 0;
+                const ivaPercent = parseFloat(document.getElementById('contratoIva').value) || 0;
+                
+                // Calcular IVA e valor total
+                const valorIVA = (valor * ivaPercent) / 100;
+                const valorTotal = valor + valorIVA;
+                
+                console.log('🔧 Valores calculados:', { valor, ivaPercent, valorIVA, valorTotal });
+                
+                contratosAtual[contratoIndex] = {
+                    ...contratosAtual[contratoIndex],
                     clienteId: parseInt(clienteId),
-                    clienteNome: cliente ? cliente.nome : contratos[contratoIndex].clienteNome,
+                    clienteNome: cliente ? cliente.nome : contratosAtual[contratoIndex].clienteNome,
                     tipo: document.getElementById('contratoTipo').value,
-                    valor: document.getElementById('contratoValor').value,
-                    iva: document.getElementById('contratoIva').value,
+                    valor: valor,
+                    iva: ivaPercent,
+                    valorIVA: valorIVA,
+                    valorTotal: valorTotal,
                     status: document.getElementById('contratoStatus').value,
                     dataInicio: document.getElementById('contratoDataInicio').value,
                     dataFim: document.getElementById('contratoDataFim').value,
@@ -13911,10 +13941,22 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                     dataAtualizacao: new Date().toISOString()
                 };
                 
-                salvarDados('contratos', contratos);
+                // Atualizar array global
+                contratos = contratosAtual;
+                window.contratos = contratos;
+                
+                console.log('🔧 Contrato atualizado:', contratosAtual[contratoIndex]);
+                salvarDados('contratos', contratosAtual);
                 mostrarNotificacao('Contrato atualizado com sucesso!', 'success');
-                fecharModal();
-                carregarSecao('contratos');
+                fecharModalRobusto();
+                
+                setTimeout(() => {
+                    carregarSecao('contratos');
+                }, 300);
+            } else {
+                console.error('❌ Contrato não encontrado com ID:', contratoId);
+                console.error('❌ Contratos disponíveis:', contratosAtual.map(c => c.id));
+                mostrarNotificacao('Contrato não encontrado!', 'error');
             }
         }
         
