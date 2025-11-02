@@ -7710,6 +7710,43 @@ Sistema Legal - ANA PAULA MEDINA
             }
         }
 
+        function excluirClienteDireto(id) {
+            console.log('🔧 excluirClienteDireto chamado com ID:', id);
+            
+            if (confirm('Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita.')) {
+                // Carregar dados dos clientes
+                const clientesSalvos = localStorage.getItem('clientes');
+                let clientes = [];
+                if (clientesSalvos) {
+                    clientes = JSON.parse(clientesSalvos);
+                }
+                
+                console.log('🔧 Clientes antes da exclusão:', clientes.length);
+                
+                // Filtrar cliente a ser excluído
+                const clientesAtualizados = clientes.filter(c => c.id !== parseInt(id));
+                
+                console.log('🔧 Clientes após exclusão:', clientesAtualizados.length);
+                
+                // Salvar dados atualizados
+                localStorage.setItem('clientes', JSON.stringify(clientesAtualizados));
+                window.clientes = clientesAtualizados;
+                
+                console.log('✅ Clientes salvos no localStorage');
+                
+                mostrarNotificacao('Cliente excluído com sucesso!', 'success');
+                
+                // Recarregar seção
+                setTimeout(() => {
+                    console.log('🔧 Recarregando seção clientes');
+                    carregarSecao('clientes');
+                    if (typeof atualizarListaClientes === 'function') {
+                        atualizarListaClientes(clientesAtualizados);
+                    }
+                }, 100);
+            }
+        }
+
         function atualizarContrato(event, id) {
             console.log('🔧 atualizarContrato chamado com ID:', id);
             event.preventDefault();
@@ -16032,6 +16069,7 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         window.editarHonorarioDireto = editarHonorarioDireto;
         window.excluirHonorarioDireto = excluirHonorarioDireto;
         window.salvarHonorarioEditado = salvarHonorarioEditado;
+        window.excluirClienteDireto = excluirClienteDireto;
         
         // Service Worker Registration REMOVIDO
         
