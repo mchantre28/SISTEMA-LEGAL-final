@@ -9748,26 +9748,128 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
         }
         
         function criarNotificacaoPersonalizada() {
-            const titulo = prompt('Digite o título da notificação:');
-            if (!titulo) return;
+            console.log('🔧 criarNotificacaoPersonalizada chamado');
             
-            const mensagem = prompt('Digite a mensagem da notificação:');
-            if (!mensagem) return;
+            const modalContainer = document.getElementById('modalContainer');
+            if (!modalContainer) {
+                console.error('❌ modalContainer não encontrado!');
+                mostrarNotificacao('Erro: Container do modal não encontrado!', 'error');
+                return;
+            }
             
-            const tipo = prompt('Digite o tipo (prazo, honorario, contrato, heranca, migracao, registo):');
-            if (!tipo) return;
+            const modal = `
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="fecharModalRobusto()">
+                    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content" onclick="event.stopPropagation()">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-xl font-bold text-gray-900">Criar Notificação Personalizada</h3>
+                                <button onclick="fecharModalRobusto()" class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="x" class="w-6 h-6"></i>
+                                </button>
+                            </div>
+                            
+                            <form id="formNotificacaoPersonalizada" onsubmit="salvarNotificacaoPersonalizada(event)">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Título *</label>
+                                        <input type="text" id="notificacaoTitulo" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Digite o título da notificação">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Mensagem *</label>
+                                        <textarea id="notificacaoMensagem" rows="4" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="Digite a mensagem da notificação"></textarea>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipo *</label>
+                                        <select id="notificacaoTipo" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                            <option value="">Selecionar Tipo</option>
+                                            <option value="prazo">Prazo</option>
+                                            <option value="honorario">Honorário</option>
+                                            <option value="contrato">Contrato</option>
+                                            <option value="heranca">Herança</option>
+                                            <option value="migracao">Migração</option>
+                                            <option value="registo">Registo</option>
+                                            <option value="geral">Geral</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Prioridade</label>
+                                        <select id="notificacaoPrioridade" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                            <option value="baixa">Baixa</option>
+                                            <option value="media" selected>Média</option>
+                                            <option value="alta">Alta</option>
+                                            <option value="urgente">Urgente</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-end space-x-3 mt-6">
+                                    <button type="button" onclick="fecharModalRobusto()" class="btn btn-secondary">
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i data-lucide="check" class="w-4 h-4"></i>
+                                        Criar Notificação
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            modalContainer.innerHTML = modal;
+            lucide.createIcons();
+            console.log('✅ Modal de notificação personalizada aberto!');
+        }
+        
+        function salvarNotificacaoPersonalizada(event) {
+            console.log('🔧 salvarNotificacaoPersonalizada chamado');
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const titulo = document.getElementById('notificacaoTitulo').value.trim();
+            const mensagem = document.getElementById('notificacaoMensagem').value.trim();
+            const tipo = document.getElementById('notificacaoTipo').value;
+            const prioridade = document.getElementById('notificacaoPrioridade').value;
+            
+            if (!titulo || !mensagem || !tipo) {
+                mostrarNotificacao('Por favor, preencha todos os campos obrigatórios!', 'error');
+                return;
+            }
+            
+            // Carregar notificações do localStorage
+            const notificacoesSalvas = localStorage.getItem('notificacoes');
+            let notificacoesAtual = notificacoes;
+            if (notificacoesSalvas) {
+                notificacoesAtual = JSON.parse(notificacoesSalvas);
+                notificacoes = notificacoesAtual;
+                window.notificacoes = notificacoes;
+            }
             
             criarNotificacao({
                 tipo: tipo,
                 titulo: titulo,
                 mensagem: mensagem,
-                prioridade: 'media',
+                prioridade: prioridade || 'media',
                 referenciaId: Date.now(),
                 acao: 'ver_detalhes'
             });
             
-            mostrarNotificacao('Notificação personalizada criada!', 'success');
+            fecharModalRobusto();
+            mostrarNotificacao('Notificação personalizada criada com sucesso!', 'success');
+            
+            // Recarregar seção de notificações após um pequeno delay
+            setTimeout(() => {
+                carregarSecao('notificacoes');
+            }, 300);
         }
+        
+        // Garantir que as funções sejam globalmente acessíveis
+        window.salvarNotificacaoPersonalizada = salvarNotificacaoPersonalizada;
+        window.criarNotificacaoPersonalizada = criarNotificacaoPersonalizada;
 
         function atualizarBadgeNotificacoes() {
             const tipoUsuario = localStorage.getItem('tipoUsuario');
