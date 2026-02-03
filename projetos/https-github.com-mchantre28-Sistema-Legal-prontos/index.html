@@ -733,9 +733,18 @@
         <!-- Header -->
         <header class="bg-white shadow-sm border-b">
             <div class="px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <h1 class="text-2xl font-bold text-gray-800" id="pageTitle">Sistema Legal</h1>
-                    <div class="flex items-center space-x-4">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-6">
+                        <h1 class="text-2xl font-bold text-gray-800" id="pageTitle">Sistema Legal</h1>
+                        <div id="globalSearchContainer" class="relative w-full max-w-xl">
+                            <input id="globalSearchInput" type="text" placeholder="Pesquisa global: clientes, processos, contratos e prazos..." class="form-control w-full pl-10">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                <i data-lucide="search" class="w-4 h-4"></i>
+                            </span>
+                            <div id="globalSearchResults" class="hidden absolute z-50 mt-2 w-full rounded-lg border border-gray-200 bg-white shadow-lg"></div>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
                         <!-- Botão PWA removido -->
                         <button onclick="exportarDadosCompletos()" class="btn btn-primary">
                             <i data-lucide="download" class="w-4 h-4"></i>
@@ -1410,6 +1419,7 @@
             }
             
             configurarEventos();
+            inicializarPesquisaGlobal();
             atualizarInterface();
             iniciarSistemaNotificacoes();
             iniciarSistemaBackup();
@@ -1423,6 +1433,188 @@
             
             // Calcular juros automáticos na inicialização
             // calcularJurosAutomaticos(); // REMOVIDO
+        }
+
+        function inicializarPesquisaGlobal() {
+            const input = document.getElementById('globalSearchInput');
+            const results = document.getElementById('globalSearchResults');
+            const container = document.getElementById('globalSearchContainer');
+            if (!input || !results || !container) return;
+            
+            let timer = null;
+            const fecharResultados = () => {
+                results.classList.add('hidden');
+                results.innerHTML = '';
+            };
+            
+            const renderizar = (termo) => {
+                const resultados = executarPesquisaGlobal(termo);
+                if (resultados.length === 0) {
+                    results.innerHTML = `
+                        <div class="px-4 py-3 text-sm text-gray-500">
+                            Nenhum resultado encontrado para "${termo}".
+                        </div>
+                    `;
+                    results.classList.remove('hidden');
+                    return;
+                }
+                
+                const itens = resultados.map(item => `
+                    <button class="w-full text-left px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" data-secao="${item.secao}">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-sm font-semibold text-gray-800">${item.titulo}</div>
+                                <div class="text-xs text-gray-500">${item.subtitulo || ''}</div>
+                            </div>
+                            <span class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">${item.tipo}</span>
+                        </div>
+                    </button>
+                `).join('');
+                
+                results.innerHTML = `
+                    <div class="px-4 py-2 text-xs text-gray-400 border-b border-gray-100">
+                        Resultados: ${resultados.length}
+                    </div>
+                    <div class="max-h-80 overflow-y-auto">${itens}</div>
+                `;
+                results.classList.remove('hidden');
+            };
+            
+            input.addEventListener('input', () => {
+                const termo = input.value.trim();
+                if (timer) clearTimeout(timer);
+                if (termo.length < 2) {
+                    fecharResultados();
+                    return;
+                }
+                timer = setTimeout(() => renderizar(termo), 250);
+            });
+            
+            input.addEventListener('focus', () => {
+                const termo = input.value.trim();
+                if (termo.length >= 2) {
+                    renderizar(termo);
+                }
+            });
+            
+            results.addEventListener('click', (event) => {
+                const botao = event.target.closest('[data-secao]');
+                if (!botao) return;
+                const secao = botao.getAttribute('data-secao');
+                if (secao) {
+                    carregarSecao(secao);
+                }
+                fecharResultados();
+            });
+            
+            document.addEventListener('click', (event) => {
+                if (!container.contains(event.target)) {
+                    fecharResultados();
+                }
+            });
+            
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    fecharResultados();
+                }
+            });
+        }
+
+        function executarPesquisaGlobal(termo) {
+            const termoLower = termo.toLowerCase();
+            const resultados = [];
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            
+            const clientePermitido = (clienteId) => {
+                if (tipoUsuario !== 'convidado') return true;
+                if (!clienteId) return false;
+                return verificarPermissaoCliente(clienteId);
+            };
+            
+            const clientesParaPesquisar = Array.isArray(clientes) ? clientes : [];
+            clientesParaPesquisar.forEach(cliente => {
+                if (!clientePermitido(cliente.id)) return;
+                const haystack = [
+                    cliente.nome,
+                    cliente.email,
+                    cliente.telefone,
+                    cliente.nif
+                ].filter(Boolean).join(' ').toLowerCase();
+                if (haystack.includes(termoLower)) {
+                    resultados.push({
+                        tipo: 'Cliente',
+                        titulo: cliente.nome,
+                        subtitulo: [cliente.email, cliente.telefone].filter(Boolean).join(' • '),
+                        secao: 'clientes'
+                    });
+                }
+            });
+            
+            const contratosParaPesquisar = Array.isArray(contratos) ? contratos : [];
+            contratosParaPesquisar.forEach(contrato => {
+                if (contrato.clienteId && !clientePermitido(contrato.clienteId)) return;
+                const clienteNome = contrato.cliente || contrato.clienteNome || obterNomeClienteRelatorio(contrato);
+                const haystack = [
+                    contrato.tipo,
+                    contrato.descricao,
+                    contrato.status,
+                    contrato.valor,
+                    clienteNome
+                ].filter(Boolean).join(' ').toLowerCase();
+                if (haystack.includes(termoLower)) {
+                    resultados.push({
+                        tipo: 'Contrato',
+                        titulo: contrato.tipo || contrato.descricao || 'Contrato',
+                        subtitulo: [clienteNome, contrato.status].filter(Boolean).join(' • '),
+                        secao: 'contratos'
+                    });
+                }
+            });
+            
+            const registosParaPesquisar = Array.isArray(registos) ? registos : [];
+            registosParaPesquisar.forEach(registo => {
+                if (registo.clienteId && !clientePermitido(registo.clienteId)) return;
+                const clienteNome = registo.cliente || registo.clienteNome || obterNomeClienteRelatorio(registo);
+                const haystack = [
+                    registo.tipo,
+                    registo.descricao,
+                    registo.status,
+                    registo.valor,
+                    clienteNome
+                ].filter(Boolean).join(' ').toLowerCase();
+                if (haystack.includes(termoLower)) {
+                    resultados.push({
+                        tipo: 'Processo',
+                        titulo: registo.tipo || registo.descricao || 'Processo',
+                        subtitulo: [clienteNome, registo.status].filter(Boolean).join(' • '),
+                        secao: 'registos'
+                    });
+                }
+            });
+            
+            const prazosParaPesquisar = Array.isArray(prazos) ? prazos : [];
+            prazosParaPesquisar.forEach(prazo => {
+                if (prazo.clienteId && !clientePermitido(prazo.clienteId)) return;
+                const clienteNome = prazo.clienteNome || prazo.cliente || obterNomeClienteRelatorio(prazo);
+                const haystack = [
+                    prazo.descricao,
+                    prazo.tipo,
+                    prazo.status,
+                    prazo.dataLimite,
+                    clienteNome
+                ].filter(Boolean).join(' ').toLowerCase();
+                if (haystack.includes(termoLower)) {
+                    const data = extrairDataRelatorio(prazo);
+                    resultados.push({
+                        tipo: 'Prazo',
+                        titulo: prazo.descricao || prazo.tipo || 'Prazo',
+                        subtitulo: [clienteNome, data ? formatarDataRelatorio(data) : null].filter(Boolean).join(' • '),
+                        secao: 'prazos'
+                    });
+                }
+            });
+            
+            return resultados.slice(0, 20);
         }
 
 
