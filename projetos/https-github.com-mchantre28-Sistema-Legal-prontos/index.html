@@ -7291,6 +7291,48 @@ Sistema Legal - ANA PAULA MEDINA
             salvarDados('tarefas', tarefas);
         }
 
+        function normalizarLinkTarefa(url) {
+            const valor = String(url || '').trim();
+            if (!valor) return '';
+            if (!/^(https?:)?\/\//i.test(valor)) {
+                return `https://${valor}`;
+            }
+            return valor;
+        }
+
+        function baixarAnexoTarefa(tarefaId, anexoId) {
+            const lista = Array.isArray(tarefas) ? tarefas : [];
+            const tarefa = lista.find(t => t.id === tarefaId);
+            const anexo = tarefa && Array.isArray(tarefa.anexos) ? tarefa.anexos.find(a => a.id === anexoId) : null;
+            if (!anexo || !anexo.conteudo) {
+                mostrarNotificacao('Anexo não encontrado.', 'error');
+                return;
+            }
+            const link = document.createElement('a');
+            link.href = anexo.conteudo;
+            link.download = anexo.nome || 'anexo';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function finalizarCriacaoTarefa(tarefa) {
+            const lista = Array.isArray(tarefas) ? tarefas : [];
+            lista.unshift(tarefa);
+            salvarTarefasLocal(lista);
+            registrarAuditoria('criar', 'tarefa', `Tarefa criada: ${tarefa.titulo}`, null, tarefa);
+            mostrarNotificacao('Tarefa criada com sucesso!', 'success');
+
+            const ids = ['tarefaCliente', 'tarefaTitulo', 'tarefaDescricao', 'tarefaObservacoes', 'tarefaLinks', 'tarefaDataLimite', 'tarefaLembrete', 'tarefaAnexos'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            const prioridadeEl = document.getElementById('tarefaPrioridade');
+            if (prioridadeEl) prioridadeEl.value = 'media';
+            aplicarFiltrosTarefas();
+        }
+
         function gerarTarefas() {
             const tipoUsuario = localStorage.getItem('tipoUsuario');
             const isConvidado = tipoUsuario === 'convidado';
@@ -7352,6 +7394,19 @@ Sistema Legal - ANA PAULA MEDINA
                                 <div class="md:col-span-2 lg:col-span-3">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
                                     <textarea id="tarefaDescricao" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" rows="3" placeholder="Detalhes adicionais"></textarea>
+                                </div>
+                                <div class="md:col-span-2 lg:col-span-3">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Observações</label>
+                                    <textarea id="tarefaObservacoes" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" rows="2" placeholder="Observações internas"></textarea>
+                                </div>
+                                <div class="md:col-span-2 lg:col-span-3">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Links (separados por vírgula)</label>
+                                    <input id="tarefaLinks" type="text" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="ex: https://..., https://...">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Anexos</label>
+                                    <input id="tarefaAnexos" type="file" multiple class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                    <p class="text-xs text-gray-500 mt-1">Recomendado até 5 MB por anexo.</p>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Data limite</label>
@@ -7525,8 +7580,10 @@ Sistema Legal - ANA PAULA MEDINA
                     const alvo = [
                         t.titulo,
                         t.descricao,
+                        t.observacoes,
                         t.clienteNome,
-                        t.processoTipo
+                        t.processoTipo,
+                        ...(t.links || [])
                     ].filter(Boolean).join(' ').toLowerCase();
                     return alvo.includes(texto);
                 });
@@ -7597,8 +7654,27 @@ Sistema Legal - ANA PAULA MEDINA
                         <div class="flex-1">
                             <div class="text-sm font-semibold text-gray-800">${tarefa.titulo}</div>
                             <div class="text-xs text-gray-500">${tarefa.descricao || 'Sem descrição'}</div>
+                            ${tarefa.observacoes ? `<div class="text-xs text-gray-500">Observações: ${tarefa.observacoes}</div>` : ''}
                             <div class="text-xs text-gray-500">${tarefa.clienteNome || 'Cliente'} • ${tarefa.processoTipo || 'outro'}</div>
                             ${tarefa.dataLimite ? `<div class="text-xs text-gray-400">Prazo: ${new Date(tarefa.dataLimite).toLocaleDateString('pt-PT')}</div>` : ''}
+                            ${tarefa.links && tarefa.links.length ? `
+                                <div class="text-xs text-gray-400">
+                                    Links:
+                                    ${tarefa.links.map(link => {
+                                        const href = normalizarLinkTarefa(link);
+                                        return href ? `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline mr-2">${link}</a>` : '';
+                                    }).join('')}
+                                </div>
+                            ` : ''}
+                            ${tarefa.anexos && tarefa.anexos.length ? `
+                                <div class="flex flex-wrap gap-2 mt-1">
+                                    ${tarefa.anexos.map(anexo => `
+                                        <button onclick="baixarAnexoTarefa(${tarefa.id}, '${anexo.id}')" class="text-xs text-blue-600 hover:text-blue-800 underline">
+                                            ${anexo.nome}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="status-badge status-${tarefa.prioridade || 'media'}">${tarefa.prioridade || 'media'}</span>
@@ -7631,7 +7707,18 @@ Sistema Legal - ANA PAULA MEDINA
             const prioridade = document.getElementById('tarefaPrioridade')?.value || 'media';
             const titulo = document.getElementById('tarefaTitulo')?.value?.trim() || '';
             const descricao = document.getElementById('tarefaDescricao')?.value?.trim() || '';
+            const observacoes = document.getElementById('tarefaObservacoes')?.value?.trim() || '';
+            const linksRaw = document.getElementById('tarefaLinks')?.value || '';
+            const links = linksRaw.split(',').map(item => item.trim()).filter(Boolean);
             const dataLimite = document.getElementById('tarefaDataLimite')?.value || '';
+            const anexosInput = document.getElementById('tarefaAnexos');
+            const arquivos = anexosInput && anexosInput.files ? Array.from(anexosInput.files) : [];
+            const maxAnexo = 5 * 1024 * 1024;
+            const anexoGrande = arquivos.find(arquivo => arquivo.size > maxAnexo);
+            if (anexoGrande) {
+                mostrarNotificacao('Anexo acima de 5 MB. Tente um ficheiro menor.', 'error');
+                return;
+            }
             
             if (!clienteId) {
                 mostrarNotificacao('Selecione o cliente da tarefa.', 'warning');
@@ -7650,28 +7737,37 @@ Sistema Legal - ANA PAULA MEDINA
                 processoTipo,
                 titulo,
                 descricao,
+                observacoes,
+                links,
                 prioridade,
                 status: 'aberta',
                 dataLimite: dataLimite || null,
+                anexos: [],
                 criadoPor: localStorage.getItem('usuarioLogado') || 'N/D',
                 tipoUsuario: localStorage.getItem('tipoUsuario') || 'N/D',
                 dataCriacao: new Date().toISOString()
             };
-            
-            const lista = Array.isArray(tarefas) ? tarefas : [];
-            lista.unshift(tarefa);
-            salvarTarefasLocal(lista);
-            registrarAuditoria('criar', 'tarefa', `Tarefa criada: ${tarefa.titulo}`, null, tarefa);
-            mostrarNotificacao('Tarefa criada com sucesso!', 'success');
-            
-            const ids = ['tarefaCliente', 'tarefaTitulo', 'tarefaDescricao', 'tarefaDataLimite'];
-            ids.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.value = '';
+
+            if (arquivos.length === 0) {
+                finalizarCriacaoTarefa(tarefa);
+                return;
+            }
+
+            Promise.all(arquivos.map((arquivo, index) => new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = () => resolve({
+                    id: `${Date.now()}_${index}`,
+                    nome: arquivo.name,
+                    tipo: arquivo.type,
+                    tamanho: arquivo.size,
+                    conteudo: reader.result
+                });
+                reader.onerror = () => resolve(null);
+                reader.readAsDataURL(arquivo);
+            }))).then(resultados => {
+                tarefa.anexos = resultados.filter(Boolean);
+                finalizarCriacaoTarefa(tarefa);
             });
-            const prioridadeEl = document.getElementById('tarefaPrioridade');
-            if (prioridadeEl) prioridadeEl.value = 'media';
-            aplicarFiltrosTarefas();
         }
 
         function alterarStatusTarefa(id) {
