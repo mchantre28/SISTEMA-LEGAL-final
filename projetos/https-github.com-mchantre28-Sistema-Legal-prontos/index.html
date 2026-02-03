@@ -1132,6 +1132,17 @@
         
         // Verificar login após o DOM estar carregado
         document.addEventListener('DOMContentLoaded', function() {
+            // Garantir que não existe service worker antigo a servir cache
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then((regs) => {
+                    regs.forEach((reg) => reg.unregister());
+                }).catch(() => {});
+            }
+            if ('caches' in window) {
+                caches.keys().then((keys) => {
+                    keys.forEach((key) => caches.delete(key));
+                }).catch(() => {});
+            }
             if (!verificarLogin()) {
                 // A página será substituída pela tela de login
                 // O resto do código não será executado
@@ -6682,7 +6693,7 @@ Sistema Legal - ANA PAULA MEDINA
             <div class="card p-6">
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold">Alertas Automáticos</h3>
+                        <h3 class="text-lg font-semibold">Alertas Automáticos (v2)</h3>
                         <p class="text-sm text-gray-600">Enviar resumo de prazos e honorários por Email ou WhatsApp.</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
