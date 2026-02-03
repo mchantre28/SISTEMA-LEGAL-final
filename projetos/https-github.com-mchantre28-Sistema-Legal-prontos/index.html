@@ -540,6 +540,43 @@
             color: #991b1b;
         }
 
+        .status-aberta {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-concluida {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .calendario-item {
+            padding: 2px 6px;
+            border-radius: 6px;
+            border-left: 4px solid #e5e7eb;
+            background: #f9fafb;
+        }
+
+        .calendario-prioridade-baixa {
+            border-left-color: #9ca3af;
+            background: #f3f4f6;
+        }
+
+        .calendario-prioridade-media {
+            border-left-color: #f59e0b;
+            background: #fef3c7;
+        }
+
+        .calendario-prioridade-alta {
+            border-left-color: #f97316;
+            background: #fed7aa;
+        }
+
+        .calendario-prioridade-critica {
+            border-left-color: #ef4444;
+            background: #fee2e2;
+        }
+
         .table-responsive {
             overflow-x: auto;
             border-radius: 8px;
@@ -702,11 +739,23 @@
                     <i data-lucide="clock" class="w-5 h-5 mr-3"></i>
                     Prazos
                 </a>
+                <a href="#" onclick="carregarSecao('tarefas')" class="sidebar-item" id="nav-tarefas">
+                    <i data-lucide="check-square" class="w-5 h-5 mr-3"></i>
+                    Tarefas
+                </a>
+                <a href="#" onclick="carregarSecao('calendario')" class="sidebar-item" id="nav-calendario">
+                    <i data-lucide="calendar-days" class="w-5 h-5 mr-3"></i>
+                    Calendário
+                </a>
                 <a href="#" onclick="carregarSecao('notificacoes')" class="sidebar-item" id="nav-notificacoes">
                     <i data-lucide="bell" class="w-5 h-5 mr-3"></i>
                     Notificações
                     <span id="badgeNotificacoes" class="hidden bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-2">0</span>
                 </a>
+            <a href="#" onclick="carregarSecao('documentos')" class="sidebar-item" id="nav-documentos">
+                <i data-lucide="folder" class="w-5 h-5 mr-3"></i>
+                Documentos
+            </a>
             <a href="#" onclick="carregarSecao('relatorios')" class="sidebar-item" id="nav-relatorios">
                 <i data-lucide="bar-chart-3" class="w-5 h-5 mr-3"></i>
                 Relatórios
@@ -714,6 +763,10 @@
             <a href="#" onclick="carregarSecao('backup')" class="sidebar-item" id="nav-backup">
                 <i data-lucide="database" class="w-5 h-5 mr-3"></i>
                 Backup
+            </a>
+            <a href="#" onclick="carregarSecao('historico')" class="sidebar-item" id="nav-historico">
+                <i data-lucide="history" class="w-5 h-5 mr-3"></i>
+                Histórico
             </a>
             <a href="#" onclick="carregarSecao('convidados')" class="sidebar-item" id="nav-convidados" style="display: none;">
                 <i data-lucide="user-plus" class="w-5 h-5 mr-3"></i>
@@ -1129,6 +1182,29 @@
             }
             return true;
         }
+
+        function obterNomeEntidade(tipo) {
+            const nomes = {
+                cliente: 'cliente',
+                honorario: 'honorário',
+                contrato: 'contrato',
+                heranca: 'herança',
+                migracao: 'migração',
+                registo: 'registo',
+                prazo: 'prazo',
+                documento: 'documento'
+            };
+            return nomes[tipo] || tipo || 'item';
+        }
+
+        function exigirPermissaoAcao(acao, entidade) {
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            if (tipoUsuario === 'admin') {
+                return true;
+            }
+            mostrarNotificacao(`Acesso restrito: perfil não pode ${acao} ${obterNomeEntidade(entidade)}.`, 'error');
+            return false;
+        }
         
         // Verificar login após o DOM estar carregado
         document.addEventListener('DOMContentLoaded', function() {
@@ -1221,8 +1297,11 @@
                 'nav-migracao',
                 'nav-registos',
                 'nav-prazos',
+                'nav-calendario',
+                'nav-documentos',
                 'nav-relatorios',
                 'nav-backup',
+                'nav-historico',
                 'nav-convidados'
             ];
             
@@ -1243,13 +1322,21 @@
         function mostrarTodasSecoes() {
             // Mostrar todas as seções para administradores
             const todasSecoes = [
+                'nav-dashboard',
+                'nav-clientes',
                 'nav-honorarios',
                 'nav-contratos', 
                 'nav-herancas',
                 'nav-migracao',
                 'nav-registos',
+                'nav-prazos',
+                'nav-tarefas',
+                'nav-calendario',
+                'nav-notificacoes',
+                'nav-documentos',
                 'nav-relatorios',
                 'nav-backup',
+                'nav-historico',
                 'nav-convidados'
             ];
             
@@ -1270,6 +1357,14 @@
         let herancas = [];
         let migracoes = [];
         let registos = [];
+        let documentos = [];
+        let tarefas = [];
+        let calendarioModo = 'mensal';
+        let calendarioDataRef = new Date();
+        let calendarioFiltroCliente = '';
+        let calendarioFiltroStatus = '';
+        let calendarioFiltroTipo = '';
+        let calendarioFiltroPrioridade = '';
         let secaoAtiva = 'dashboard';
         let relatorioAvancadoUltimosResultados = [];
         
@@ -1282,6 +1377,14 @@
         window.herancas = herancas;
         window.migracoes = migracoes;
         window.registos = registos;
+        window.documentos = documentos;
+        window.tarefas = tarefas;
+        window.calendarioModo = calendarioModo;
+        window.calendarioDataRef = calendarioDataRef;
+        window.calendarioFiltroCliente = calendarioFiltroCliente;
+        window.calendarioFiltroStatus = calendarioFiltroStatus;
+        window.calendarioFiltroTipo = calendarioFiltroTipo;
+        window.calendarioFiltroPrioridade = calendarioFiltroPrioridade;
         window.relatorioAvancadoUltimosResultados = relatorioAvancadoUltimosResultados;
 
         // === FUNÇÃO DE TESTE ===
@@ -1997,7 +2100,7 @@
         }
 
         function navegarSecaoAnterior() {
-            const secoes = ['dashboard', 'clientes', 'honorarios', 'contratos', 'herancas', 'migracoes', 'registos', 'prazos', 'notificacoes'];
+            const secoes = ['dashboard', 'clientes', 'honorarios', 'contratos', 'herancas', 'migracoes', 'registos', 'prazos', 'tarefas', 'calendario', 'notificacoes', 'documentos', 'relatorios', 'backup', 'historico'];
             const indiceAtual = secoes.indexOf(secaoAtiva);
             if (indiceAtual > 0) {
                 carregarSecao(secoes[indiceAtual - 1]);
@@ -2005,7 +2108,7 @@
         }
 
         function navegarProximaSecao() {
-            const secoes = ['dashboard', 'clientes', 'honorarios', 'contratos', 'herancas', 'migracoes', 'registos', 'prazos', 'notificacoes'];
+            const secoes = ['dashboard', 'clientes', 'honorarios', 'contratos', 'herancas', 'migracoes', 'registos', 'prazos', 'tarefas', 'calendario', 'notificacoes', 'documentos', 'relatorios', 'backup', 'historico'];
             const indiceAtual = secoes.indexOf(secaoAtiva);
             if (indiceAtual < secoes.length - 1) {
                 carregarSecao(secoes[indiceAtual + 1]);
@@ -2718,6 +2821,18 @@ END:VCALENDAR`;
                     window.registos = registos;
                 }
 
+                const documentosSalvos = localStorage.getItem('documentos');
+                if (documentosSalvos) {
+                    documentos = JSON.parse(documentosSalvos);
+                    window.documentos = documentos;
+                }
+
+                const tarefasSalvas = localStorage.getItem('tarefas');
+                if (tarefasSalvas) {
+                    tarefas = JSON.parse(tarefasSalvas);
+                    window.tarefas = tarefas;
+                }
+
                 console.log('✅ Dados carregados com sucesso');
             } catch (error) {
                 console.error('❌ Erro ao carregar dados:', error);
@@ -2972,6 +3087,214 @@ END:VCALENDAR`;
             mostrarNotificacao('Auditoria limpa com sucesso!', 'success');
         }
 
+        function escaparHtml(texto) {
+            return String(texto)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function formatarAuditoriaJson(dados) {
+            if (!dados) {
+                return '<span class="text-xs text-gray-500">Sem dados</span>';
+            }
+            const json = JSON.stringify(dados, null, 2);
+            return `<pre class="text-xs bg-gray-50 border border-gray-200 rounded p-3 overflow-x-auto">${escaparHtml(json)}</pre>`;
+        }
+
+        function gerarHistoricoDetalhado() {
+            const auditoria = obterAuditoria();
+            const usuarios = [...new Set(auditoria.map(item => item.usuario).filter(Boolean))].sort();
+            const entidades = [...new Set(auditoria.map(item => item.entidade).filter(Boolean))].sort();
+            const acoes = [...new Set(auditoria.map(item => item.acao).filter(Boolean))].sort();
+            const tiposUsuario = [...new Set(auditoria.map(item => item.tipoUsuario).filter(Boolean))].sort();
+            
+            return `
+                <div class="space-y-6">
+                    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold">Histórico de Alterações</h2>
+                            <p class="text-sm text-gray-600">Quem mudou o quê, quando e em qual secção.</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="exportarAuditoria()" class="btn btn-secondary">
+                                <i data-lucide="clipboard" class="w-4 h-4"></i>
+                                Exportar
+                            </button>
+                            <button onclick="limparAuditoria()" class="btn btn-danger">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                Limpar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Filtros</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Pesquisa</label>
+                                <input id="filtroHistoricoTexto" type="text" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="ex: cliente, contrato, prazo...">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Usuário</label>
+                                <select id="filtroHistoricoUsuario" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                    <option value="">Todos</option>
+                                    ${usuarios.map(u => `<option value="${u}">${u}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tipo usuário</label>
+                                <select id="filtroHistoricoTipoUsuario" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                    <option value="">Todos</option>
+                                    ${tiposUsuario.map(t => `<option value="${t}">${t}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Ação</label>
+                                <select id="filtroHistoricoAcao" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                    <option value="">Todas</option>
+                                    ${acoes.map(a => `<option value="${a}">${a}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Entidade</label>
+                                <select id="filtroHistoricoEntidade" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                    <option value="">Todas</option>
+                                    ${entidades.map(e => `<option value="${e}">${e}</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Período</label>
+                                <select id="filtroHistoricoPeriodo" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                    <option value="">Todos</option>
+                                    <option value="hoje">Hoje</option>
+                                    <option value="semana">Esta semana</option>
+                                    <option value="mes">Este mês</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end gap-2">
+                                <button onclick="aplicarFiltrosHistorico()" class="btn btn-primary">
+                                    <i data-lucide="filter" class="w-4 h-4"></i>
+                                    Aplicar filtros
+                                </button>
+                                <button onclick="limparFiltrosHistorico()" class="btn btn-secondary">
+                                    <i data-lucide="x" class="w-4 h-4"></i>
+                                    Limpar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-600" id="historicoResumo"></div>
+                    <div id="listaHistoricoDetalhado" class="space-y-3"></div>
+                </div>
+            `;
+        }
+
+        function limparFiltrosHistorico() {
+            const campos = [
+                'filtroHistoricoTexto',
+                'filtroHistoricoUsuario',
+                'filtroHistoricoTipoUsuario',
+                'filtroHistoricoAcao',
+                'filtroHistoricoEntidade',
+                'filtroHistoricoPeriodo'
+            ];
+            campos.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            aplicarFiltrosHistorico();
+        }
+
+        function aplicarFiltrosHistorico() {
+            const auditoria = obterAuditoria();
+            const texto = (document.getElementById('filtroHistoricoTexto')?.value || '').toLowerCase();
+            const usuario = document.getElementById('filtroHistoricoUsuario')?.value || '';
+            const tipoUsuario = document.getElementById('filtroHistoricoTipoUsuario')?.value || '';
+            const acao = document.getElementById('filtroHistoricoAcao')?.value || '';
+            const entidade = document.getElementById('filtroHistoricoEntidade')?.value || '';
+            const periodo = document.getElementById('filtroHistoricoPeriodo')?.value || '';
+            
+            let filtrados = auditoria;
+            if (usuario) filtrados = filtrados.filter(item => item.usuario === usuario);
+            if (tipoUsuario) filtrados = filtrados.filter(item => item.tipoUsuario === tipoUsuario);
+            if (acao) filtrados = filtrados.filter(item => item.acao === acao);
+            if (entidade) filtrados = filtrados.filter(item => item.entidade === entidade);
+            if (texto) {
+                filtrados = filtrados.filter(item => {
+                    const alvo = [
+                        item.usuario,
+                        item.tipoUsuario,
+                        item.acao,
+                        item.entidade,
+                        item.descricao
+                    ].filter(Boolean).join(' ').toLowerCase();
+                    return alvo.includes(texto);
+                });
+            }
+            if (periodo) {
+                const agora = new Date();
+                const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+                const inicioSemana = new Date(hoje);
+                inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+                const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
+                filtrados = filtrados.filter(item => {
+                    if (!item.timestamp) return false;
+                    const data = new Date(item.timestamp);
+                    if (periodo === 'hoje') return data >= hoje;
+                    if (periodo === 'semana') return data >= inicioSemana;
+                    if (periodo === 'mes') return data >= inicioMes;
+                    return true;
+                });
+            }
+            
+            renderizarHistoricoDetalhado(filtrados);
+        }
+
+        function renderizarHistoricoDetalhado(itens) {
+            const resumo = document.getElementById('historicoResumo');
+            const container = document.getElementById('listaHistoricoDetalhado');
+            if (resumo) {
+                resumo.textContent = `Registos: ${itens.length}`;
+            }
+            if (!container) return;
+            if (itens.length === 0) {
+                container.innerHTML = '<div class="text-sm text-gray-500">Nenhuma alteração encontrada.</div>';
+                return;
+            }
+            
+            container.innerHTML = itens.slice(0, 200).map(item => `
+                <div class="card p-4">
+                    <div class="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
+                        <div>
+                            <div class="text-sm font-semibold text-gray-800">${(item.acao || '').toUpperCase()} ${item.entidade || ''}</div>
+                            <div class="text-xs text-gray-600">${item.descricao || ''}</div>
+                            <div class="text-xs text-gray-500">${item.timestamp ? new Date(item.timestamp).toLocaleString('pt-PT') : ''}</div>
+                        </div>
+                        <div class="text-xs text-gray-500">${item.usuario || 'N/D'} (${item.tipoUsuario || 'N/D'})</div>
+                    </div>
+                    <details class="mt-3">
+                        <summary class="text-sm text-blue-600 cursor-pointer">Ver detalhes</summary>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                            <div>
+                                <div class="text-xs font-semibold text-gray-600 mb-1">Antes</div>
+                                ${formatarAuditoriaJson(item.dadosAntes)}
+                            </div>
+                            <div>
+                                <div class="text-xs font-semibold text-gray-600 mb-1">Depois</div>
+                                ${formatarAuditoriaJson(item.dadosDepois)}
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            `).join('');
+        }
+
         function registrarErro(contexto, erro, detalhe = null) {
             try {
                 const erros = JSON.parse(localStorage.getItem('errosSistema') || '[]');
@@ -3055,7 +3378,7 @@ END:VCALENDAR`;
             // Verificar se é convidado e redirecionar para clientes se necessário
             const tipoUsuario = localStorage.getItem('tipoUsuario');
             if (tipoUsuario === 'convidado') {
-                const secoesPermitidas = ['clientes', 'notificacoes'];
+                const secoesPermitidas = ['clientes', 'notificacoes', 'documentos', 'tarefas'];
                 if (!secoesPermitidas.includes(secao)) {
                     secao = 'clientes'; // Redirecionar para clientes
                 }
@@ -3111,6 +3434,18 @@ END:VCALENDAR`;
                 setTimeout(() => {
                     aplicarFiltrosPrazos();
                     lucide.createIcons();
+                }, 100);
+            }
+            
+            if (secao === 'tarefas') {
+                setTimeout(() => {
+                    aplicarFiltrosTarefas();
+                }, 100);
+            }
+            
+            if (secao === 'calendario') {
+                setTimeout(() => {
+                    inicializarCalendarioPrazos();
                 }, 100);
             }
             
@@ -3220,8 +3555,12 @@ END:VCALENDAR`;
                 herancas: 'Gestão de Heranças',
                 migracoes: 'Gestão de Migração',
                 registos: 'Gestão de Registos',
+                documentos: 'Gestão de Documentos',
+                tarefas: 'Sistema de Tarefas',
+                calendario: 'Calendário de Prazos',
                 relatorios: 'Gestão de Relatórios',
                 backup: 'Sistema de Backup',
+                historico: 'Histórico de Alterações',
             };
             
             const tituloElement = document.getElementById('tituloSecao');
@@ -3271,8 +3610,12 @@ END:VCALENDAR`;
                     convidados: gerarConvidados(),
                     migracoes: gerarMigracao(),
                     registos: gerarRegistos(),
+                documentos: gerarDocumentos(),
+                tarefas: gerarTarefas(),
+                calendario: gerarCalendarioPrazos(),
                     relatorios: gerarRelatorios(),
                     backup: gerarBackup(),
+                historico: gerarHistoricoDetalhado(),
                 };
                 
                 console.log('🔧 Conteúdos disponíveis:', Object.keys(conteudos));
@@ -5199,13 +5542,15 @@ Sistema Legal - ANA PAULA MEDINA
 
             const inicioMes = new Date(anoAtual, agora.getMonth(), 1);
             const fimMes = new Date(anoAtual, agora.getMonth() + 1, 0);
-            const calcularTotaisMes = (itens) => {
+            const inicioMesAnterior = new Date(anoAtual, agora.getMonth() - 1, 1);
+            const fimMesAnterior = new Date(anoAtual, agora.getMonth(), 0);
+            const calcularTotaisPeriodo = (itens, inicio, fim) => {
                 let total = 0;
                 let iva = 0;
                 itens.forEach((item) => {
                     const dataCriacao = item.dataCriacao ? new Date(item.dataCriacao) : null;
                     if (!dataCriacao || Number.isNaN(dataCriacao.getTime())) return;
-                    if (dataCriacao >= inicioMes && dataCriacao <= fimMes) {
+                    if (dataCriacao >= inicio && dataCriacao <= fim) {
                         const valor = parseFloat(item.valor) || 0;
                         const ivaPercentual = parseFloat(item.iva) || 0;
                         total += valor;
@@ -5214,13 +5559,39 @@ Sistema Legal - ANA PAULA MEDINA
                 });
                 return { total, iva };
             };
-            const totaisHonorariosMes = calcularTotaisMes(honorariosParaMostrar);
-            const totaisContratosMes = calcularTotaisMes(contratosParaMostrar);
-            const totaisHerancasMes = calcularTotaisMes(herancasParaMostrar);
-            const totaisMigracoesMes = calcularTotaisMes(migracoesParaMostrar);
-            const totaisRegistosMes = calcularTotaisMes(registosParaMostrar);
+            const totaisHonorariosMes = calcularTotaisPeriodo(honorariosParaMostrar, inicioMes, fimMes);
+            const totaisContratosMes = calcularTotaisPeriodo(contratosParaMostrar, inicioMes, fimMes);
+            const totaisHerancasMes = calcularTotaisPeriodo(herancasParaMostrar, inicioMes, fimMes);
+            const totaisMigracoesMes = calcularTotaisPeriodo(migracoesParaMostrar, inicioMes, fimMes);
+            const totaisRegistosMes = calcularTotaisPeriodo(registosParaMostrar, inicioMes, fimMes);
             const totalEntradasMes = totaisHonorariosMes.total + totaisContratosMes.total + totaisHerancasMes.total + totaisMigracoesMes.total + totaisRegistosMes.total;
             const ivaMes = totaisHonorariosMes.iva + totaisContratosMes.iva + totaisHerancasMes.iva + totaisMigracoesMes.iva + totaisRegistosMes.iva;
+            
+            const totaisHonorariosMesAnterior = calcularTotaisPeriodo(honorariosParaMostrar, inicioMesAnterior, fimMesAnterior);
+            const totaisContratosMesAnterior = calcularTotaisPeriodo(contratosParaMostrar, inicioMesAnterior, fimMesAnterior);
+            const totaisHerancasMesAnterior = calcularTotaisPeriodo(herancasParaMostrar, inicioMesAnterior, fimMesAnterior);
+            const totaisMigracoesMesAnterior = calcularTotaisPeriodo(migracoesParaMostrar, inicioMesAnterior, fimMesAnterior);
+            const totaisRegistosMesAnterior = calcularTotaisPeriodo(registosParaMostrar, inicioMesAnterior, fimMesAnterior);
+            const totalEntradasMesAnterior = totaisHonorariosMesAnterior.total + totaisContratosMesAnterior.total + totaisHerancasMesAnterior.total + totaisMigracoesMesAnterior.total + totaisRegistosMesAnterior.total;
+            const ivaMesAnterior = totaisHonorariosMesAnterior.iva + totaisContratosMesAnterior.iva + totaisHerancasMesAnterior.iva + totaisMigracoesMesAnterior.iva + totaisRegistosMesAnterior.iva;
+            
+            const formatarVariacao = (atual, anterior) => {
+                if (anterior === 0 && atual === 0) {
+                    return { texto: '0%', classe: 'text-gray-600', icone: 'minus' };
+                }
+                if (anterior === 0) {
+                    return { texto: 'Novo', classe: 'text-emerald-600', icone: 'arrow-up-right' };
+                }
+                const perc = ((atual - anterior) / anterior) * 100;
+                const texto = `${perc > 0 ? '+' : ''}${perc.toFixed(1)}%`;
+                return {
+                    texto,
+                    classe: perc >= 0 ? 'text-emerald-600' : 'text-red-600',
+                    icone: perc >= 0 ? 'arrow-up-right' : 'arrow-down-right'
+                };
+            };
+            const variacaoEntradas = formatarVariacao(totalEntradasMes, totalEntradasMesAnterior);
+            const variacaoIva = formatarVariacao(ivaMes, ivaMesAnterior);
 
             const proximoPrazo = prazosParaMostrar
                 .filter(p => p.dataLimite && p.status === 'ativo')
@@ -5508,6 +5879,38 @@ Sistema Legal - ANA PAULA MEDINA
                                 <div class="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
                                     <span class="text-purple-800 font-medium">Taxa de Conversão</span>
                                     <span class="text-purple-600 font-bold">${totalClientes > 0 ? Math.round((honorariosParaMostrar.filter(h => h.clienteId).length / totalClientes) * 100) : 0}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">📈 Comparativo Mensal</h3>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center p-3 bg-indigo-50 rounded-lg">
+                                    <div>
+                                        <span class="text-indigo-800 font-medium">Entradas do Mês</span>
+                                        <p class="text-xs text-indigo-600">Mês anterior: €${(Math.round(totalEntradasMesAnterior * 100) / 100).toFixed(2)}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-indigo-600 font-bold">€${(Math.round(totalEntradasMes * 100) / 100).toFixed(2)}</span>
+                                        <div class="flex items-center justify-end gap-1 text-xs ${variacaoEntradas.classe}">
+                                            <i data-lucide="${variacaoEntradas.icone}" class="w-3 h-3"></i>
+                                            <span>${variacaoEntradas.texto}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-emerald-50 rounded-lg">
+                                    <div>
+                                        <span class="text-emerald-800 font-medium">IVA do Mês</span>
+                                        <p class="text-xs text-emerald-600">Mês anterior: €${(Math.round(ivaMesAnterior * 100) / 100).toFixed(2)}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-emerald-600 font-bold">€${(Math.round(ivaMes * 100) / 100).toFixed(2)}</span>
+                                        <div class="flex items-center justify-end gap-1 text-xs ${variacaoIva.classe}">
+                                            <i data-lucide="${variacaoIva.icone}" class="w-3 h-3"></i>
+                                            <span>${variacaoIva.texto}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -6882,6 +7285,701 @@ Sistema Legal - ANA PAULA MEDINA
             `;
         }
 
+        function salvarTarefasLocal(novos) {
+            tarefas = novos;
+            window.tarefas = tarefas;
+            salvarDados('tarefas', tarefas);
+        }
+
+        function gerarTarefas() {
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            const isConvidado = tipoUsuario === 'convidado';
+            let clientesParaSelect = Array.isArray(clientes) ? clientes : [];
+            let tarefasParaMostrar = Array.isArray(tarefas) ? tarefas : [];
+            
+            if (isConvidado) {
+                clientesParaSelect = clientesParaSelect.filter(c => verificarPermissaoCliente(c.id));
+                tarefasParaMostrar = tarefasParaMostrar.filter(t => verificarPermissaoCliente(t.clienteId));
+            }
+            
+            return `
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-2xl font-bold">Tarefas</h2>
+                        ${isConvidado ? '' : `
+                            <button onclick="criarTarefa()" class="btn btn-primary">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                Adicionar Tarefa
+                            </button>
+                        `}
+                    </div>
+                    
+                    ${isConvidado ? '' : `
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">Nova Tarefa</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Cliente *</label>
+                                    <select id="tarefaCliente" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                        <option value="">Selecione</option>
+                                        ${clientesParaSelect.map(cliente => `<option value="${cliente.id}">${cliente.nome}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Processo</label>
+                                    <select id="tarefaProcessoTipo" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                        <option value="contrato">Contrato</option>
+                                        <option value="heranca">Herança</option>
+                                        <option value="migracao">Migração</option>
+                                        <option value="registo">Registo</option>
+                                        <option value="prazo">Prazo</option>
+                                        <option value="outro">Outro</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Prioridade</label>
+                                    <select id="tarefaPrioridade" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                        <option value="baixa">Baixa</option>
+                                        <option value="media" selected>Média</option>
+                                        <option value="alta">Alta</option>
+                                        <option value="critica">Crítica</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-2 lg:col-span-3">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Título *</label>
+                                    <input id="tarefaTitulo" type="text" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="ex: Recolher documentação do cliente">
+                                </div>
+                                <div class="md:col-span-2 lg:col-span-3">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+                                    <textarea id="tarefaDescricao" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" rows="3" placeholder="Detalhes adicionais"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Data limite</label>
+                                    <input id="tarefaDataLimite" type="date" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                </div>
+                            </div>
+                        </div>
+                    `}
+                    
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Filtros rápidos</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Pesquisa</label>
+                                <input id="filtroTarefasTexto" type="text" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="título, cliente, processo..." oninput="aplicarFiltrosTarefas()">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Cliente</label>
+                                <select id="filtroTarefasCliente" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosTarefas()">
+                                    <option value="">Todos</option>
+                                    ${clientesParaSelect.map(cliente => `<option value="${cliente.id}">${cliente.nome}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                                <select id="filtroTarefasStatus" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosTarefas()">
+                                    <option value="">Todos</option>
+                                    <option value="aberta">Aberta</option>
+                                    <option value="concluida">Concluída</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Prioridade</label>
+                                <select id="filtroTarefasPrioridade" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosTarefas()">
+                                    <option value="">Todas</option>
+                                    <option value="baixa">Baixa</option>
+                                    <option value="media">Média</option>
+                                    <option value="alta">Alta</option>
+                                    <option value="critica">Crítica</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Prazo</label>
+                                <select id="filtroTarefasPrazo" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosTarefas()">
+                                    <option value="">Todos</option>
+                                    <option value="vencidas">Vencidas</option>
+                                    <option value="hoje">Hoje</option>
+                                    <option value="semana">Esta semana</option>
+                                    <option value="mes">Este mês</option>
+                                    <option value="sem_prazo">Sem prazo</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Ordenar por</label>
+                                <select id="filtroTarefasOrdenacao" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosTarefas()">
+                                    <option value="prazo">Prazo</option>
+                                    <option value="prioridade">Prioridade</option>
+                                    <option value="prioridade_prazo">Prioridade + Prazo</option>
+                                    <option value="prazo_prioridade">Prazo + Prioridade</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 mt-4">
+                            <button id="btnSoComPrazo" onclick="alternarFiltroSoComPrazo()" class="btn ${localStorage.getItem('tarefasFiltroSoComPrazo') === 'true' ? 'btn-primary' : 'btn-secondary'}" data-ativo="${localStorage.getItem('tarefasFiltroSoComPrazo') === 'true' ? 'true' : 'false'}">
+                                <i data-lucide="clock" class="w-4 h-4"></i>
+                                ${localStorage.getItem('tarefasFiltroSoComPrazo') === 'true' ? 'Só com prazo: ON' : 'Só com prazo'}
+                            </button>
+                            <button onclick="aplicarFiltrosTarefas()" class="btn btn-primary">
+                                <i data-lucide="filter" class="w-4 h-4"></i>
+                                Aplicar filtros
+                            </button>
+                            <button onclick="limparFiltrosTarefas()" class="btn btn-secondary">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                                Limpar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold">Tarefas</h3>
+                            <div class="text-sm text-gray-600"><span id="contadorTarefas">0</span> tarefas</div>
+                        </div>
+                        <div id="listaTarefas" class="space-y-3"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function limparFiltrosTarefas() {
+            const ids = ['filtroTarefasTexto', 'filtroTarefasCliente', 'filtroTarefasStatus', 'filtroTarefasPrioridade', 'filtroTarefasPrazo'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            const btnSoComPrazo = document.getElementById('btnSoComPrazo');
+            if (btnSoComPrazo) {
+                btnSoComPrazo.dataset.ativo = 'false';
+                btnSoComPrazo.classList.remove('btn-primary');
+                btnSoComPrazo.classList.add('btn-secondary');
+                btnSoComPrazo.innerHTML = '<i data-lucide="clock" class="w-4 h-4"></i> Só com prazo';
+            }
+            localStorage.setItem('tarefasFiltroSoComPrazo', 'false');
+            aplicarFiltrosTarefas();
+        }
+
+        function alternarFiltroSoComPrazo() {
+            const btn = document.getElementById('btnSoComPrazo');
+            if (!btn) return;
+            const ativo = btn.dataset.ativo === 'true';
+            btn.dataset.ativo = ativo ? 'false' : 'true';
+            btn.classList.toggle('btn-primary', !ativo);
+            btn.classList.toggle('btn-secondary', ativo);
+            btn.innerHTML = `<i data-lucide="clock" class="w-4 h-4"></i> ${ativo ? 'Só com prazo' : 'Só com prazo: ON'}`;
+            localStorage.setItem('tarefasFiltroSoComPrazo', ativo ? 'false' : 'true');
+            aplicarFiltrosTarefas();
+        }
+
+        function aplicarFiltrosTarefas() {
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            let lista = Array.isArray(tarefas) ? tarefas : [];
+            if (tipoUsuario === 'convidado') {
+                lista = lista.filter(t => verificarPermissaoCliente(t.clienteId));
+            }
+            
+            const texto = (document.getElementById('filtroTarefasTexto')?.value || '').toLowerCase();
+            const clienteId = document.getElementById('filtroTarefasCliente')?.value || '';
+            const status = document.getElementById('filtroTarefasStatus')?.value || '';
+            const prioridade = document.getElementById('filtroTarefasPrioridade')?.value || '';
+            const prazo = document.getElementById('filtroTarefasPrazo')?.value || '';
+            const ordenacao = document.getElementById('filtroTarefasOrdenacao')?.value || 'prazo';
+            const soComPrazo = document.getElementById('btnSoComPrazo')?.dataset?.ativo === 'true';
+            
+            if (clienteId) lista = lista.filter(t => String(t.clienteId) === clienteId);
+            if (status) lista = lista.filter(t => t.status === status);
+            if (prioridade) lista = lista.filter(t => t.prioridade === prioridade);
+            if (soComPrazo) lista = lista.filter(t => !!t.dataLimite);
+            if (prazo) {
+                const agora = new Date();
+                const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+                const inicioSemana = new Date(hoje);
+                inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+                const fimSemana = new Date(inicioSemana);
+                fimSemana.setDate(inicioSemana.getDate() + 6);
+                const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
+                const fimMes = new Date(agora.getFullYear(), agora.getMonth() + 1, 0);
+                
+                lista = lista.filter(t => {
+                    if (!t.dataLimite) return prazo === 'sem_prazo';
+                    const dataLimite = new Date(t.dataLimite);
+                    if (isNaN(dataLimite.getTime())) return false;
+                    
+                    switch (prazo) {
+                        case 'vencidas':
+                            return dataLimite < hoje;
+                        case 'hoje':
+                            return dataLimite.toDateString() === hoje.toDateString();
+                        case 'semana':
+                            return dataLimite >= inicioSemana && dataLimite <= fimSemana;
+                        case 'mes':
+                            return dataLimite >= inicioMes && dataLimite <= fimMes;
+                        case 'sem_prazo':
+                            return false;
+                        default:
+                            return true;
+                    }
+                });
+            }
+            if (texto) {
+                lista = lista.filter(t => {
+                    const alvo = [
+                        t.titulo,
+                        t.descricao,
+                        t.clienteNome,
+                        t.processoTipo
+                    ].filter(Boolean).join(' ').toLowerCase();
+                    return alvo.includes(texto);
+                });
+            }
+            
+            const prioridadePeso = (valor) => {
+                switch (valor) {
+                    case 'critica':
+                        return 4;
+                    case 'alta':
+                        return 3;
+                    case 'media':
+                        return 2;
+                    case 'baixa':
+                        return 1;
+                    default:
+                        return 0;
+                }
+            };
+            
+            lista = lista.sort((a, b) => {
+                const ordenarPorPrioridade = ordenacao === 'prioridade' || ordenacao === 'prioridade_prazo';
+                const ordenarPorPrazo = ordenacao === 'prazo' || ordenacao === 'prazo_prioridade';
+                
+                if (ordenarPorPrioridade) {
+                    const pesoA = prioridadePeso(a.prioridade);
+                    const pesoB = prioridadePeso(b.prioridade);
+                    if (pesoA !== pesoB) return pesoB - pesoA;
+                    if (ordenacao === 'prioridade') {
+                        // fallback para data, como antes
+                    }
+                }
+                
+                const dataA = a.dataLimite ? new Date(a.dataLimite) : null;
+                const dataB = b.dataLimite ? new Date(b.dataLimite) : null;
+                if (ordenarPorPrazo || ordenacao === 'prioridade_prazo') {
+                    if (dataA && dataB) return dataA - dataB;
+                    if (dataA && !dataB) return -1;
+                    if (!dataA && dataB) return 1;
+                }
+                
+                if (ordenacao === 'prazo_prioridade') {
+                    const pesoA = prioridadePeso(a.prioridade);
+                    const pesoB = prioridadePeso(b.prioridade);
+                    if (pesoA !== pesoB) return pesoB - pesoA;
+                }
+                return (b.dataCriacao || '').localeCompare(a.dataCriacao || '');
+            });
+            
+            renderizarListaTarefas(lista);
+        }
+
+        function renderizarListaTarefas(lista) {
+            const container = document.getElementById('listaTarefas');
+            const contador = document.getElementById('contadorTarefas');
+            if (contador) contador.textContent = lista.length;
+            if (!container) return;
+            
+            if (lista.length === 0) {
+                container.innerHTML = '<div class="text-sm text-gray-500">Nenhuma tarefa encontrada.</div>';
+                return;
+            }
+            
+            const isConvidado = localStorage.getItem('tipoUsuario') === 'convidado';
+            container.innerHTML = lista.map(tarefa => `
+                <div class="flex flex-col gap-2 border border-gray-200 rounded-lg p-4">
+                    <div class="flex justify-between items-start gap-3">
+                        <div class="flex-1">
+                            <div class="text-sm font-semibold text-gray-800">${tarefa.titulo}</div>
+                            <div class="text-xs text-gray-500">${tarefa.descricao || 'Sem descrição'}</div>
+                            <div class="text-xs text-gray-500">${tarefa.clienteNome || 'Cliente'} • ${tarefa.processoTipo || 'outro'}</div>
+                            ${tarefa.dataLimite ? `<div class="text-xs text-gray-400">Prazo: ${new Date(tarefa.dataLimite).toLocaleDateString('pt-PT')}</div>` : ''}
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="status-badge status-${tarefa.prioridade || 'media'}">${tarefa.prioridade || 'media'}</span>
+                            <span class="status-badge status-${tarefa.status}">${tarefa.status === 'concluida' ? 'Concluída' : 'Aberta'}</span>
+                        </div>
+                    </div>
+                    ${isConvidado ? '' : `
+                        <div class="flex items-center gap-2">
+                            <button onclick="alterarStatusTarefa(${tarefa.id})" class="btn btn-secondary">
+                                <i data-lucide="${tarefa.status === 'concluida' ? 'rotate-ccw' : 'check'}" class="w-4 h-4"></i>
+                                ${tarefa.status === 'concluida' ? 'Reabrir' : 'Concluir'}
+                            </button>
+                            <button onclick="excluirTarefa(${tarefa.id})" class="btn btn-danger">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                Excluir
+                            </button>
+                        </div>
+                    `}
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function criarTarefa() {
+            if (!exigirPermissaoAcao('criar', 'tarefa')) {
+                return;
+            }
+            const clienteId = parseInt(document.getElementById('tarefaCliente')?.value || '');
+            const processoTipo = document.getElementById('tarefaProcessoTipo')?.value || 'outro';
+            const prioridade = document.getElementById('tarefaPrioridade')?.value || 'media';
+            const titulo = document.getElementById('tarefaTitulo')?.value?.trim() || '';
+            const descricao = document.getElementById('tarefaDescricao')?.value?.trim() || '';
+            const dataLimite = document.getElementById('tarefaDataLimite')?.value || '';
+            
+            if (!clienteId) {
+                mostrarNotificacao('Selecione o cliente da tarefa.', 'warning');
+                return;
+            }
+            if (!titulo) {
+                mostrarNotificacao('Informe o título da tarefa.', 'warning');
+                return;
+            }
+            
+            const cliente = clientes.find(c => c.id === clienteId);
+            const tarefa = {
+                id: Date.now(),
+                clienteId,
+                clienteNome: cliente ? cliente.nome : '',
+                processoTipo,
+                titulo,
+                descricao,
+                prioridade,
+                status: 'aberta',
+                dataLimite: dataLimite || null,
+                criadoPor: localStorage.getItem('usuarioLogado') || 'N/D',
+                tipoUsuario: localStorage.getItem('tipoUsuario') || 'N/D',
+                dataCriacao: new Date().toISOString()
+            };
+            
+            const lista = Array.isArray(tarefas) ? tarefas : [];
+            lista.unshift(tarefa);
+            salvarTarefasLocal(lista);
+            registrarAuditoria('criar', 'tarefa', `Tarefa criada: ${tarefa.titulo}`, null, tarefa);
+            mostrarNotificacao('Tarefa criada com sucesso!', 'success');
+            
+            const ids = ['tarefaCliente', 'tarefaTitulo', 'tarefaDescricao', 'tarefaDataLimite'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            const prioridadeEl = document.getElementById('tarefaPrioridade');
+            if (prioridadeEl) prioridadeEl.value = 'media';
+            aplicarFiltrosTarefas();
+        }
+
+        function alterarStatusTarefa(id) {
+            if (!exigirPermissaoAcao('editar', 'tarefa')) {
+                return;
+            }
+            const lista = Array.isArray(tarefas) ? tarefas : [];
+            const index = lista.findIndex(t => t.id === id);
+            if (index === -1) return;
+            const antes = { ...lista[index] };
+            lista[index].status = lista[index].status === 'concluida' ? 'aberta' : 'concluida';
+            salvarTarefasLocal(lista);
+            registrarAuditoria('editar', 'tarefa', `Status da tarefa: ${lista[index].titulo}`, antes, lista[index]);
+            aplicarFiltrosTarefas();
+        }
+
+        function excluirTarefa(id) {
+            if (!exigirPermissaoAcao('apagar', 'tarefa')) {
+                return;
+            }
+            const lista = Array.isArray(tarefas) ? tarefas : [];
+            const tarefa = lista.find(t => t.id === id);
+            if (!tarefa) {
+                mostrarNotificacao('Tarefa não encontrada.', 'error');
+                return;
+            }
+            if (!confirm('Tem certeza que deseja excluir esta tarefa?')) return;
+            const novas = lista.filter(t => t.id !== id);
+            salvarTarefasLocal(novas);
+            registrarAuditoria('excluir', 'tarefa', `Tarefa excluída: ${tarefa.titulo}`, tarefa, null);
+            aplicarFiltrosTarefas();
+            mostrarNotificacao('Tarefa excluída com sucesso!', 'success');
+        }
+
+        function formatarDataLocalCalendario(data) {
+            const ano = data.getFullYear();
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const dia = String(data.getDate()).padStart(2, '0');
+            return `${ano}-${mes}-${dia}`;
+        }
+
+        function normalizarDataCalendario(valor) {
+            if (!valor) return null;
+            const data = new Date(valor);
+            if (isNaN(data)) return null;
+            return new Date(data.getFullYear(), data.getMonth(), data.getDate());
+        }
+
+        function obterPrazosDoDia(data) {
+            const alvo = formatarDataLocalCalendario(data);
+            const lista = Array.isArray(prazos) ? prazos : [];
+            return lista.filter(prazo => {
+                if (!prazo.dataLimite) return false;
+                if (calendarioFiltroCliente) {
+                    const clienteId = String(prazo.clienteId || '');
+                    if (clienteId !== String(calendarioFiltroCliente)) return false;
+                }
+                if (calendarioFiltroStatus) {
+                    if (String(prazo.status || '') !== String(calendarioFiltroStatus)) return false;
+                }
+                if (calendarioFiltroTipo) {
+                    const tipo = String(prazo.tipo || '').toLowerCase();
+                    if (tipo !== String(calendarioFiltroTipo)) return false;
+                }
+                if (calendarioFiltroPrioridade) {
+                    const prioridade = String(prazo.prioridade || '').toLowerCase();
+                    if (prioridade !== String(calendarioFiltroPrioridade)) return false;
+                }
+                const dataPrazo = normalizarDataCalendario(prazo.dataLimite);
+                if (!dataPrazo) return false;
+                return formatarDataLocalCalendario(dataPrazo) === alvo;
+            });
+        }
+
+        function gerarCalendarioPrazos() {
+            return `
+                <div class="space-y-6">
+                    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <h2 class="text-2xl font-bold">Calendário de Prazos</h2>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="moverCalendario(-1)" class="btn btn-secondary">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="irHojeCalendario()" class="btn btn-secondary">Hoje</button>
+                            <button onclick="moverCalendario(1)" class="btn btn-secondary">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="alterarModoCalendario('mensal')" class="btn btn-primary">Mês</button>
+                            <button onclick="alterarModoCalendario('semanal')" class="btn btn-secondary">Semana</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Cliente</label>
+                                <select id="calendarioFiltroCliente" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosCalendario()">
+                                    <option value="">Todos os clientes</option>
+                                    ${clientes.map(cliente => `<option value="${cliente.id}">${cliente.nome}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                                <select id="calendarioFiltroStatus" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosCalendario()">
+                                    <option value="">Todos os status</option>
+                                    <option value="ativo">Ativo</option>
+                                    <option value="pendente">Pendente</option>
+                                    <option value="em_andamento">Em andamento</option>
+                                    <option value="concluido">Concluído</option>
+                                    <option value="vencido">Vencido</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tipo</label>
+                                <select id="calendarioFiltroTipo" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosCalendario()">
+                                    <option value="">Todos os tipos</option>
+                                    <option value="contrato">Contrato</option>
+                                    <option value="heranca">Herança</option>
+                                    <option value="migracao">Migração</option>
+                                    <option value="registo">Registo</option>
+                                    <option value="prazo">Prazo</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Prioridade</label>
+                                <select id="calendarioFiltroPrioridade" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" onchange="aplicarFiltrosCalendario()">
+                                    <option value="">Todas</option>
+                                    <option value="baixa">Baixa</option>
+                                    <option value="media">Média</option>
+                                    <option value="alta">Alta</option>
+                                    <option value="critica">Crítica</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 text-xs text-gray-600 mb-4">
+                            <div class="flex items-center gap-2">
+                                <span class="calendario-item calendario-prioridade-baixa">Baixa</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="calendario-item calendario-prioridade-media">Média</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="calendario-item calendario-prioridade-alta">Alta</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="calendario-item calendario-prioridade-critica">Crítica</span>
+                            </div>
+                        </div>
+                        <div id="calendarioTitulo" class="text-lg font-semibold mb-4"></div>
+                        <div id="calendarioGrid"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function inicializarCalendarioPrazos() {
+            const select = document.getElementById('calendarioFiltroCliente');
+            if (select) {
+                select.value = calendarioFiltroCliente || '';
+            }
+            const selectStatus = document.getElementById('calendarioFiltroStatus');
+            if (selectStatus) {
+                selectStatus.value = calendarioFiltroStatus || '';
+            }
+            const selectTipo = document.getElementById('calendarioFiltroTipo');
+            if (selectTipo) {
+                selectTipo.value = calendarioFiltroTipo || '';
+            }
+            const selectPrioridade = document.getElementById('calendarioFiltroPrioridade');
+            if (selectPrioridade) {
+                selectPrioridade.value = calendarioFiltroPrioridade || '';
+            }
+            atualizarCalendarioPrazos();
+            lucide.createIcons();
+        }
+
+        function aplicarFiltrosCalendario() {
+            const select = document.getElementById('calendarioFiltroCliente');
+            const selectStatus = document.getElementById('calendarioFiltroStatus');
+            const selectTipo = document.getElementById('calendarioFiltroTipo');
+            const selectPrioridade = document.getElementById('calendarioFiltroPrioridade');
+            calendarioFiltroCliente = select ? select.value : '';
+            calendarioFiltroStatus = selectStatus ? selectStatus.value : '';
+            calendarioFiltroTipo = selectTipo ? selectTipo.value : '';
+            calendarioFiltroPrioridade = selectPrioridade ? selectPrioridade.value : '';
+            window.calendarioFiltroCliente = calendarioFiltroCliente;
+            window.calendarioFiltroStatus = calendarioFiltroStatus;
+            window.calendarioFiltroTipo = calendarioFiltroTipo;
+            window.calendarioFiltroPrioridade = calendarioFiltroPrioridade;
+            atualizarCalendarioPrazos();
+        }
+
+        function alterarModoCalendario(modo) {
+            calendarioModo = modo;
+            window.calendarioModo = calendarioModo;
+            atualizarCalendarioPrazos();
+        }
+
+        function moverCalendario(direcao) {
+            const atual = calendarioDataRef instanceof Date ? calendarioDataRef : new Date(calendarioDataRef);
+            if (calendarioModo === 'semanal') {
+                atual.setDate(atual.getDate() + (direcao * 7));
+            } else {
+                atual.setMonth(atual.getMonth() + direcao);
+            }
+            calendarioDataRef = atual;
+            window.calendarioDataRef = calendarioDataRef;
+            atualizarCalendarioPrazos();
+        }
+
+        function irHojeCalendario() {
+            calendarioDataRef = new Date();
+            window.calendarioDataRef = calendarioDataRef;
+            atualizarCalendarioPrazos();
+        }
+
+        function atualizarCalendarioPrazos() {
+            const titulo = document.getElementById('calendarioTitulo');
+            const grid = document.getElementById('calendarioGrid');
+            if (!titulo || !grid) return;
+            
+            if (calendarioModo === 'semanal') {
+                const dataRef = calendarioDataRef instanceof Date ? calendarioDataRef : new Date(calendarioDataRef);
+                const diaSemana = (dataRef.getDay() + 6) % 7;
+                const inicioSemana = new Date(dataRef.getFullYear(), dataRef.getMonth(), dataRef.getDate() - diaSemana);
+                const fimSemana = new Date(inicioSemana.getFullYear(), inicioSemana.getMonth(), inicioSemana.getDate() + 6);
+                titulo.textContent = `Semana de ${inicioSemana.toLocaleDateString('pt-PT')} até ${fimSemana.toLocaleDateString('pt-PT')}`;
+                grid.innerHTML = gerarSemanaCalendario(inicioSemana);
+            } else {
+                const dataRef = calendarioDataRef instanceof Date ? calendarioDataRef : new Date(calendarioDataRef);
+                const mesExtenso = dataRef.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });
+                titulo.textContent = mesExtenso.charAt(0).toUpperCase() + mesExtenso.slice(1);
+                grid.innerHTML = gerarMesCalendario(dataRef.getFullYear(), dataRef.getMonth());
+            }
+        }
+
+        function gerarMesCalendario(ano, mes) {
+            const primeiroDia = new Date(ano, mes, 1);
+            const offset = (primeiroDia.getDay() + 6) % 7;
+            const inicio = new Date(ano, mes, 1 - offset);
+            const hoje = formatarDataLocalCalendario(new Date());
+            
+            const diasSemana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+            let html = `
+                <div class="grid grid-cols-7 text-xs text-gray-500 mb-2">
+                    ${diasSemana.map(dia => `<div class="text-center font-semibold">${dia}</div>`).join('')}
+                </div>
+                <div class="grid grid-cols-7 gap-2">
+            `;
+            
+            for (let i = 0; i < 42; i++) {
+                const dataAtual = new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate() + i);
+                const dataLocal = formatarDataLocalCalendario(dataAtual);
+                const pertenceMes = dataAtual.getMonth() === mes;
+                const prazosDia = obterPrazosDoDia(dataAtual);
+                const extra = prazosDia.length > 3 ? prazosDia.length - 3 : 0;
+                
+                html += `
+                    <div class="border rounded-lg p-2 min-h-[90px] ${pertenceMes ? 'bg-white' : 'bg-gray-50 text-gray-400'} ${dataLocal === hoje ? 'border-blue-400' : 'border-gray-200'}">
+                        <div class="text-xs font-semibold mb-1">${dataAtual.getDate()}</div>
+                        <div class="space-y-1">
+                            ${prazosDia.slice(0, 3).map(prazo => `
+                                <div class="text-[11px] text-gray-700 truncate calendario-item calendario-prioridade-${prazo.prioridade || 'media'}">
+                                    <span class="status-badge status-${prazo.prioridade || 'media'}">${prazo.prioridade || 'media'}</span>
+                                    ${prazo.descricao || prazo.tipo || 'Prazo'}
+                                </div>
+                            `).join('')}
+                            ${extra > 0 ? `<div class="text-[11px] text-gray-400">+${extra} mais</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function gerarSemanaCalendario(inicioSemana) {
+            const diasSemana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+            const hoje = formatarDataLocalCalendario(new Date());
+            let html = '<div class="grid grid-cols-7 gap-2">';
+            
+            for (let i = 0; i < 7; i++) {
+                const dataAtual = new Date(inicioSemana.getFullYear(), inicioSemana.getMonth(), inicioSemana.getDate() + i);
+                const dataLocal = formatarDataLocalCalendario(dataAtual);
+                const prazosDia = obterPrazosDoDia(dataAtual);
+                
+                html += `
+                    <div class="border rounded-lg p-3 min-h-[140px] ${dataLocal === hoje ? 'border-blue-400' : 'border-gray-200'}">
+                        <div class="text-xs font-semibold text-gray-500 mb-2">${diasSemana[i]} • ${dataAtual.toLocaleDateString('pt-PT')}</div>
+                        <div class="space-y-2">
+                            ${prazosDia.length ? prazosDia.map(prazo => `
+                                <div class="text-xs text-gray-700 border border-gray-200 rounded p-2 calendario-item calendario-prioridade-${prazo.prioridade || 'media'}">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="status-badge status-${prazo.prioridade || 'media'}">${prazo.prioridade || 'media'}</span>
+                                        <span class="font-semibold">${prazo.descricao || prazo.tipo || 'Prazo'}</span>
+                                    </div>
+                                    <div class="text-[11px] text-gray-500">${prazo.clienteNome || prazo.cliente || ''}</div>
+                                </div>
+                            `).join('') : '<div class="text-xs text-gray-400">Sem prazos</div>'}
+                        </div>
+                    </div>
+                `;
+            }
+            html += '</div>';
+            return html;
+        }
+
         function gerarRelatorios() {
             return `
                 <div class="space-y-6">
@@ -6991,6 +8089,513 @@ Sistema Legal - ANA PAULA MEDINA
                     </div>
                 </div>
             `;
+        }
+
+        function formatarTamanhoArquivo(bytes) {
+            if (!bytes && bytes !== 0) return 'N/D';
+            if (bytes < 1024) return `${bytes} B`;
+            if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+            return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+        }
+
+        function salvarDocumentosLocal(novos) {
+            documentos = novos;
+            window.documentos = documentos;
+            salvarDados('documentos', documentos);
+        }
+
+        function obterModelosDocumentos() {
+            return [
+                { id: 'procuracao_simples', nome: 'Procuração Simples', arquivo: 'procuracao_simples' },
+                { id: 'declaracao_comparecimento', nome: 'Declaração de Comparecimento', arquivo: 'declaracao_comparecimento' },
+                { id: 'declaracao_residencia', nome: 'Declaração de Residência', arquivo: 'declaracao_residencia' },
+                { id: 'recibo_honorarios', nome: 'Recibo de Honorários', arquivo: 'recibo_honorarios' }
+            ];
+        }
+
+        function normalizarNomeArquivo(valor) {
+            return String(valor || '')
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '_')
+                .replace(/^_+|_+$/g, '');
+        }
+
+        function obterDadosTemplateDocumento() {
+            const clienteId = parseInt(document.getElementById('templateCliente')?.value || '');
+            const modeloId = document.getElementById('templateModelo')?.value || '';
+            const processoTipo = document.getElementById('templateProcessoTipo')?.value || 'outro';
+
+            if (!clienteId) {
+                mostrarNotificacao('Selecione o cliente do modelo.', 'warning');
+                return null;
+            }
+            if (!modeloId) {
+                mostrarNotificacao('Selecione o modelo.', 'warning');
+                return null;
+            }
+
+            const cliente = clientes.find(c => c.id === clienteId);
+            return {
+                clienteId,
+                cliente,
+                processoTipo,
+                modeloId,
+                hoje: new Date()
+            };
+        }
+
+        function gerarConteudoTemplateDocumento(modeloId, dados) {
+            const nomeCliente = dados.cliente?.nome || 'N/D';
+            const nif = dados.cliente?.nif || dados.cliente?.documento || 'N/D';
+            const morada = dados.cliente?.morada || dados.cliente?.endereco || 'N/D';
+            const dataHoje = dados.hoje.toLocaleDateString('pt-PT');
+
+            switch (modeloId) {
+                case 'procuracao_simples':
+                    return [
+                        'PROCURAÇÃO SIMPLES',
+                        '',
+                        `Eu, ${nomeCliente}, NIF ${nif}, residente em ${morada},`,
+                        'pelo presente instrumento, nomeio e constituo como meu bastante procurador(a)',
+                        'o(a) Dr(a). ________________________, para me representar junto das entidades competentes.',
+                        '',
+                        `Local e data: _____________________, ${dataHoje}`,
+                        '',
+                        'Assinatura: ________________________________'
+                    ].join('\n');
+                case 'declaracao_comparecimento':
+                    return [
+                        'DECLARAÇÃO DE COMPARECIMENTO',
+                        '',
+                        `Declaro que ${nomeCliente}, NIF ${nif}, compareceu neste escritório no dia ${dataHoje}.`,
+                        '',
+                        'Para os devidos efeitos, assino a presente declaração.',
+                        '',
+                        `Local e data: _____________________, ${dataHoje}`,
+                        '',
+                        'Assinatura: ________________________________'
+                    ].join('\n');
+                case 'declaracao_residencia':
+                    return [
+                        'DECLARAÇÃO DE RESIDÊNCIA',
+                        '',
+                        `Eu, ${nomeCliente}, NIF ${nif}, declaro que resido em ${morada}.`,
+                        '',
+                        'Declaro, sob compromisso de honra, que as informações acima são verdadeiras.',
+                        '',
+                        `Local e data: _____________________, ${dataHoje}`,
+                        '',
+                        'Assinatura: ________________________________'
+                    ].join('\n');
+                case 'recibo_honorarios':
+                    return [
+                        'RECIBO DE HONORÁRIOS',
+                        '',
+                        `Recebi de ${nomeCliente}, NIF ${nif}, a quantia de €__________`,
+                        'referente a honorários profissionais.',
+                        '',
+                        `Local e data: _____________________, ${dataHoje}`,
+                        '',
+                        'Assinatura: ________________________________'
+                    ].join('\n');
+                default:
+                    return 'Modelo não encontrado.';
+            }
+        }
+
+        function gerarTemplateDocumento(acao) {
+            if (!exigirPermissaoAcao('criar', 'documento')) {
+                return;
+            }
+            const dados = obterDadosTemplateDocumento();
+            if (!dados) return;
+
+            const modelos = obterModelosDocumentos();
+            const modelo = modelos.find(m => m.id === dados.modeloId);
+            if (!modelo) {
+                mostrarNotificacao('Modelo não encontrado.', 'error');
+                return;
+            }
+
+            const conteudo = gerarConteudoTemplateDocumento(modelo.id, dados);
+            const dataUri = `data:text/plain;charset=utf-8,${encodeURIComponent(conteudo)}`;
+            const nomeBase = normalizarNomeArquivo(`${modelo.arquivo}_${dados.cliente?.nome || 'cliente'}`);
+            const nomeArquivo = `${nomeBase || modelo.arquivo}.txt`;
+
+            if (acao === 'baixar') {
+                const link = document.createElement('a');
+                link.href = dataUri;
+                link.download = nomeArquivo;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                return;
+            }
+
+            const tamanho = new Blob([conteudo]).size;
+            const documento = {
+                id: Date.now(),
+                clienteId: dados.clienteId,
+                clienteNome: dados.cliente?.nome || '',
+                processoTipo: dados.processoTipo,
+                descricao: `Modelo: ${modelo.nome}`,
+                tags: ['template', modelo.nome],
+                nomeArquivo,
+                tipoArquivo: 'text/plain',
+                tamanho,
+                conteudo: dataUri,
+                criadoPor: localStorage.getItem('usuarioLogado') || 'N/D',
+                tipoUsuario: localStorage.getItem('tipoUsuario') || 'N/D',
+                dataCriacao: new Date().toISOString()
+            };
+            const lista = Array.isArray(documentos) ? documentos : [];
+            lista.unshift(documento);
+            salvarDocumentosLocal(lista);
+            registrarAuditoria('criar', 'documento', `Documento modelo criado: ${documento.nomeArquivo}`, null, documento);
+            mostrarNotificacao('Modelo gerado e guardado com sucesso!', 'success');
+            aplicarFiltrosDocumentos();
+        }
+
+        function gerarDocumentos() {
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            const isConvidado = tipoUsuario === 'convidado';
+            let clientesParaSelect = Array.isArray(clientes) ? clientes : [];
+            let documentosParaMostrar = Array.isArray(documentos) ? documentos : [];
+            
+            if (tipoUsuario === 'convidado') {
+                const convidadoId = localStorage.getItem('convidadoId');
+                const convidados = obterConvidados();
+                const convidado = convidados.find(c => c.id === parseInt(convidadoId));
+                const clientesAutorizados = convidado && convidado.ativo ? convidado.clientesAutorizados : [];
+                clientesParaSelect = clientesParaSelect.filter(c => clientesAutorizados.includes(c.id));
+                documentosParaMostrar = documentosParaMostrar.filter(d => clientesAutorizados.includes(d.clienteId));
+            }
+            
+            return `
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-2xl font-bold">Documentos</h2>
+                        ${isConvidado ? '' : `
+                            <button onclick="uploadDocumento()" class="btn btn-primary">
+                                <i data-lucide="upload" class="w-4 h-4"></i>
+                                Adicionar Documento
+                            </button>
+                        `}
+                    </div>
+                    
+                    ${isConvidado ? '' : `
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">Novo Documento</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Cliente *</label>
+                                    <select id="docCliente" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                        <option value="">Selecione</option>
+                                        ${clientesParaSelect.map(cliente => `<option value="${cliente.id}">${cliente.nome}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Processo</label>
+                                    <select id="docProcessoTipo" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                        <option value="contrato">Contrato</option>
+                                        <option value="heranca">Herança</option>
+                                        <option value="migracao">Migração</option>
+                                        <option value="registo">Registo</option>
+                                        <option value="prazo">Prazo</option>
+                                        <option value="outro">Outro</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+                                    <input id="docDescricao" type="text" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="ex: Contrato assinado">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Tags (separadas por vírgula)</label>
+                                    <input id="docTags" type="text" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="ex: contrato, assinatura">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Ficheiro *</label>
+                                    <input id="docArquivo" type="file" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                    <p class="text-xs text-gray-500 mt-1">Recomendado até 5 MB.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `}
+
+                    ${isConvidado ? '' : `
+                        <div class="card p-6">
+                            <h3 class="text-lg font-semibold mb-4">Modelos de documentos</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Cliente *</label>
+                                    <select id="templateCliente" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                        <option value="">Selecione</option>
+                                        ${clientesParaSelect.map(cliente => `<option value="${cliente.id}">${cliente.nome}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Processo</label>
+                                    <select id="templateProcessoTipo" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                        <option value="contrato">Contrato</option>
+                                        <option value="heranca">Herança</option>
+                                        <option value="migracao">Migração</option>
+                                        <option value="registo">Registo</option>
+                                        <option value="prazo">Prazo</option>
+                                        <option value="outro">Outro</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Modelo *</label>
+                                    <select id="templateModelo" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                        ${obterModelosDocumentos().map(modelo => `<option value="${modelo.id}">${modelo.nome}</option>`).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mt-4">
+                                <button onclick="gerarTemplateDocumento('salvar')" class="btn btn-primary">
+                                    <i data-lucide="file-plus" class="w-4 h-4"></i>
+                                    Gerar e guardar
+                                </button>
+                                <button onclick="gerarTemplateDocumento('baixar')" class="btn btn-secondary">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                    Baixar
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-3">Os modelos são gerados em formato .txt e podem ser editados depois.</p>
+                        </div>
+                    `}
+                    
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Filtros</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Pesquisa</label>
+                                <input id="filtroDocTexto" type="text" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="nome, descrição, tag...">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Cliente</label>
+                                <select id="filtroDocCliente" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                    <option value="">Todos</option>
+                                    ${clientesParaSelect.map(cliente => `<option value="${cliente.id}">${cliente.nome}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Processo</label>
+                                <select id="filtroDocProcesso" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black">
+                                    <option value="">Todos</option>
+                                    <option value="contrato">Contrato</option>
+                                    <option value="heranca">Herança</option>
+                                    <option value="migracao">Migração</option>
+                                    <option value="registo">Registo</option>
+                                    <option value="prazo">Prazo</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tag</label>
+                                <input id="filtroDocTag" type="text" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="ex: assinatura">
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 mt-4">
+                            <button onclick="aplicarFiltrosDocumentos()" class="btn btn-primary">
+                                <i data-lucide="filter" class="w-4 h-4"></i>
+                                Aplicar filtros
+                            </button>
+                            <button onclick="limparFiltrosDocumentos()" class="btn btn-secondary">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                                Limpar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold">Documentos guardados</h3>
+                            <div class="text-sm text-gray-600"><span id="contadorDocumentos">0</span> documentos</div>
+                        </div>
+                        <div id="listaDocumentos" class="space-y-3"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function limparFiltrosDocumentos() {
+            const ids = ['filtroDocTexto', 'filtroDocCliente', 'filtroDocProcesso', 'filtroDocTag'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            aplicarFiltrosDocumentos();
+        }
+
+        function aplicarFiltrosDocumentos() {
+            const tipoUsuario = localStorage.getItem('tipoUsuario');
+            let lista = Array.isArray(documentos) ? documentos : [];
+            
+            if (tipoUsuario === 'convidado') {
+                const convidadoId = localStorage.getItem('convidadoId');
+                const convidados = obterConvidados();
+                const convidado = convidados.find(c => c.id === parseInt(convidadoId));
+                const clientesAutorizados = convidado && convidado.ativo ? convidado.clientesAutorizados : [];
+                lista = lista.filter(doc => clientesAutorizados.includes(doc.clienteId));
+            }
+            
+            const texto = (document.getElementById('filtroDocTexto')?.value || '').toLowerCase();
+            const clienteId = document.getElementById('filtroDocCliente')?.value || '';
+            const processo = document.getElementById('filtroDocProcesso')?.value || '';
+            const tag = (document.getElementById('filtroDocTag')?.value || '').toLowerCase();
+            
+            if (clienteId) lista = lista.filter(doc => String(doc.clienteId) === clienteId);
+            if (processo) lista = lista.filter(doc => doc.processoTipo === processo);
+            if (texto) {
+                lista = lista.filter(doc => {
+                    const alvo = [
+                        doc.nomeArquivo,
+                        doc.descricao,
+                        doc.clienteNome,
+                        doc.processoTipo,
+                        ...(doc.tags || [])
+                    ].filter(Boolean).join(' ').toLowerCase();
+                    return alvo.includes(texto);
+                });
+            }
+            if (tag) {
+                lista = lista.filter(doc => (doc.tags || []).some(t => t.toLowerCase().includes(tag)));
+            }
+            
+            lista = lista.sort((a, b) => new Date(b.dataCriacao) - new Date(a.dataCriacao));
+            renderizarListaDocumentos(lista);
+        }
+
+        function renderizarListaDocumentos(lista) {
+            const container = document.getElementById('listaDocumentos');
+            const contador = document.getElementById('contadorDocumentos');
+            if (contador) contador.textContent = lista.length;
+            if (!container) return;
+            
+            if (lista.length === 0) {
+                container.innerHTML = '<div class="text-sm text-gray-500">Nenhum documento encontrado.</div>';
+                return;
+            }
+            
+            const isConvidado = localStorage.getItem('tipoUsuario') === 'convidado';
+            container.innerHTML = lista.map(doc => `
+                <div class="flex flex-col gap-2 border border-gray-200 rounded-lg p-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-sm font-semibold text-gray-800">${doc.nomeArquivo}</div>
+                            <div class="text-xs text-gray-500">${doc.descricao || 'Sem descrição'}</div>
+                            <div class="text-xs text-gray-500">${doc.clienteNome || 'Cliente'} • ${doc.processoTipo || 'outro'} • ${formatarTamanhoArquivo(doc.tamanho)}</div>
+                            <div class="text-xs text-gray-400">${doc.dataCriacao ? new Date(doc.dataCriacao).toLocaleString('pt-PT') : ''}</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="baixarDocumento(${doc.id})" class="text-blue-600 hover:text-blue-800" title="Baixar">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                            </button>
+                            ${isConvidado ? '' : `
+                                <button onclick="excluirDocumento(${doc.id})" class="text-red-600 hover:text-red-800" title="Excluir">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                    ${doc.tags && doc.tags.length ? `
+                        <div class="flex flex-wrap gap-2">
+                            ${doc.tags.map(tag => `<span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">${tag}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function uploadDocumento() {
+            if (!exigirPermissaoAcao('criar', 'documento')) {
+                return;
+            }
+            const arquivoInput = document.getElementById('docArquivo');
+            const clienteId = parseInt(document.getElementById('docCliente')?.value || '');
+            const processoTipo = document.getElementById('docProcessoTipo')?.value || 'outro';
+            const descricao = document.getElementById('docDescricao')?.value?.trim() || '';
+            const tagsRaw = document.getElementById('docTags')?.value || '';
+            const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+            
+            if (!clienteId) {
+                mostrarNotificacao('Selecione o cliente do documento.', 'warning');
+                return;
+            }
+            if (!arquivoInput || !arquivoInput.files || arquivoInput.files.length === 0) {
+                mostrarNotificacao('Selecione um ficheiro.', 'warning');
+                return;
+            }
+            const arquivo = arquivoInput.files[0];
+            if (arquivo.size > 5 * 1024 * 1024) {
+                mostrarNotificacao('Ficheiro acima de 5 MB. Tente um ficheiro menor.', 'error');
+                return;
+            }
+            
+            const cliente = clientes.find(c => c.id === clienteId);
+            const reader = new FileReader();
+            reader.onload = () => {
+                const documento = {
+                    id: Date.now(),
+                    clienteId,
+                    clienteNome: cliente ? cliente.nome : '',
+                    processoTipo,
+                    descricao,
+                    tags,
+                    nomeArquivo: arquivo.name,
+                    tipoArquivo: arquivo.type,
+                    tamanho: arquivo.size,
+                    conteudo: reader.result,
+                    criadoPor: localStorage.getItem('usuarioLogado') || 'N/D',
+                    tipoUsuario: localStorage.getItem('tipoUsuario') || 'N/D',
+                    dataCriacao: new Date().toISOString()
+                };
+                const lista = Array.isArray(documentos) ? documentos : [];
+                lista.unshift(documento);
+                salvarDocumentosLocal(lista);
+                registrarAuditoria('criar', 'documento', `Documento adicionado: ${documento.nomeArquivo}`, null, documento);
+                mostrarNotificacao('Documento adicionado com sucesso!', 'success');
+                arquivoInput.value = '';
+                const descInput = document.getElementById('docDescricao');
+                const tagsInput = document.getElementById('docTags');
+                if (descInput) descInput.value = '';
+                if (tagsInput) tagsInput.value = '';
+                aplicarFiltrosDocumentos();
+            };
+            reader.readAsDataURL(arquivo);
+        }
+
+        function baixarDocumento(id) {
+            const doc = documentos.find(d => d.id === id);
+            if (!doc) {
+                mostrarNotificacao('Documento não encontrado.', 'error');
+                return;
+            }
+            const link = document.createElement('a');
+            link.href = doc.conteudo;
+            link.download = doc.nomeArquivo || 'documento';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function excluirDocumento(id) {
+            if (!exigirPermissaoAcao('apagar', 'documento')) {
+                return;
+            }
+            const doc = documentos.find(d => d.id === id);
+            if (!doc) {
+                mostrarNotificacao('Documento não encontrado.', 'error');
+                return;
+            }
+            if (!confirm('Tem certeza que deseja excluir este documento?')) return;
+            const lista = documentos.filter(d => d.id !== id);
+            salvarDocumentosLocal(lista);
+            registrarAuditoria('excluir', 'documento', `Documento excluído: ${doc.nomeArquivo}`, doc, null);
+            aplicarFiltrosDocumentos();
+            mostrarNotificacao('Documento excluído com sucesso!', 'success');
         }
 
         function inicializarRelatoriosAvancados() {
@@ -7323,6 +8928,16 @@ Sistema Legal - ANA PAULA MEDINA
             if (secao === 'notificacoes') {
                 setTimeout(() => {
                     inicializarAlertasAutomaticos();
+                }, 100);
+            }
+            if (secao === 'documentos') {
+                setTimeout(() => {
+                    aplicarFiltrosDocumentos();
+                }, 100);
+            }
+            if (secao === 'historico') {
+                setTimeout(() => {
+                    aplicarFiltrosHistorico();
                 }, 100);
             }
         }
@@ -8283,6 +9898,10 @@ Sistema Legal - ANA PAULA MEDINA
                     return false;
                 }
                 
+                if (!exigirPermissaoAcao('editar', 'cliente')) {
+                    return false;
+                }
+
                 // Obter valores do formulário
                 const nomeInput = document.getElementById('editarClienteNome');
                 const emailInput = document.getElementById('editarClienteEmail');
@@ -8444,6 +10063,9 @@ Sistema Legal - ANA PAULA MEDINA
         function excluirClienteDireto(id) {
             console.log('🔧 excluirClienteDireto chamado com ID:', id);
             
+            if (!exigirPermissaoAcao('apagar', 'cliente')) {
+                return;
+            }
             if (confirm('Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita.')) {
                 // Carregar dados dos clientes
                 const clientesSalvos = localStorage.getItem('clientes');
@@ -8486,6 +10108,9 @@ Sistema Legal - ANA PAULA MEDINA
             console.log('🔧 Contrato encontrado no índice:', contratoIndex);
             
             if (contratoIndex !== -1) {
+                if (!exigirPermissaoAcao('editar', 'contrato')) {
+                    return false;
+                }
                 const clienteId = parseInt(document.getElementById('editarContratoCliente').value);
                 const clienteSelecionado = clientes.find(c => c.id === clienteId);
                 console.log('🔧 Cliente selecionado:', clienteSelecionado);
@@ -8939,6 +10564,10 @@ Sistema Legal - ANA PAULA MEDINA
 
         function editarItem(tipo, id) {
             console.log('🔧 editarItem chamado:', tipo, id);
+
+            if (!exigirPermissaoAcao('editar', tipo)) {
+                return;
+            }
             
             // Fechar qualquer modal aberto primeiro
             fecharModal();
@@ -8992,6 +10621,10 @@ Sistema Legal - ANA PAULA MEDINA
 
         function excluirItem(tipo, id) {
             console.log('🔧 excluirItem chamado:', tipo, id);
+
+            if (!exigirPermissaoAcao('apagar', tipo)) {
+                return;
+            }
             
             if (confirm('Tem certeza que deseja excluir este item?')) {
                 if (!exigirAdmin('exclusão de dados')) {
@@ -14134,6 +15767,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             
             const prazoIndex = prazos.findIndex(p => p.id === id);
             if (prazoIndex !== -1) {
+                if (!exigirPermissaoAcao('editar', 'prazo')) {
+                    return false;
+                }
                 prazos[prazoIndex] = {
                     ...prazos[prazoIndex],
                     descricao: document.getElementById('prazoDescricao').value,
@@ -14939,6 +16575,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             });
             
             if (contratoIndex !== -1) {
+                if (!exigirPermissaoAcao('editar', 'contrato')) {
+                    return false;
+                }
                 const clienteId = document.getElementById('contratoClienteId').value;
                 const cliente = clientes.find(c => c.id === parseInt(clienteId));
                 
@@ -14992,6 +16631,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             
             const honorarioIndex = honorarios.findIndex(h => h.id === id);
             if (honorarioIndex !== -1) {
+                if (!exigirPermissaoAcao('editar', 'honorario')) {
+                    return false;
+                }
                 honorarios[honorarioIndex] = {
                     ...honorarios[honorarioIndex],
                     cliente: document.getElementById('honorarioCliente').value,
@@ -15029,6 +16671,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             
             const herancaIndex = herancas.findIndex(h => h.id === id);
             if (herancaIndex !== -1) {
+                if (!exigirPermissaoAcao('editar', 'heranca')) {
+                    return false;
+                }
                 const clienteId = document.getElementById('herancaClienteId').value;
                 const cliente = clientes.find(c => c.id === parseInt(clienteId));
                 
@@ -15087,6 +16732,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             
             const migracaoIndex = migracoes.findIndex(m => m.id === id);
             if (migracaoIndex !== -1) {
+                if (!exigirPermissaoAcao('editar', 'migracao')) {
+                    return false;
+                }
                 const clienteId = document.getElementById('migracaoClienteId').value;
                 const cliente = clientes.find(c => c.id === parseInt(clienteId));
                 
@@ -15145,6 +16793,9 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
             
             const registoIndex = registos.findIndex(r => r.id === id);
             if (registoIndex !== -1) {
+                if (!exigirPermissaoAcao('editar', 'registo')) {
+                    return false;
+                }
                 const clienteId = document.getElementById('registoClienteId').value;
                 const cliente = clientes.find(c => c.id === parseInt(clienteId));
                 
