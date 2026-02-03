@@ -6679,6 +6679,40 @@ Sistema Legal - ANA PAULA MEDINA
                 </div>
             </div>
             
+            ${tipoUsuario === 'admin' ? `
+            <div class="card p-6">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold">Alertas Automáticos</h3>
+                        <p class="text-sm text-gray-600">Enviar resumo de prazos e honorários por Email ou WhatsApp.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="enviarAlertasEmail()" class="btn btn-primary">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                            Enviar por Email
+                        </button>
+                        <button onclick="enviarAlertasWhatsApp()" class="btn btn-success">
+                            <i data-lucide="message-circle" class="w-4 h-4"></i>
+                            Enviar por WhatsApp
+                        </button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email de destino</label>
+                        <input id="alertasEmailDestino" type="email" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="ex: cliente@email.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">WhatsApp (com indicativo)</label>
+                        <input id="alertasWhatsAppDestino" type="text" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-black" placeholder="ex: 351912345678">
+                    </div>
+                </div>
+                <div class="mt-3 text-xs text-gray-500">
+                    Dica: o envio usa o seu cliente de email/WhatsApp Web (sem serviços externos).
+                </div>
+            </div>
+            ` : ''}
+            
             <!-- Filtros Inteligentes -->
             <div class="card p-6">
                 <h3 class="text-lg font-semibold mb-4">Filtros Inteligentes</h3>
@@ -7275,6 +7309,11 @@ Sistema Legal - ANA PAULA MEDINA
             if (secao === 'relatorios') {
                 setTimeout(() => {
                     inicializarRelatoriosAvancados();
+                }, 100);
+            }
+            if (secao === 'notificacoes') {
+                setTimeout(() => {
+                    inicializarAlertasAutomaticos();
                 }, 100);
             }
         }
@@ -10239,6 +10278,97 @@ ${index + 1}. ${honorario.cliente} - €${(Math.round((parseFloat(honorario.valo
                 verificarPrazosUrgentes();
                 atualizarBadgeNotificacoes();
             }, 5 * 60 * 1000);
+        }
+
+        function inicializarAlertasAutomaticos() {
+            const emailInput = document.getElementById('alertasEmailDestino');
+            const whatsappInput = document.getElementById('alertasWhatsAppDestino');
+            if (emailInput) {
+                emailInput.value = localStorage.getItem('alertasEmailDestino') || '';
+                emailInput.addEventListener('change', () => {
+                    localStorage.setItem('alertasEmailDestino', emailInput.value.trim());
+                });
+            }
+            if (whatsappInput) {
+                whatsappInput.value = localStorage.getItem('alertasWhatsAppDestino') || '';
+                whatsappInput.addEventListener('change', () => {
+                    whatsappInput.value = whatsappInput.value.replace(/\D/g, '');
+                    localStorage.setItem('alertasWhatsAppDestino', whatsappInput.value.trim());
+                });
+            }
+        }
+
+        function gerarResumoAlertasAutomaticos() {
+            const hoje = new Date();
+            const proximos3Dias = new Date(hoje.getTime() + 3 * 24 * 60 * 60 * 1000);
+            const honorariosVencidos = honorarios.filter(h => {
+                if (!h.vencimento) return false;
+                const dataVenc = new Date(h.vencimento);
+                return !isNaN(dataVenc.getTime()) && dataVenc < hoje && h.status !== 'pago';
+            });
+            const prazosVencidos = prazos.filter(p => {
+                if (!p.dataLimite) return false;
+                const dataLimite = new Date(p.dataLimite);
+                return !isNaN(dataLimite.getTime()) && dataLimite < hoje && p.status === 'ativo';
+            });
+            const prazosHoje = prazos.filter(p => {
+                if (!p.dataLimite) return false;
+                const dataLimite = new Date(p.dataLimite);
+                return !isNaN(dataLimite.getTime()) && dataLimite.toDateString() === hoje.toDateString() && p.status === 'ativo';
+            });
+            const prazos3Dias = prazos.filter(p => {
+                if (!p.dataLimite) return false;
+                const dataLimite = new Date(p.dataLimite);
+                return !isNaN(dataLimite.getTime()) && dataLimite > hoje && dataLimite <= proximos3Dias && p.status === 'ativo';
+            });
+            
+            const linhas = [];
+            linhas.push(`Resumo de alertas (${hoje.toLocaleDateString('pt-PT')})`);
+            linhas.push('');
+            linhas.push(`Honorários vencidos: ${honorariosVencidos.length}`);
+            honorariosVencidos.slice(0, 10).forEach(h => {
+                const data = new Date(h.vencimento);
+                linhas.push(`- ${h.cliente} | €${(parseFloat(h.valor) || 0).toFixed(2)} | venc. ${data.toLocaleDateString('pt-PT')}`);
+            });
+            linhas.push('');
+            linhas.push(`Prazos vencidos: ${prazosVencidos.length}`);
+            prazosVencidos.slice(0, 10).forEach(p => {
+                linhas.push(`- ${p.clienteNome} | ${p.descricao} | venc. ${new Date(p.dataLimite).toLocaleDateString('pt-PT')}`);
+            });
+            linhas.push('');
+            linhas.push(`Prazos hoje: ${prazosHoje.length}`);
+            prazosHoje.slice(0, 10).forEach(p => {
+                linhas.push(`- ${p.clienteNome} | ${p.descricao}`);
+            });
+            linhas.push('');
+            linhas.push(`Prazos em até 3 dias: ${prazos3Dias.length}`);
+            prazos3Dias.slice(0, 10).forEach(p => {
+                linhas.push(`- ${p.clienteNome} | ${p.descricao} | ${new Date(p.dataLimite).toLocaleDateString('pt-PT')}`);
+            });
+            return linhas.join('\n');
+        }
+
+        function enviarAlertasEmail() {
+            const destino = (document.getElementById('alertasEmailDestino')?.value || '').trim();
+            if (!destino) {
+                mostrarNotificacao('Informe o email de destino.', 'warning');
+                return;
+            }
+            const corpo = gerarResumoAlertasAutomaticos();
+            const assunto = `Alertas Automáticos - ${new Date().toLocaleDateString('pt-PT')}`;
+            const link = `mailto:${encodeURIComponent(destino)}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+            window.location.href = link;
+        }
+
+        function enviarAlertasWhatsApp() {
+            const destino = (document.getElementById('alertasWhatsAppDestino')?.value || '').trim();
+            if (!destino) {
+                mostrarNotificacao('Informe o número de WhatsApp (com indicativo).', 'warning');
+                return;
+            }
+            const corpo = gerarResumoAlertasAutomaticos();
+            const link = `https://wa.me/${encodeURIComponent(destino)}?text=${encodeURIComponent(corpo)}`;
+            window.open(link, '_blank');
         }
 
 
